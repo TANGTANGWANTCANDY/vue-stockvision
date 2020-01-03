@@ -33,6 +33,7 @@ import Layout from '@/layout'
 export const constantRoutes = [
   {
     path: '/login',
+    name: 'Login',
     component: () => import('@/views/login/index'),
     hidden: true
   },
@@ -44,43 +45,56 @@ export const constantRoutes = [
   {
     path: '/',
     component: Layout,
-    redirect: '/dashboard',
+    redirect: '/index',
     children: [{
-      path: 'dashboard',
+      path: 'index',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: '首页', icon: 'guide' }
+      meta: { requireAuth: true, title: '首页', icon: 'guide' }
     }]
+  },
+  {
+    path: '/search',
+    component: Layout,
+    children: [
+      {
+        path: 'search',
+        name: 'Search',
+        component: () => import('@/views/search'),
+        meta: { requireAuth: true, title: '增删改查', icon: 'component' }
+      }
+    ]
   },
   {
     path: '/market',
     component: Layout,
     redirect: '/market/index',
     name: 'Market',
-    meta: { title: '大盘监控', icon: 'dashboard' },
+    meta: { requireAuth: true, title: '大盘监控', icon: 'dashboard' },
     children: [
       {
         path: 'index',
         name: 'Index',
         component: () => import('@/views/market/index'),
-        meta: { title: '介绍', icon: 'dashboard' }
+        meta: { requireAuth: true, title: '介绍', icon: 'dashboard' }
       },
       {
         path: 'line',
         name: 'Line',
         component: () => import('@/views/charts/line'),
-        meta: { title: '折线图', icon: 'table' }
-      },{
+        meta: { requireAuth: true, title: '折线图', icon: 'table' }
+      },
+      {
         path: 'keyboard',
         name: 'Keyboard',
         component: () => import('@/views/charts/keyboard'),
-        meta: { title: '柱状图', icon: 'table' }
+        meta: { requireAuth: true, title: '柱状图', icon: 'table' }
       },
       {
         path: 'mix',
         name: 'Mix',
         component: () => import('@/views/charts/mix-chart'),
-        meta: { title: '混合图', icon: 'table' }
+        meta: { requireAuth: true, title: '混合图', icon: 'table' }
       }
     ]
   },
@@ -92,7 +106,7 @@ export const constantRoutes = [
         path: 'industry',
         name: 'industry',
         component: () => import('@/views/industry/index'),
-        meta: { title: '行业监控', icon: 'component' }
+        meta: { requireAuth: true, title: '行业监控', icon: 'component' }
       }
     ]
   },
@@ -104,7 +118,7 @@ export const constantRoutes = [
         path: 'indContribution',
         name: 'indContribution',
         component: () => import('@/views/ind-contribution/index'),
-        meta: { title: '个股贡献度', icon: 'example' }
+        meta: { requireAuth: true, title: '个股贡献度', icon: 'example' }
       }
     ]
   },
@@ -116,7 +130,7 @@ export const constantRoutes = [
         path: 'tradingBoard',
         name: 'tradingBoard',
         component: () => import('@/views/trading-board/index'),
-        meta: { title: '涨停连板情况', icon: 'nested' }
+        meta: { requireAuth: true, title: '涨停连板情况', icon: 'nested' }
       }
     ]
   },
@@ -128,7 +142,7 @@ export const constantRoutes = [
         path: 'volatility',
         name: 'volatility',
         component: () => import('@/views/volatility/index'),
-        meta: { title: '波动率', icon: 'chart' }
+        meta: { requireAuth: true, title: '波动率', icon: 'chart' }
       }
     ]
   },
@@ -140,7 +154,7 @@ export const constantRoutes = [
         path: 'abnormalPlate',
         name: 'abnormalPlate',
         component: () => import('@/views/abnormal-plate/index'),
-        meta: { title: '异动板块', icon: 'documentation' }
+        meta: { requireAuth: true, title: '异动板块', icon: 'documentation' }
       }
     ]
   },
@@ -152,7 +166,7 @@ export const constantRoutes = [
         path: 'customIndex',
         name: 'customIndex',
         component: () => import('@/views/custom-index/index'),
-        meta: { title: '自定义指数', icon: 'edit' }
+        meta: { requireAuth: true, title: '自定义指数', icon: 'edit' }
       }
     ]
   },
@@ -164,7 +178,7 @@ export const constantRoutes = [
         path: 'notice',
         name: 'notice',
         component: () => import('@/views/notice/index'),
-        meta: { title: '公告内容监测', icon: 'message' }
+        meta: { requireAuth: true, title: '公告内容监测', icon: 'message' }
       }
     ]
   },
@@ -176,7 +190,7 @@ export const constantRoutes = [
         path: 'fund',
         name: 'fund',
         component: () => import('@/views/fund/index'),
-        meta: { title: '资金监控', icon: 'money' }
+        meta: { requireAuth: true, title: '资金监控', icon: 'money' }
       }
     ]
   },
@@ -188,7 +202,7 @@ export const constantRoutes = [
         path: 'customFactor',
         name: 'customFactor',
         component: () => import('@/views/custom-factor/index'),
-        meta: { title: '自定义因子组合', icon: 'search' }
+        meta: { requireAuth: true, title: '自定义因子组合', icon: 'search' }
       }
     ]
   },
@@ -200,7 +214,7 @@ export const constantRoutes = [
         path: 'autoTrading',
         name: 'autoTrading',
         component: () => import('@/views/auto-trading/index'),
-        meta: { title: '自动交易', icon: 'shopping' }
+        meta: { requireAuth: true, title: '自动交易', icon: 'shopping' }
       }
     ]
   },
@@ -212,7 +226,19 @@ export const constantRoutes = [
         path: 'profitLoss',
         name: 'profitLoss',
         component: () => import('@/views/profit-loss/index'),
-        meta: { title: '盈亏统计', icon: 'table' }
+        meta: { requireAuth: true, title: '盈亏统计', icon: 'table' }
+      }
+    ]
+  },
+  {
+    path: '/testview',
+    component: Layout,
+    children: [
+      {
+        path: 'testview',
+        name: 'Testview',
+        component: () => import('@/views/test/index'),
+        meta: { requireAuth: true, title: '测试数据传递', icon: 'drag' }
       }
     ]
   },

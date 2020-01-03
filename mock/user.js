@@ -46,7 +46,6 @@ export default [
       }
     }
   },
-
   // get user info
   {
     url: '/user/info\.*',

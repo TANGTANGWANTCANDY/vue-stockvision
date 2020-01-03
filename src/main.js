@@ -14,9 +14,17 @@ import router from './router'
 
 import '@/icons' // icon
 import '@/permission' // permission control
-
 import echarts from 'echarts'
+import 'echarts/theme/customed.js'
+import 'echarts/theme/chalk.js'
 Vue.prototype.$echarts = echarts
+
+// 设置反向代理，前端请求默认发送到 http://localhost:8443/api
+var axios = require('axios')
+axios.defaults.baseURL = 'http://localhost:8443/api'
+// 全局注册，之后可在其他组件中通过 this.$axios 发送数据
+Vue.prototype.$axios = axios
+Vue.config.productionTip = false
 
 /**
  * If you don't want to use mock-server
@@ -25,12 +33,12 @@ Vue.prototype.$echarts = echarts
  *
  * Currently MockJs will be used in the production environment,
  * please remove it before going online! ! !
- */
+
 import { mockXHR } from '../mock'
 if (process.env.NODE_ENV === 'production') {
   mockXHR()
 }
-
+*/
 // set ElementUI lang to EN
 Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明
