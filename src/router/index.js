@@ -53,6 +53,7 @@ export const constantRoutes = [
       meta: { requireAuth: true, title: '首页', icon: 'guide' }
     }]
   },
+  /*
   {
     path: '/search',
     component: Layout,
@@ -65,6 +66,7 @@ export const constantRoutes = [
       }
     ]
   },
+  */
   {
     path: '/market',
     component: Layout,
@@ -117,7 +119,7 @@ export const constantRoutes = [
       {
         path: 'indContribution',
         name: 'indContribution',
-        component: () => import('@/views/ind-contribution/index'),
+        component: () => import('@/views/ind-contribution/ContributionTable'),
         meta: { requireAuth: true, title: '个股贡献度', icon: 'example' }
       }
     ]
