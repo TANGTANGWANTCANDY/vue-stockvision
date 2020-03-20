@@ -1,15 +1,25 @@
 <template>
   <div class="app-container">
+    <p>{{returntext}}</p>
 
     <div id="toolbar">
-
       <div id="theme">
         <span>Theme:</span>
         <p :title="item.text" :class="item.text" v-for="(item,index) in list" :key="index" @click="choice(index)" ><span></span></p>
       </div>
     </div>
 
+    <el-select v-model="keywords" @change = "factorValue" filterable placeholder="请选择">
+      <el-option
+        v-for="item in options"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value">
+      </el-option>
+    </el-select>
+
     <div id="myChart" :style="{ width:'900px', height: '500px'}"></div>
+
   </div>
 </template>
 
@@ -18,6 +28,25 @@ export default {
   name: 'testview',
   data () {
     return {
+
+      options: [{
+        value: '选项1',
+        label: 'change'
+      }, {
+        value: '选项2',
+        label: 'change'
+      }, {
+        value: '选项3',
+        label: 'change'
+      }, {
+        value: '选项4',
+        label: 'change'
+      }, {
+        value: '选项5',
+        label: 'change'
+      }],
+      keywords: '',
+      returntext:"原来",
       msg:['一','二','三'],
       theme:['default','light','dark'],
       status: 0,
@@ -106,7 +135,19 @@ export default {
       this.myChart = this.$echarts.init(document.getElementById('myChart'),this.theme[0])
       // 绘制图表
       this.myChart.setOption(this.option,true);
-    }
+    },
+    factorValue () {
+      let param = new URLSearchParams()
+      param.append(this.keywords, 'admin')
+      this.$axios
+        .post('/test-box', {
+          keywords: param
+        }).then(resp => {
+          this.returntext = resp.data
+        console.log('您选择了：',this.returntext)
+      })
+    },
+
   }
 }
 </script>
@@ -116,7 +157,7 @@ export default {
   #toolbar {
     height: 30px;
     position: fixed;
-    margin-top: 20px;
+    margin-top: 50px;
     width: 500px;
     right: 0;
     z-index: 200

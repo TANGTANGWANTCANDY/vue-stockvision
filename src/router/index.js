@@ -53,18 +53,7 @@ export const constantRoutes = [
       meta: { requireAuth: true, title: '首页', icon: 'guide' }
     }]
   },
-  {
-    path: '/search',
-    component: Layout,
-    children: [
-      {
-        path: 'search',
-        name: 'Search',
-        component: () => import('@/views/search'),
-        meta: { requireAuth: true, title: '增删改查', icon: 'component' }
-      }
-    ]
-  },
+
   {
     path: '/market',
     component: Layout,
@@ -107,6 +96,51 @@ export const constantRoutes = [
         name: 'industry',
         component: () => import('@/views/industry/index'),
         meta: { requireAuth: true, title: '行业监控', icon: 'component' }
+      }
+    ]
+  },
+  {
+    path: '/factorAnalysis',
+    component: Layout,
+    redirect: '/factorAnalysis/index',
+    name: 'FactorAnalysis',
+    meta: { requireAuth: true, title: '因子分析', icon: 'component' },
+    children: [
+      {
+        path: 'ic',
+        name: 'IC',
+        component: () => import('@/views/factor-analysis/ic'),
+        meta: { requireAuth: true, title: 'IC序列分析', icon: 'table' }
+      },
+      {
+        path: 'icdecay',
+        name: 'ICDECAY',
+        component: () => import('@/views/factor-analysis/icdecay'),
+        meta: { requireAuth: true, title: 'IC衰减', icon: 'table' }
+      },
+      {
+        path: 'ret',
+        name: 'Ret',
+        component: () => import('@/views/factor-analysis/ret'),
+        meta: { requireAuth: true, title: '收益率分析', icon: 'table' }
+      },
+      {
+        path: 'turnover',
+        name: 'Turnover',
+        component: () => import('@/views/factor-analysis/turnover'),
+        meta: { requireAuth: true, title: '换手率分析', icon: 'table' }
+      },
+      {
+        path: 'buydecay',
+        name: 'Buydecay',
+        component: () => import('@/views/factor-analysis/buydecay'),
+        meta: { requireAuth: true, title: '买入信号衰减与反转', icon: 'table' }
+      },
+      {
+        path: 'industryana',
+        name: 'Industryana',
+        component: () => import('@/views/factor-analysis/industry'),
+        meta: { requireAuth: true, title: '版块分析', icon: 'table' }
       }
     ]
   },
@@ -230,6 +264,7 @@ export const constantRoutes = [
       }
     ]
   },
+  /**
   {
     path: '/testview',
     component: Layout,
@@ -242,7 +277,7 @@ export const constantRoutes = [
       }
     ]
   },
-  /**
+
   {
     path: '/example',
     component: Layout,
