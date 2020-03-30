@@ -15,8 +15,8 @@ import router from './router'
 import '@/icons' // icon
 import '@/permission' // permission control
 import echarts from 'echarts'
-import 'echarts/theme/customed.js'
-import 'echarts/theme/chalk.js'
+// import 'echarts/theme/customed.js'
+// import 'echarts/theme/chalk.js'
 Vue.prototype.$echarts = echarts
 
 // 设置反向代理，前端请求默认发送到 http://localhost:8443/api

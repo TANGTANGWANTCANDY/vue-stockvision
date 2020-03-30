@@ -53,18 +53,18 @@ export const constantRoutes = [
       meta: { requireAuth: true, title: '首页', icon: 'guide' }
     }]
   },
-  {
-    path: '/search',
-    component: Layout,
-    children: [
-      {
-        path: 'search',
-        name: 'Search',
-        component: () => import('@/views/search'),
-        meta: { requireAuth: true, title: '增删改查', icon: 'component' }
-      }
-    ]
-  },
+  // {
+  //   path: '/search',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'search',
+  //       name: 'Search',
+  //       component: () => import('@/views/search'),
+  //       meta: { requireAuth: true, title: '增删改查', icon: 'component' }
+  //     }
+  //   ]
+  // },
   {
     path: '/market',
     component: Layout,
@@ -88,7 +88,7 @@ export const constantRoutes = [
         path: 'keyboard',
         name: 'Keyboard',
         component: () => import('@/views/charts/keyboard'),
-        meta: { requireAuth: true, title: '柱状图', icon: 'table' }
+        meta: { requireAuth: true, title: '涨跌分布', icon: 'table' }
       },
       {
         path: 'mix',
@@ -239,6 +239,27 @@ export const constantRoutes = [
         name: 'Testview',
         component: () => import('@/views/test/index'),
         meta: { requireAuth: true, title: '测试数据传递', icon: 'drag' }
+      }
+    ]
+  },
+  {
+    path: '/factorValidation',
+    component: Layout,
+    redirect: '/factor/index',
+    name: 'Factor',
+    meta: { requireAuth: true, title: '因子有效性验证', icon: 'dashboard' },
+    children: [
+      {
+        path: 'singleFactorValidation',
+        name: 'singleFactorValidation',
+        component: () => import('@/views/charts/singleFactorValidation'),
+        meta: { requireAuth: true, title: '单因子有效性验证', icon: 'table' }
+      },
+      {
+        path: 'multiFactorValidation',
+        name: 'multiFactorValidation',
+        component: () => import('@/views/charts/multiFactorValidation'),
+        meta: { requireAuth: true, title: '多因子有效性验证', icon: 'table' }
       }
     ]
   },
