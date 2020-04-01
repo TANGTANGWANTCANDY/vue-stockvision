@@ -203,7 +203,7 @@ export const constantRoutes = [
       {
         path: 'customFactor',
         name: 'customFactor',
-        component: () => import('@/views/custom-factor/index'),
+        component: () => import('@/views/custom-factor/FactorSelect'),
         meta: { requireAuth: true, title: '自定义因子组合', icon: 'search' }
       }
     ]
