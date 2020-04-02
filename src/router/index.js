@@ -102,10 +102,29 @@ export const constantRoutes = [
   {
     path: '/factorAnalysis',
     component: Layout,
+    children: [
+      {
+        path: 'factorAnalysis',
+        name: 'FactorAnalysis',
+        component: () => import('@/views/factor-analysis/index'),
+        meta: { requireAuth: true, title: '因子分析', icon: 'component' }
+      }
+    ]
+  },
+  /*
+  {
+    path: '/factorAnalysis',
+    component: Layout,
     redirect: '/factorAnalysis/index',
     name: 'FactorAnalysis',
     meta: { requireAuth: true, title: '因子分析', icon: 'component' },
     children: [
+      {
+        path: 'index',
+        name: 'Index',
+        component: () => import('@/views/factor-analysis/index'),
+        meta: { requireAuth: true, title: '首页', icon: 'table' }
+      },
       {
         path: 'ic',
         name: 'IC',
@@ -144,6 +163,7 @@ export const constantRoutes = [
       }
     ]
   },
+  */
   {
     path: '/indContribution',
     component: Layout,
@@ -151,7 +171,7 @@ export const constantRoutes = [
       {
         path: 'indContribution',
         name: 'indContribution',
-        component: () => import('@/views/ind-contribution/index'),
+        component: () => import('@/views/ind-contribution/ContributionTable'),
         meta: { requireAuth: true, title: '个股贡献度', icon: 'example' }
       }
     ]
@@ -235,7 +255,7 @@ export const constantRoutes = [
       {
         path: 'customFactor',
         name: 'customFactor',
-        component: () => import('@/views/custom-factor/index'),
+        component: () => import('@/views/custom-factor/FactorSelect'),
         meta: { requireAuth: true, title: '自定义因子组合', icon: 'search' }
       }
     ]
@@ -264,7 +284,6 @@ export const constantRoutes = [
       }
     ]
   },
-  /**
   {
     path: '/testview',
     component: Layout,
@@ -277,7 +296,7 @@ export const constantRoutes = [
       }
     ]
   },
-
+  /**
   {
     path: '/example',
     component: Layout,

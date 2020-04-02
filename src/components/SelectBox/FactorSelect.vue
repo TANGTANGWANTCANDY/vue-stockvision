@@ -1,48 +1,44 @@
 <template>
-  <el-select v-model="keywords" @change = "factorValue" filterable placeholder="请选择">
-    <el-option
-      v-for="item in options"
-      :key="item.value"
-      :label="item.label"
-      :value="item.value">
-    </el-option>
-  </el-select>
+  <div class="block">
+    <span class="demonstration">因子：</span>
+    <el-select v-model="keywords" @change = "factorValue" filterable placeholder="请选择">
+      <el-option
+        v-for="item in options"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value">
+      </el-option>
+    </el-select>
+  </div>
 </template>
 
 <script>
   export default {
+    name: 'FactorSelect',
     data() {
       return {
         options: [{
-          value: '选项1',
+          value: 'change',
           label: 'change'
         }, {
-          value: '选项2',
+          value: 'change',
           label: 'change'
         }, {
-          value: '选项3',
+          value: 'change',
           label: 'change'
         }, {
-          value: '选项4',
+          value: 'change',
           label: 'change'
         }, {
-          value: '选项5',
+          value: 'change',
           label: 'change'
         }],
         keywords: ''
       }
     },
-    methods: {
+    methods:{
       factorValue(){
-        this.returntext = this.keywords
-        console.log('您选择了：',this.returntext)
-        this.$axios
-          .post('/test-box', {
-            keywords: keywords
-          }).then(resp => {
-          this.returntext = resp.data
-          console.log('您选择了：',this.returntext)
-        })
+        this.$emit('getFactor',this.keywords);
       }
     }
   }

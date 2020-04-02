@@ -17,6 +17,12 @@ import '@/permission' // permission control
 import echarts from 'echarts'
 import 'echarts/theme/customed.js'
 import 'echarts/theme/chalk.js'
+
+// 引入样式
+import 'vue-easytable/libs/themes-base/index.css'
+// 导入 table 和 分页组件
+import { VTable, VPagination } from 'vue-easytable'
+
 Vue.prototype.$echarts = echarts
 
 // 设置反向代理，前端请求默认发送到 http://localhost:8443/api
@@ -25,6 +31,10 @@ axios.defaults.baseURL = 'http://localhost:8443/api'
 // 全局注册，之后可在其他组件中通过 this.$axios 发送数据
 Vue.prototype.$axios = axios
 Vue.config.productionTip = false
+
+// 将table和分页组件注册到全局
+Vue.component(VTable.name, VTable)
+Vue.component(VPagination.name, VPagination)
 
 /**
  * If you don't want to use mock-server
