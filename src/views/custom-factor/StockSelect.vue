@@ -1,8 +1,8 @@
 <template>
   <div id="main_div">
     <div id="select-stock-pool" style="margin-bottom: 10px">
-      交易所：
-      <el-select v-model="exchange" multiple @change="selectExchangeAll" placeholder="请选择">
+      <span style="margin-left:5px">交易所：</span>
+      <el-select v-model="exchange" multiple @change="selectExchangeAll" placeholder="请选择" style="width:15%">
         <el-option
           v-for="item in exchanges"
           :key="item.value"
@@ -13,8 +13,8 @@
         </el-option>
       </el-select>
 
-      市场类型：
-      <el-select v-model="market" multiple @change="selectMarketAll" placeholder="请选择">
+      <span style="margin-left:5px">市场类型：</span>
+      <el-select v-model="market" multiple @change="selectMarketAll" placeholder="请选择" style="width:15%">
         <el-option
           v-for="item in markets"
           :key="item.value"
@@ -24,8 +24,8 @@
         </el-option>
       </el-select>
 
-      行业：
-      <el-select v-model="industry" multiple @change="selectIndustryAll" placeholder="请选择">
+      <span style="margin-left:5px">行业：</span>
+      <el-select v-model="industry" multiple @change="selectIndustryAll" placeholder="请选择" style="width:15%">
         <el-option
           v-for="item in industries"
           :key="item.value"
@@ -35,8 +35,8 @@
         </el-option>
       </el-select>
 
-      指数成分：
-      <el-select v-model="selectedIndex" multiple @change="selectIndexAll" placeholder="请选择">
+      <span style="margin-left:5px">指数成分：</span>
+      <el-select v-model="selectedIndex" multiple @change="selectIndexAll" placeholder="请选择" style="width:15%">
         <el-option
           v-for="item in indexes"
           :key="item.value"
@@ -46,7 +46,7 @@
         </el-option>
       </el-select>
     </div>
-    <el-button @click="submit">确认股票池</el-button>
+    <!--el-button @click="submit">确认股票池</el-button-->
   </div>
 </template>
 
@@ -150,3 +150,6 @@
     }
   }
 </script>
+
+<style scoped>
+</style>
