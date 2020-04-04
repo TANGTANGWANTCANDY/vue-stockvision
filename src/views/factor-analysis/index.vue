@@ -327,7 +327,7 @@
       },
       icAnalyse(){
         this.$axios
-          .get('/ic-analysis/'+this.factor+"/"+this.startdate+"/"+this.enddate)
+          .get('/ic-analysis/'+this.startdate+"/"+this.enddate+"?factors="+this.factor)
           .then(res => {
             this.tree = res.data; //把取item的数据赋给 tree
             console.log(res.data);

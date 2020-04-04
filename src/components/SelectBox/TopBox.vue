@@ -4,12 +4,6 @@
       <el-col :span="7">
         <AnaType @getAnaModel="getAnaModel"></AnaType>
       </el-col>
-    </el-row>
-
-    <el-row>
-      <el-col :span="7">
-        <FactorSelect @getFactor="getFactor" ref="factor"></FactorSelect>
-      </el-col>
       <el-col :span="10">
         <DateStartToEnd @getDate="getDate"></DateStartToEnd>
       </el-col>

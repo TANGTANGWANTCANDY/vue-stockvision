@@ -307,44 +307,36 @@
   //日线行情
   const dailyFactorInfo=[
     {
-      name:'开盘价',
       value:'open',
-      description:'开盘价'
+      label:'开盘价'
     },
     {
-      name:'最高价',
       value:'high',
-      description:'最高价'
+      label:'最高价'
     },
     {
-      name:'最低价',
       value:'low',
-      description:'最低价'
+      label:'最低价'
     },
     {
-      name:'收盘价',
       value:'close',
-      description:'收盘价'
+      label:'收盘价'
     },
     {
-      name:'涨跌额',
       value:'change',
-      description:'涨跌额'
+      label:'涨跌额'
     },
     {
-      name:'涨跌幅',
       value:'pct_chg',
-      description:'涨跌幅（未复权）'
+      label:'涨跌幅（未复权）'
     },
     {
-      name:'成交量',
       value:'vol',
-      description:'成交量（手）'
+      label:'成交量（手）'
     },
     {
-      name:'成交额',
       value:'amount',
-      description:'成交额（千元）'
+      label:'成交额（千元）'
     },
   ]
   //现金流量表

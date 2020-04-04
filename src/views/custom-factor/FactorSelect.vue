@@ -9,13 +9,13 @@
       <el-tabs v-model="factorsTab">
         <el-tab-pane label="基础" name="1">
           日线行情：
-          <el-select class="select" v-model="factors.dailyFactors" multiple placeholder="请选择" >
+          <el-select class="select" v-model="factors.dailyFactors" @change = "testfactors()" multiple placeholder="请选择" >
             <el-option
               v-for="item in allFactor.dailyFactorAll"
               :key="item.value"
-              :label="item.name"
+              :label="item.label"
               :value="item.value"
-              :title="item.description"
+              :title="item.label"
             >
             </el-option>
           </el-select>
@@ -134,6 +134,8 @@
         option: {},
         option1: {},
 
+        valuer: [],
+
 
         factorsTab: "1",
         twoTab: "analysisTab",
@@ -200,6 +202,26 @@
         }else if(num>1){//多因子有效性验证
           this.$router.push({path: '',params: {factors}})
         }
+      },
+      testfactors(){
+        var urlfac = "json-test?factors="
+        for(let i=0;i<=this.factors.dailyFactors.length-1;i++){
+          if(i === 0){
+            urlfac = urlfac+this.factors.dailyFactors[i]
+          }
+          else{
+             urlfac = urlfac +"&factors=" + this.factors.dailyFactors[i]
+          }
+        }
+
+        this.$axios
+          .get(urlfac)
+          .then(res => {
+            console.log(res.data);
+          })
+          .catch(err => {
+            alert('请求失败');
+          })
       },
       setIcOption(data){
         return{
@@ -473,8 +495,17 @@
         }
       },
       icAnalyse(){
+        var urlfac = "?factors="
+        for(let i=0;i<=this.factors.dailyFactors.length-1;i++){
+          if(i === 0){
+            urlfac = urlfac+this.factors.dailyFactors[i]
+          }
+          else{
+            urlfac = urlfac +"&factors=" + this.factors.dailyFactors[i]
+          }
+        }
         this.$axios
-          .get('/ic-analysis/'+this.factor+"/"+this.startdate+"/"+this.enddate)
+          .get('/ic-analysis/'+this.startdate+"/"+this.enddate+urlfac)
           .then(res => {
             this.tree = res.data; //把取item的数据赋给 tree
             console.log(res.data);
