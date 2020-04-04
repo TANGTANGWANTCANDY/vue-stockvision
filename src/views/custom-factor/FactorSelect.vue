@@ -2,20 +2,20 @@
   <div>
     <div style="margin-top: 10px;margin-bottom: 20px">
       <!--span style="margin-left:5px">股票池选择</span-->
-      <StockSelect style="margin-top: 10px"></StockSelect>
+      <StockSelect style="margin-top: 10px" @stockSelectChange="getStockPool"></StockSelect>
     </div>
     <!--span style="margin-left:5px">因子选择</span-->
     <div id="select-Factors" v-cloak style="margin-top: 10px;margin-bottom: 20px">
       <el-tabs v-model="factorsTab">
         <el-tab-pane label="基础" name="1">
           日线行情：
-          <el-select class="select" v-model="factors.dailyFactors" @change = "testfactors()" multiple placeholder="请选择" >
+          <el-select class="select" v-model="factors.dailyFactors" multiple placeholder="请选择" >
             <el-option
               v-for="item in allFactor.dailyFactorAll"
               :key="item.value"
-              :label="item.label"
+              :label="item.name"
               :value="item.value"
-              :title="item.label"
+              :title="item.description"
             >
             </el-option>
           </el-select>
@@ -92,18 +92,23 @@
         </el-tab-pane>
       </el-tabs>
     </div>
-    <!-- id="jump-btns">
-      <el-button id="do-to-factor-validation" @click="factorValidation">因子有效性</el-button>
-      <el-button id="go-to-factor-analysis" @click="factorAnalysis">因子分析</el-button>
-    </div-->
 
     <div id="ana-or-vali" v-cloak style="margin-top: 10px;margin-bottom: 20px">
       <el-tabs v-model="twoTab">
         <el-tab-pane label="因子分析" name="analysisTab">
-          <TopBox @newModel="newModel" @newFactor="newFactor" @newDate="newDate" @buttonOn="onAnalyse" ref = "topbox"></TopBox>
+          <TopBox @newModel="newModel"  @newDate="newDate" @buttonOn="onAnalyse" ref = "topbox"></TopBox>
           <div id="myChart" :style="{ width:'900px', height: '450px'}"></div>
         </el-tab-pane>
         <el-tab-pane label="因子有效性" name="validationTab">
+          <el-row>
+            <el-col :span="12">
+              <DateStartToEnd @getDate="getDate"></DateStartToEnd>
+            </el-col>
+            <el-col :span="12">
+              <el-button type="primary" style="border-width:0;background-color:#587482;width:100px" @click.native="handleSearch">验证</el-button>
+            </el-col>
+          </el-row>
+          <chart height="100%" width="100%" :factorList="this.factorList" :result="this.result" :addMark="this.addMark"></chart>
         </el-tab-pane>
       </el-tabs>
 
@@ -117,28 +122,44 @@
   import Pane from "./pane";
   import FactorInfo from "./FactorInfo";
   import TopBox from "@/components/SelectBox/TopBox"
+  import DateStartToEnd from "@/components/SelectBox/DateStartToEnd"
+  import Chart from '@/components/Charts/multiFactorValidation'
+
   export default {
     name: "FactorSelect",
     components: {
       Pane,
       StockSelect,
       Tabs,
-      TopBox
+      TopBox,
+      DateStartToEnd,
+      Chart,
     },
     data() {
       return {
         model:"",
-        factor:"",
-        startdate:"",
-        enddate:"",
+        date:{
+          startdate:"",
+          enddate:"",
+        },
         option: {},
         option1: {},
 
-        valuer: [],
-
+        options: [],
+        value: '',
+        values: [],
+        factorList: [],
+        result: [],
+        addMark: false,
 
         factorsTab: "1",
         twoTab: "analysisTab",
+        category:{
+          exchange:[],
+          industry:[],
+          market:[],
+          index:[]
+        },
         factors: {
           dailyBasicFactors: [],
           dailyFactors: [],
@@ -166,62 +187,11 @@
       }
     },
     methods: {
-      factorAnalysis(){
-        let num=this.factors.analystFactors.length + this.factors.cashflowFactors.length+this.factors.dailyBasicFactors.length
-          + this.factors.dailyFactors.length+ this.factors.developFactors.length+this.factors.emotionFactors.length+
-          this.factors.fluctuateFactors.length + this.factors.motiveFactors.length + this.factors.profitFactors.length+ this.factors.valueFactors;
-        //因子数为1，单因子分析
-        let factors=this.factors
-        if (num === 1){
-          this.$router.push({
-            path: 'getonefactor',
-            params: {factors}
-          })
-            .then(res => {
-              alert('上传成功');
-              console.log(factors)
-            })
-            .catch(err => {
-              alert('请求失败');
-            })
-        }else if(num>1){//多因子分析
-          this.$router.push({
-            path: 'getmorefactor',
-            params: {factors}
-          })
-        }
-      },
-      factorValidation(){
-        let num=this.factors.analystFactors.length + this.factors.cashflowFactors.length+this.factors.dailyBasicFactors.length
-          + this.factors.dailyFactors.length+ this.factors.developFactors.length+this.factors.emotionFactors.length+
-          this.factors.fluctuateFactors.length + this.factors.motiveFactors.length + this.factors.profitFactors.length+ this.factors.valueFactors;
-        let factors=this.factors
-        //单因子有效性验证
-        if (num === 1){
-          this.$router.push({path: '',params: {factors}})
-        }else if(num>1){//多因子有效性验证
-          this.$router.push({path: '',params: {factors}})
-        }
-      },
-      testfactors(){
-        var urlfac = "json-test?factors="
-        for(let i=0;i<=this.factors.dailyFactors.length-1;i++){
-          if(i === 0){
-            urlfac = urlfac+this.factors.dailyFactors[i]
-          }
-          else{
-             urlfac = urlfac +"&factors=" + this.factors.dailyFactors[i]
-          }
-        }
-
-        this.$axios
-          .get(urlfac)
-          .then(res => {
-            console.log(res.data);
-          })
-          .catch(err => {
-            alert('请求失败');
-          })
+      getStockPool(obj){
+        this.category.exchange=obj.exchange
+        this.category.industry=obj.industry
+        this.category.market=obj.market
+        this.category.index=obj.index
       },
       setIcOption(data){
         return{
@@ -467,9 +437,14 @@
         this.factor = keywords;
       },
       newDate(value2){
-        this.startdate = value2[0]
-        this.enddate = value2[1];
+        this.date.startdate = value2[0]
+        this.date.enddate = value2[1];
       },
+      getDate(value2) {
+        this.date.startdate = value2[0]
+        this.date.enddate = value2[1];
+      },
+
       onAnalyse() {
         if (this.model === 'ic') {
           this.icAnalyse();
@@ -495,17 +470,12 @@
         }
       },
       icAnalyse(){
-        var urlfac = "?factors="
-        for(let i=0;i<=this.factors.dailyFactors.length-1;i++){
-          if(i === 0){
-            urlfac = urlfac+this.factors.dailyFactors[i]
-          }
-          else{
-            urlfac = urlfac +"&factors=" + this.factors.dailyFactors[i]
-          }
-        }
         this.$axios
-          .get('/ic-analysis/'+this.startdate+"/"+this.enddate+urlfac)
+          .get('/ic-analysis',{
+            date:this.date,
+            category: this.category,
+            factors:this.factors
+          })
           .then(res => {
             this.tree = res.data; //把取item的数据赋给 tree
             console.log(res.data);
@@ -549,8 +519,13 @@
           })
       },
       turnoverAnalyse(){
+        //turnover-analysis
         this.$axios
-          .get('/turnover-analysis/'+this.factor+"/"+this.startdate+"/"+this.enddate)
+          .post('/multiFactorValidation',{
+            date:this.date,
+            category: this.category,
+            factors:this.factors
+          })
           .then(res => {
             this.tree = res.data; //把取item的数据赋给 tree
             console.log(res.data);
@@ -593,6 +568,30 @@
             this.$refs.topbox.buttonOff()
           })
       },
+      handleSearch() {
+        this.factorList = this.factors
+        console.log(this.factorList)
+        this.$axios
+          .post('/multiFactorValidation',{
+            // 按照原来的接口
+           // startDate: this.date.startDate,
+           // endDate: this.date.endDate,
+           // factorList: this.factors,
+
+            // 改之后的接口
+            date:this.date,
+            category: this.category,
+            factors:this.factors
+          })
+          .then(res => {
+            this.result = res.data
+            this.addMark = !this.addMark
+            console.log(this.result)
+          })
+          .catch(err => {
+            alert('请求失败');
+          })
+      },
     }
   }
 </script>
@@ -604,5 +603,18 @@
   .select{
     width: 15%;
     margin-left: 2px;
+  }
+  .chart-container{
+    position: relative;
+    width: 100%;
+    height: calc(100vh - 84px);
+  }
+  .title {
+    font-size: 18px;
+    /*color: ;*/
+    margin: 20px auto 20px auto;
+    text-align: left;
+    font-weight:bold;
+    height: 30px;
   }
 </style>

@@ -8,7 +8,7 @@
         <DateStartToEnd @getDate="getDate"></DateStartToEnd>
       </el-col>
       <el-col :span="4">
-        <el-button type="primary" :loading="buttonstate" @click="buttonOn">{{buttontext}}</el-button>
+        <el-button type="primary" :loading="buttonstate" style="border-width:0;background-color:#587482;width:100px" @click="buttonOn">{{buttontext}}</el-button>
       </el-col>
     </el-row>
   </div>
@@ -22,34 +22,34 @@
   export default {
     name: 'TopBox',
 
-    data () {
+    data() {
       return {
-        buttonstte:false,
+        buttonstate: false,
         buttontext: "确认"
       }
     },
-    components:{
+    components: {
       FactorSelect,
       DateStartToEnd,
       AnaType
     },
     methods: {
-      getAnaModel(models){
-        this.$emit('newModel',models);
+      getAnaModel(models) {
+        this.$emit('newModel', models);
       },
-      getFactor(keywords){
-        this.$emit('newFactor',keywords);
+      getFactor(keywords) {
+        this.$emit('newFactor', keywords);
       },
-      getDate(value2){
-        this.$emit('newDate',value2);
+      getDate(value2) {
+        this.$emit('newDate', value2);
       },
 
-      buttonOn(){
+      buttonOn() {
         this.buttonstate = true;
         this.buttontext = "正在加载"
-        this.$emit('buttonOn',this.buttonstate);
+        this.$emit('buttonOn', this.buttonstate);
       },
-      buttonOff(){
+      buttonOff() {
         this.buttonstate = false;
         this.buttontext = "确认"
       }
@@ -60,9 +60,12 @@
 <style scoped>
   .el-row {
     margin-bottom: 10px;
-  &:last-child {
-     margin-bottom: 0;
-   }
+
+  &
+  :last-child {
+    margin-bottom: 0;
+  }
+
   }
   .el-col {
     border-radius: 4px;
