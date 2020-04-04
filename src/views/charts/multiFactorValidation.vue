@@ -76,7 +76,7 @@ export default {
       this.factorList = this.values
       console.log(this.factorList)
       this.values = []
-      axios.get('/multiFactorValidation', {
+      axios.post('/multiFactorValidation', {
         params: {
           startDate: this.startDate,
           endDate: this.endDate,

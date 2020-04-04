@@ -1,5 +1,5 @@
 <template>
-  <div :id="id" :class="className">
+  <div id="id" class="className">
     <div style="margin-top: 10px">
       验证结果：
       <el-card>
@@ -11,7 +11,7 @@
               ref="multipleTable"
               tooltip-effect="dark"
               style="width: 100%"
-              @selection-change='selectArInfo'>
+              >
               <el-table-column label="序号" width="62px" type="index">
               </el-table-column>
               <template v-for='(col) in tableData'>
@@ -24,11 +24,13 @@
                   width="160px">
                 </el-table-column>
               </template>
+              <!--
               <el-table-column label="操作" width="80" align="center">
                 <template slot-scope="scope">
                   <el-button size="mini" class="del-com" @click="handleDelete(scope.$index,scope.row)" >删除<i class="iconfont icon-shanchu"></i></el-button>
                 </template>
               </el-table-column>
+              -->
             </el-table>
           </el-row>
         </el-scrollbar>
@@ -40,9 +42,6 @@
 <script>
 export default {
   props: {
-    factorList: {
-      type: Array
-    },
     result: {
       type: Array
     },
@@ -54,9 +53,6 @@ export default {
     return {
       tables: [],
       tableData: [{
-        dataItem: '因子组合',
-        dataName: '因子组合'
-      }, {
         dataItem: 'IC_mean',
         dataName: 'IC_mean'
       }, {
@@ -71,10 +67,10 @@ export default {
     } },
   methods: {
     handleAdd() {
-      var factorStr = this.factorList.toString()
-      console.log(factorStr)
+      //var factorStr = this.factorList.toString()
+      //console.log(factorStr)
       var row = {
-        因子组合: factorStr,
+        //因子组合: factorStr,
         IC_mean: this.result[0],
         IC_IR: this.result[1]
       }

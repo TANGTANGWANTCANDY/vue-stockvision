@@ -352,6 +352,7 @@
       description:'经营活动现金流出小计'
     },
   ]
+
   export default {
     name: "FactorInfo",
     dailyFactorInfo,

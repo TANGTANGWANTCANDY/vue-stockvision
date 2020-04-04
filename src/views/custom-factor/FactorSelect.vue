@@ -13,9 +13,8 @@
             <el-option
               v-for="item in allFactor.dailyFactorAll"
               :key="item.value"
-              :label="item.name"
+              :label="item.label"
               :value="item.value"
-              :title="item.description"
             >
             </el-option>
           </el-select>
@@ -105,10 +104,10 @@
               <DateStartToEnd @getDate="getDate"></DateStartToEnd>
             </el-col>
             <el-col :span="12">
-              <el-button type="primary" style="border-width:0;background-color:#587482;width:100px" @click.native="handleSearch">验证</el-button>
+              <el-button type="primary" style="border-width:0;background-color:#587482;width:100px" @click="handleSearch">验证</el-button>
             </el-col>
           </el-row>
-          <chart height="100%" width="100%" :factorList="this.factorList" :result="this.result" :addMark="this.addMark"></chart>
+          <chart height="100%" width="100%" :result="this.result" :addMark="this.addMark"></chart>
         </el-tab-pane>
       </el-tabs>
 
@@ -148,7 +147,6 @@
         options: [],
         value: '',
         values: [],
-        factorList: [],
         result: [],
         addMark: false,
 
@@ -519,9 +517,8 @@
           })
       },
       turnoverAnalyse(){
-        //turnover-analysis
         this.$axios
-          .post('/multiFactorValidation',{
+          .post('/turnover-analysis',{
             date:this.date,
             category: this.category,
             factors:this.factors
@@ -569,16 +566,8 @@
           })
       },
       handleSearch() {
-        this.factorList = this.factors
-        console.log(this.factorList)
         this.$axios
           .post('/multiFactorValidation',{
-            // 按照原来的接口
-           // startDate: this.date.startDate,
-           // endDate: this.date.endDate,
-           // factorList: this.factors,
-
-            // 改之后的接口
             date:this.date,
             category: this.category,
             factors:this.factors
