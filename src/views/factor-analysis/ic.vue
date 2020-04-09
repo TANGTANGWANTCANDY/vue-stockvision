@@ -2,8 +2,6 @@
   <div class="app-container">
     <ThemeSwitch  @themeChange = "themeChange"></ThemeSwitch>
 
-
-
     <div id="myChart" :style="{ width:'900px', height: '450px'}"></div>
 
   </div>

@@ -89,6 +89,7 @@ export const constantRoutes = [
       }
     ]
   },
+  /*
   {
     path: '/factorAnalysis',
     component: Layout,
@@ -101,7 +102,6 @@ export const constantRoutes = [
       }
     ]
   },
-  /*
   {
     path: '/factorAnalysis',
     component: Layout,
@@ -153,7 +153,6 @@ export const constantRoutes = [
       }
     ]
   },
-  */
   {
     path: '/factorValidation',
     component: Layout,
@@ -175,6 +174,7 @@ export const constantRoutes = [
       }
     ]
   },
+  */
   {
     path: '/customFactor',
     component: Layout,
@@ -183,7 +183,7 @@ export const constantRoutes = [
         path: 'customFactor',
         name: 'customFactor',
         component: () => import('@/views/custom-factor/FactorSelect'),
-        meta: { requireAuth: true, title: '自定义因子组合', icon: 'search' }
+        meta: { requireAuth: true, title: '因子分析与有效性验证', icon: 'search' }
       }
     ]
   },
@@ -283,18 +283,18 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '/testview',
-    component: Layout,
-    children: [
-      {
-        path: 'testview',
-        name: 'Testview',
-        component: () => import('@/views/test/index'),
-        meta: { requireAuth: true, title: '测试数据传递', icon: 'drag' }
-      }
-    ]
-  },
+  // {
+  //   path: '/testview',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'testview',
+  //       name: 'Testview',
+  //       component: () => import('@/views/test/index'),
+  //       meta: { requireAuth: true, title: '测试数据传递', icon: 'drag' }
+  //     }
+  //   ]
+  // },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }

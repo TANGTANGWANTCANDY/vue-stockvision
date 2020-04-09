@@ -34,7 +34,7 @@
   #toolbar {
     height: 30px;
     position: fixed;
-    margin-top: 50px;
+    margin-top: 450px;
     width: 500px;
     right: 0;
     z-index: 200

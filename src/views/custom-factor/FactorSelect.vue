@@ -1,15 +1,20 @@
 <template>
   <div>
-    <div style="margin-top: 10px;margin-bottom: 20px">
+    <ThemeSwitch  @themeChange = "themeChange"></ThemeSwitch>
+    <div id="select-Stock" style="margin-bottom: 10px">
       <!--span style="margin-left:5px">股票池选择</span-->
-      <StockSelect style="margin-top: 10px" @stockSelectChange="getStockPool"></StockSelect>
+      <el-tabs v-model="stockTab">
+        <el-tab-pane label="股票池选择" name="stock1">
+          <StockSelect style="margin-bottom: 10px" @stockSelectChange="getStockPool"></StockSelect>
+        </el-tab-pane>
+      </el-tabs>
     </div>
     <!--span style="margin-left:5px">因子选择</span-->
-    <div id="select-Factors" v-cloak style="margin-top: 10px;margin-bottom: 20px">
+    <div id="select-Factors" v-cloak style="margin-bottom: 10px">
       <el-tabs v-model="factorsTab">
-        <el-tab-pane label="基础" name="1">
+        <el-tab-pane label="基础因子" name="1">
           日线行情：
-          <el-select class="select" v-model="factors.dailyFactors" multiple placeholder="请选择" >
+          <el-select class="select" v-model="factors.dailyFactors" multiple collapse-tags placeholder="请选择" >
             <el-option
               v-for="item in allFactor.dailyFactorAll"
               :key="item.value"
@@ -19,7 +24,7 @@
             </el-option>
           </el-select>
           每日指标：
-          <el-select class="select" v-model="factors.dailyBasicFactors" multiple placeholder="请选择" >
+          <el-select class="select" v-model="factors.dailyBasicFactors" multiple collapse-tags placeholder="请选择" >
             <el-option
               v-for="item in allFactor.dailyBasicFactorAll"
               :key="item.value"
@@ -30,9 +35,9 @@
             </el-option>
           </el-select>
         </el-tab-pane>
-        <el-tab-pane label="财务报表" name="2">
+        <el-tab-pane label="财务报表因子" name="2">
           现金流量表：
-          <el-select class="select" v-model="factors.cashflowFactors" multiple placeholder="请选择" >
+          <el-select class="select" v-model="factors.cashflowFactors" multiple collapse-tags placeholder="请选择" >
             <el-option
               v-for="item in allFactor.cashflowFactorAll"
               :key="item.value"
@@ -43,9 +48,9 @@
             </el-option>
           </el-select>
         </el-tab-pane>
-        <el-tab-pane label="高级" name="3">
+        <el-tab-pane label="高级因子" name="3">
           情感因子：
-          <el-select class="select" v-model="factors.emotionFactors" multiple placeholder="请选择">
+          <el-select class="select" v-model="factors.emotionFactors" multiple collapse-tags placeholder="请选择">
             <el-option
               v-for="item in allFactor.emotionFactorAll"
               :key="item.value"
@@ -56,7 +61,7 @@
             </el-option>
           </el-select>
           波动因子：
-          <el-select class="select" v-model="factors.fluctuateFactors" multiple placeholder="请选择">
+          <el-select class="select" v-model="factors.fluctuateFactors" multiple collapse-tags placeholder="请选择">
             <el-option
               v-for="item in allFactor.fluctuateFactorAll"
               :key="item.value"
@@ -67,7 +72,7 @@
             </el-option>
           </el-select>
           动量因子：
-          <el-select class="select" v-model="factors.motiveFactors" multiple placeholder="请选择">
+          <el-select class="select" v-model="factors.motiveFactors" multiple collapse-tags placeholder="请选择">
             <el-option
               v-for="item in allFactor.emotionFactorAll"
               :key="item.value"
@@ -78,7 +83,7 @@
             </el-option>
           </el-select>
           收益因子：
-          <el-select class="select" v-model="factors.profitFactors" multiple placeholder="请选择">
+          <el-select class="select" v-model="factors.profitFactors" multiple collapse-tags placeholder="请选择">
             <el-option
               v-for="item in allFactor.profitFactorAll"
               :key="item.value"
@@ -92,7 +97,7 @@
       </el-tabs>
     </div>
 
-    <div id="ana-or-vali" v-cloak style="margin-top: 10px;margin-bottom: 20px">
+    <div id="ana-or-vali" v-cloak style="margin-bottom: 10px">
       <el-tabs v-model="twoTab">
         <el-tab-pane label="因子分析" name="analysisTab">
           <TopBox @newModel="newModel"  @newDate="newDate" @buttonOn="onAnalyse" ref = "topbox"></TopBox>
@@ -101,15 +106,16 @@
         <el-tab-pane label="因子有效性" name="validationTab">
           <el-row>
             <el-col :span="12">
-              <DateStartToEnd @getDate="getDate"></DateStartToEnd>
+              <DateStartToEnd @getDate="getValidDate"></DateStartToEnd>
             </el-col>
             <el-col :span="12">
-              <el-button type="primary" style="border-width:0;background-color:#587482;width:100px" @click="handleSearch">验证</el-button>
+              <el-button type="primary" :loading="vailbuttonstate" style="border-width:0;background-color:#587482;width:100px" @click="handleSearch">{{vailbuttontext}}</el-button>
             </el-col>
           </el-row>
           <chart height="100%" width="100%" :result="this.result" :addMark="this.addMark"></chart>
         </el-tab-pane>
       </el-tabs>
+
 
     </div>
   </div>
@@ -123,6 +129,7 @@
   import TopBox from "@/components/SelectBox/TopBox"
   import DateStartToEnd from "@/components/SelectBox/DateStartToEnd"
   import Chart from '@/components/Charts/multiFactorValidation'
+  import ThemeSwitch from "@/components/ThemeSwitch/ThemeSwitch"
 
   export default {
     name: "FactorSelect",
@@ -133,6 +140,7 @@
       TopBox,
       DateStartToEnd,
       Chart,
+      ThemeSwitch,
     },
     data() {
       return {
@@ -149,7 +157,10 @@
         values: [],
         result: [],
         addMark: false,
+        vailbuttonstate: false,
+        vailbuttontext: "验证",
 
+        stockTab: "stock1",
         factorsTab: "1",
         twoTab: "analysisTab",
         category:{
@@ -428,6 +439,7 @@
         // 绘制图表
         this.myChart.setOption(this.option,true);
       },
+
       newModel(model){
         this.model = model;
       },
@@ -438,7 +450,7 @@
         this.date.startdate = value2[0]
         this.date.enddate = value2[1];
       },
-      getDate(value2) {
+      getValidDate(value2) {
         this.date.startdate = value2[0]
         this.date.enddate = value2[1];
       },
@@ -469,13 +481,12 @@
       },
       icAnalyse(){
         this.$axios
-          .get('/ic-analysis',{
+          .post('/ic-analysis',{
             date:this.date,
             category: this.category,
             factors:this.factors
           })
           .then(res => {
-            this.tree = res.data; //把取item的数据赋给 tree
             console.log(res.data);
             this.option = this.setIcOption(res.data)
             this.drawLine();
@@ -488,9 +499,12 @@
       },
       icDecay(){
         this.$axios
-          .get('/ic-decay/'+this.factor+"/"+this.startdate+"/"+this.enddate)
+          .post('/ic-decay',{
+            date:this.date,
+            category: this.category,
+            factors:this.factors
+          })
           .then(res => {
-            this.tree = res.data; //把取item的数据赋给 tree
             console.log(res.data);
             this.option = this.setIcDecayOption(res.data)
             this.drawLine();
@@ -503,9 +517,12 @@
       },
       retAnalyse(){
         this.$axios
-          .get('/ret-analysis/'+this.factor+"/"+this.startdate+"/"+this.enddate)
+          .post('/ret-analysis',{
+            date:this.date,
+            category: this.category,
+            factors:this.factors
+          })
           .then(res => {
-            this.tree = res.data; //把取item的数据赋给 tree
             console.log(res.data);
             this.option = this.setRetOption(res.data)
             this.drawLine();
@@ -524,7 +541,6 @@
             factors:this.factors
           })
           .then(res => {
-            this.tree = res.data; //把取item的数据赋给 tree
             console.log(res.data);
             this.option = this.setTurnoverOption(res.data)
             this.drawLine();
@@ -537,9 +553,12 @@
       },
       buyDecay(){
         this.$axios
-          .get('/buy-decay/'+this.factor+"/"+this.startdate+"/"+this.enddate)
+          .post('/buy-decay',{
+            date:this.date,
+            category: this.category,
+            factors:this.factors
+          })
           .then(res => {
-            this.tree = res.data; //把取item的数据赋给 tree
             console.log(res.data);
             this.option = this.setBuyDecayOption(res.data)
             this.drawLine();
@@ -552,9 +571,12 @@
       },
       industryAnalyse(){
         this.$axios
-          .get('/industry-analysis/'+this.factor+"/"+this.startdate+"/"+this.enddate)
+          .post('/industry-analysis',{
+            date:this.date,
+            category: this.category,
+            factors:this.factors
+          })
           .then(res => {
-            this.tree = res.data; //把取item的数据赋给 tree
             console.log(res.data);
             this.option = this.setIndustryOption0(res.data)
             this.drawLine();
@@ -566,6 +588,8 @@
           })
       },
       handleSearch() {
+        this.vailbuttonstate = true;
+        this.vailbuttontext = "正在加载"
         this.$axios
           .post('/multiFactorValidation',{
             date:this.date,
@@ -576,10 +600,19 @@
             this.result = res.data
             this.addMark = !this.addMark
             console.log(this.result)
+            this.vailbuttonstate = false;
+            this.vailbuttontext = "验证"
           })
           .catch(err => {
             alert('请求失败');
+            this.vailbuttonstate = false;
+            this.vailbuttontext = "验证"
           })
+      },
+      themeChange(theme) {
+        this.myChart.dispose();//TODO: 释放图表，销毁对象并设置为null(多次操作可能会导致内存溢出)
+        this.myChart = this.$echarts.init(document.getElementById('myChart'),theme)
+        this.myChart.setOption(this.option,true);
       },
     }
   }
