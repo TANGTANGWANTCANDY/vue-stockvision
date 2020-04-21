@@ -17,13 +17,24 @@
   export default {
     data() {
       return {
-        value1: ''
+        value1: this.formatDate(new Date(new Date().getTime() - 3600 * 1000 * 24)),
       }
+    },
+    mounted() {
+      this.dateValue()
     },
     methods:{
       dateValue(){
         this.$emit('getIndustryDate',this.value1);
       },
+      formatDate(date) {
+        let y = date.getFullYear();
+        let MM = date.getMonth() + 1;
+        MM = MM < 10 ? ('0' + MM) : MM;
+        let d = date.getDate();
+        d = d < 10 ? ('0' + d) : d;
+        return y + MM + d;
+      }
     }
   };
 </script>

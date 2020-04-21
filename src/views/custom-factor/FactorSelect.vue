@@ -100,7 +100,7 @@
     <div id="ana-or-vali" v-cloak style="margin-bottom: 10px">
       <el-tabs v-model="twoTab">
         <el-tab-pane label="因子分析" name="analysisTab">
-          <TopBox @newModel="newModel"  @newDate="newDate" @buttonOn="onAnalyse" ref = "topbox"></TopBox>
+          <TopBox @newModel="newModel"  @newDate="newDate" @newChangeBin="newChangeBin" @buttonOn="onAnalyse" ref = "topbox"></TopBox>
           <div id="myChart" :style="{ width:'900px', height: '450px'}"></div>
         </el-tab-pane>
         <el-tab-pane label="因子有效性" name="validationTab">
@@ -145,9 +145,10 @@
     data() {
       return {
         model:"",
+        changeBin:"",
         date:{
-          startdate:"",
-          enddate:"",
+          startdate: "",
+          enddate: "",
         },
         option: {},
         option1: {},
@@ -260,7 +261,7 @@
             trigger: 'axis'
           },
           legend: {
-            data: ['G01-G05', 'BENCH_RET']
+            data: data[1]
           },
           grid: {
             left: '3%',
@@ -280,18 +281,7 @@
           yAxis: {
             type: 'value'
           },
-          series: [
-            {
-              name: 'G01-G05',
-              data: data[1],
-              type: 'line'
-            },
-            {
-              name: 'BENCH_RET',
-              data: data[2],
-              type: 'line'
-            }
-          ]
+          series: data[2]
         }
       },
       setTurnoverOption(data){
@@ -443,8 +433,8 @@
       newModel(model){
         this.model = model;
       },
-      newFactor(keywords){
-        this.factor = keywords;
+      newChangeBin(changeBin){
+        this.changeBin = changeBin;
       },
       newDate(value2){
         this.date.startdate = value2[0]
@@ -484,7 +474,8 @@
           .post('/ic-analysis',{
             date:this.date,
             category: this.category,
-            factors:this.factors
+            factors:this.factors,
+            changeBin:this.changeBin
           })
           .then(res => {
             console.log(res.data);
@@ -502,7 +493,8 @@
           .post('/ic-decay',{
             date:this.date,
             category: this.category,
-            factors:this.factors
+            factors:this.factors,
+            changeBin:this.changeBin
           })
           .then(res => {
             console.log(res.data);
@@ -520,7 +512,8 @@
           .post('/ret-analysis',{
             date:this.date,
             category: this.category,
-            factors:this.factors
+            factors:this.factors,
+            changeBin:this.changeBin
           })
           .then(res => {
             console.log(res.data);
@@ -538,7 +531,8 @@
           .post('/turnover-analysis',{
             date:this.date,
             category: this.category,
-            factors:this.factors
+            factors:this.factors,
+            changeBin:this.changeBin
           })
           .then(res => {
             console.log(res.data);
@@ -556,7 +550,8 @@
           .post('/buy-decay',{
             date:this.date,
             category: this.category,
-            factors:this.factors
+            factors:this.factors,
+            changeBin:this.changeBin
           })
           .then(res => {
             console.log(res.data);
@@ -574,7 +569,8 @@
           .post('/industry-analysis',{
             date:this.date,
             category: this.category,
-            factors:this.factors
+            factors:this.factors,
+            changeBin:this.changeBin
           })
           .then(res => {
             console.log(res.data);

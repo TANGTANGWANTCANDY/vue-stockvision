@@ -28,6 +28,10 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
+
+    <div class="update-database">
+      <el-button type="text" style="color:#587482;" @click="updateDB" :loading="buttonstate" >更新数据库</el-button>
+    </div>
   </div>
 </template>
 
@@ -47,6 +51,11 @@ export default {
       'avatar'
     ])
   },
+  data() {
+    return {
+      buttonstate: false,
+    }
+  },
   methods: {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
@@ -54,6 +63,22 @@ export default {
     async logout() {
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+    },
+    updateDB() {
+      this.buttonstate = true
+      this.$axios
+        .get('/update-database')
+        .then(res => {
+          console.log(res.data);
+          alert(res.data);
+          this.buttonstate = false
+        })
+        .catch(err => {
+          alert('请求失败');
+          this.buttonstate = false
+        })
+
+
     }
   }
 }
@@ -82,6 +107,13 @@ export default {
 
   .breadcrumb-container {
     float: left;
+  }
+
+  .update-database{
+    float: right;
+    height: 100%;
+    line-height: 50px;
+    margin-right: 5%;
   }
 
   .right-menu {

@@ -43,7 +43,7 @@
     data () {
       return {
         tree: [],
-        industryDate: "20180102",
+        industryDate: "",
         industryButtonState: false,
         industryButtonText: "确认",
         formatUtil: this.$echarts.format,

@@ -2,13 +2,13 @@
   <div class="topbox">
     <el-row>
       <el-col :span="7">
-        <AnaType @getAnaModel="getAnaModel"></AnaType>
+        <IndexCodes @getIndex="getIndex"></IndexCodes>
       </el-col>
       <el-col :span="10">
         <DateStartToEnd @getDate="getDate"></DateStartToEnd>
       </el-col>
       <el-col :span="7">
-        <ChangeBinSelect @getChangeBin="getChangeBin"></ChangeBinSelect>
+        <StdLen @getStdLen="getStdLen"></StdLen>
       </el-col>
     </el-row>
     <el-row>
@@ -20,10 +20,9 @@
 </template>
 
 <script>
-  import FactorSelect from "@/components/SelectBox/FactorSelect"
+  import IndexCodes from "@/components/SelectBox/IndexCodes"
   import DateStartToEnd from "@/components/SelectBox/DateStartToEnd"
-  import AnaType from "@/components/SelectBox/AnaType"
-  import ChangeBinSelect from "@/components/SelectBox/ChangeBinSelect"
+  import StdLen from "@/components/SelectBox/StdLen"
 
   export default {
     name: 'TopBox',
@@ -35,26 +34,24 @@
       }
     },
     components: {
-      FactorSelect,
+      IndexCodes,
       DateStartToEnd,
-      AnaType,
-      ChangeBinSelect
+      StdLen
     },
     methods: {
-      getAnaModel(models) {
-        this.$emit('newModel', models);
-      },
-      getChangeBin(changeBin) {
-        this.$emit('newChangeBin', changeBin);
+      getIndex(indexValue) {
+        this.$emit('newIndex', indexValue);
       },
       getDate(value2) {
         this.$emit('newDate', value2);
       },
-
+      getStdLen(stdLen){
+        this.$emit('newStdLen', stdLen);
+      },
       buttonOn() {
         this.buttonstate = true;
         this.buttontext = "正在加载"
-        this.$emit('buttonOn', this.buttonstate);
+        this.$emit('volButtonOn', this.buttonstate);
       },
       buttonOff() {
         this.buttonstate = false;
