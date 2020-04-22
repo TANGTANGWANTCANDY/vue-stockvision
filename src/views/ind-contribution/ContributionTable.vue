@@ -51,7 +51,7 @@
 <script>
   import DateSelect from "./DateSelect";
   export default {
-    name: "ContributionTable",
+    name: "IndContribution",
     components: {
       DateSelect: DateSelect
     },
@@ -172,7 +172,9 @@
           this.total = this.rawData.length;
         } catch (err) {
           console.log(err);
-          alert("请求出错！");
+          if (err.message !== 'interrupt') {
+            alert('请求失败')
+          }
         }
         this.isLoading = false;
       },

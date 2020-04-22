@@ -39,7 +39,7 @@
   import ThemeSwitch from "@/components/ThemeSwitch/ThemeSwitch"
   import DateSelect from "@/components/SelectBox/DateSelect"
   export default {
-    name: 'testview',
+    name: 'Industry',
     data () {
       return {
         tree: [],
@@ -98,7 +98,10 @@
             this.indButtonOff();
           })
           .catch(err => {
-            alert('请求失败');
+            if (err.message !== 'interrupt') {
+              alert("请求失败")
+            }
+            console.log(err);
             this.indButtonOff();
           })
       },

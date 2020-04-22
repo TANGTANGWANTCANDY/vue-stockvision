@@ -132,7 +132,7 @@
   import ThemeSwitch from "@/components/ThemeSwitch/ThemeSwitch"
 
   export default {
-    name: "FactorSelect",
+    name: "CustomFactor",
     components: {
       Pane,
       StockSelect,
@@ -478,13 +478,16 @@
             changeBin:this.changeBin
           })
           .then(res => {
-            console.log(res.data);
+            console.log('res.data: ' + res.data);
             this.option = this.setIcOption(res.data)
             this.drawLine();
             this.$refs.topbox.buttonOff()
           })
           .catch(err => {
-            alert('请求失败');
+            if (err.message !== 'interrupt') {
+              alert('请求失败')
+            }
+            console.log(err);
             this.$refs.topbox.buttonOff()
           })
       },
@@ -503,7 +506,10 @@
             this.$refs.topbox.buttonOff()
           })
           .catch(err => {
-            alert('请求失败');
+            if (err.message !== 'interrupt') {
+              alert('请求失败')
+            }
+            console.log(err);
             this.$refs.topbox.buttonOff()
           })
       },
@@ -522,7 +528,10 @@
             this.$refs.topbox.buttonOff()
           })
           .catch(err => {
-            alert('请求失败');
+            if (err.message !== 'interrupt') {
+              alert('请求失败')
+            }
+            console.log(err);
             this.$refs.topbox.buttonOff()
           })
       },
@@ -535,13 +544,17 @@
             changeBin:this.changeBin
           })
           .then(res => {
-            console.log(res.data);
+            console.log(res);
+            console.log('res.data: ' + res.data);
             this.option = this.setTurnoverOption(res.data)
             this.drawLine();
             this.$refs.topbox.buttonOff()
           })
           .catch(err => {
-            alert('请求失败');
+            if (err.message !== 'interrupt') {
+              alert('请求失败')
+            }
+            console.log(err);
             this.$refs.topbox.buttonOff()
           })
       },
@@ -560,7 +573,10 @@
             this.$refs.topbox.buttonOff()
           })
           .catch(err => {
-            alert('请求失败');
+            if (err.message !== 'interrupt') {
+              alert('请求失败')
+            }
+            console.log(err);
             this.$refs.topbox.buttonOff()
           })
       },
@@ -579,7 +595,10 @@
             this.$refs.topbox.buttonOff()
           })
           .catch(err => {
-            alert('请求失败');
+            if (err.message !== 'interrupt') {
+              alert('请求失败')
+            }
+            console.log(err);
             this.$refs.topbox.buttonOff()
           })
       },
@@ -600,7 +619,10 @@
             this.vailbuttontext = "验证"
           })
           .catch(err => {
-            alert('请求失败');
+            if (err.message !== 'interrupt') {
+              alert('请求失败')
+            }
+            console.log(err);
             this.vailbuttonstate = false;
             this.vailbuttontext = "验证"
           })

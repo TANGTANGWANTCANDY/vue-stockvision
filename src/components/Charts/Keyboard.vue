@@ -73,7 +73,9 @@ export default {
       }).then((response) => {
         this.seriesData = response.data
       }).catch(function(error) { // 请求失败处理
-        alert('当前日期没有进行交易或输入格式错误（输入示例：20181228）！')
+        if (error.message !== 'interrupt') {
+          alert("当前日期没有进行交易或输入格式错误（输入示例：20181228）！")
+        }
         console.log(error)
       })
     },

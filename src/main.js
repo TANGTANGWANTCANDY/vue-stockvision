@@ -29,7 +29,7 @@ Vue.prototype.$echarts = echarts
 var axios = require('axios')
 axios.defaults.baseURL = 'http://localhost:8443/api'
 // 全局注册，之后可在其他组件中通过 this.$axios 发送数据
-Vue.prototype.$axios = axios
+// Vue.prototype.$axios = axios
 Vue.config.productionTip = false
 
 // 将table和分页组件注册到全局
@@ -55,6 +55,40 @@ Vue.use(ElementUI, { locale })
 // Vue.use(ElementUI)
 
 Vue.config.productionTip = false
+
+window.axiosCancel = []
+
+// 请求前拦截
+axios.interceptors.request.use(config => {
+  // 添加取消标记
+  config.cancelToken = new axios.CancelToken(cancel => {
+    window.axiosCancel.push({ cancel })
+  })
+  return config
+}, function(error) {
+  return Promise.reject(error)
+})
+
+// 请求后返回数据拦截
+axios.interceptors.response.use(res => {
+  return res
+}, function axiosRetryInterceptor(res) {
+  return Promise.reject(res)
+})
+
+Vue.prototype.$axios = axios
+// 将cancel,挂载到vue原型上
+Vue.prototype.cancel = function() {
+  // 获取缓存的 请求取消标识 数组，取消所有关联的请求
+  const cancelArr = window.axiosCancel
+  cancelArr.forEach((ele, index) => {
+    console.log(ele)
+    console.log(index)
+    // 在失败函数中返回这里自定义的错误信息
+    ele.cancel('interrupt')
+    delete window.axiosCancel[index]
+  })
+}
 
 new Vue({
   el: '#app',

@@ -71,7 +71,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'indContribution',
-        name: 'indContribution',
+        name: 'IndContribution',
         component: () => import('@/views/ind-contribution/ContributionTable'),
         meta: { requireAuth: true, title: '个股贡献度', icon: 'example' }
       }
@@ -83,7 +83,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'industry',
-        name: 'industry',
+        name: 'Industry',
         component: () => import('@/views/industry/index'),
         meta: { requireAuth: true, title: '行业监控', icon: 'component' }
       }
@@ -181,7 +181,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'customFactor',
-        name: 'customFactor',
+        name: 'CustomFactor',
         component: () => import('@/views/custom-factor/FactorSelect'),
         meta: { requireAuth: true, title: '因子分析与有效性验证', icon: 'search' }
       }
@@ -193,7 +193,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'tradingBoard',
-        name: 'tradingBoard',
+        name: 'TradingBoard',
         component: () => import('@/views/trading-board/index'),
         meta: { requireAuth: true, title: '涨停连板情况', icon: 'nested' }
       }
@@ -205,7 +205,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'volatility',
-        name: 'volatility',
+        name: 'Volatility',
         component: () => import('@/views/volatility/index'),
         meta: { requireAuth: true, title: '波动率', icon: 'chart' }
       }
@@ -313,5 +313,19 @@ export function resetRouter() {
   const newRouter = createRouter()
   router.matcher = newRouter.matcher // reset router
 }
+
+/* 路由拦截器 路由跳转前的操作 */
+router.beforeEach((to, from, next) => {
+  // 获取缓存的 请求取消标识 数组，取消所有关联的请求
+  const cancelArr = window.axiosCancel
+  cancelArr.forEach((ele, index) => {
+    console.log(ele)
+    console.log(index)
+    // 在失败函数中返回这里自定义的错误信息
+    ele.cancel('interrupt')
+    delete window.axiosCancel[index]
+  })
+  next()
+})
 
 export default router

@@ -13,7 +13,7 @@
   import DateStartToEnd from "@/components/SelectBox/DateStartToEnd"
 
   export default {
-    name: 'testview',
+    name: 'Volatility',
     data () {
       return {
         stdLen:0,
@@ -102,7 +102,10 @@
             this.$refs.voltopbox.buttonOff()
           })
           .catch(err => {
-            alert('请求失败');
+            if (err.message !== 'interrupt') {
+              alert("请求失败")
+            }
+            console.log(err);
             this.$refs.voltopbox.buttonOff()
           })
       }

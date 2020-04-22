@@ -20,7 +20,7 @@
 import Chart from '@/components/Charts/Keyboard'
 
 export default {
-  name: 'KeyboardChart',
+  name: 'Market',
   data() {
     return {
       currValue: '20181228',
