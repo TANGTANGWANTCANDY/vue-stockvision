@@ -27,8 +27,11 @@
           value: 'month',
           label: '月换仓'
         }],
-        changeBin: ''
+        changeBin: 'week'
       }
+    },
+    mounted() {
+      this.changeBinValue()
     },
     methods:{
       changeBinValue(){
