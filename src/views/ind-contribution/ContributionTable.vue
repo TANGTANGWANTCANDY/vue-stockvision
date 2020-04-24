@@ -1,25 +1,47 @@
 <template>
   <div>
     <div style="margin-left: 20px;margin-top: 10px;clear: both">
-      <div id="select_div" style="">
-        <div id="select_date" style="margin-right: 100px;float: left">
-          <DateSelect @dateSelectChange="dateChange"></DateSelect>
+      <div class="select-div" style="">
+        <div class="select-date" style="margin-right: 100px;float: left">
+          <el-date-picker
+            type="date"
+            placeholder="选择日期"
+            v-model="date"
+            value-format="yyyyMMdd"
+            format="yyyy-MM-dd"
+            style="width: 100%;"></el-date-picker>
         </div>
-        <div id="select_index">
-          <el-select v-model="curIndex" style="width: 100px" placeholder="请选择">
+        <div class="select-market">
+          <el-select v-model="curMarket" style="width: 100px" placeholder="请选择">
             <el-option
-              v-for="item in indexes"
+              v-for="item in markets"
               :key="item.value"
               :label="item.label"
               :value="item.value">
             </el-option>
           </el-select>
+          <el-button @click="getIndexes">确认</el-button>
+        </div>
+        <div class="select-index">
+          <el-select v-if="indexes.length>0" v-model="curIndex" style="width: 100px" placeholder="请选择">
+            <el-option
+              v-for="item in indexes"
+              :key="item.tsCode"
+              :label="item.name"
+              :title="item.fullName"
+              :value="item.tsCode">
+            </el-option>
+          </el-select>
         </div>
       </div>
       <p></p>
-      <el-button @click="refresh">刷新</el-button>
+      <div >
+        <el-button @click="refresh">刷新</el-button>
+        <el-button @click="orderByCon(1)">当日个股贡献度排序</el-button>
+        <el-button @click="orderByCon(5)">5日个股贡献度排序</el-button>
+      </div>
     </div>
-    <p></p>
+
     <div style="text-align: center;background-color: #587482;margin-left: 10px;margin-right: 10px">
       <v-table
         is-horizontal-resize
@@ -51,15 +73,18 @@
 <script>
   import DateSelect from "./DateSelect";
   export default {
-    name: "IndContribution",
+    name: "ContributionTable",
     components: {
       DateSelect: DateSelect
     },
     data() {
       return {
         date: "",
-        indexes: [{value: 'SSE', label: '上证'}, {value: 'SZSE', label: '深证'}],
-        curIndex: 'SSE',
+        indexes: [],
+        curIndex: '',
+        markets:[{value: 'MSCI', label: 'MSCI指数'}, {value: 'CSI', label: '中证指数'},{value:'SSE',label:'上交所指数'},
+          {value: 'SZSE', label: '深交所指数'},{value: 'CICC', label: '中金指数'},{value: 'SW', label: '申万指数'},{value: 'OTH', label: '其他指数'}],
+        curMarket:'SSE',
         rawData: [],
         pageIndex: 1,
         pageSize: 20,
@@ -130,6 +155,7 @@
         }
       }
     },
+    /*
     async created() {
       let myDate = new Date;
       let year = myDate.getFullYear();//获取当前年
@@ -144,39 +170,25 @@
       await this.getRawData(this.date);
       await this.getTableData();
     },
+    */
     methods: {
-      async getRawData(date) {
+      refresh() {
         //使用axios的get请求向后台获取用户信息数据
         this.isLoading = true;
-        try {
-          let ret = await this.$axios.get('/contribution', {
-              params: {
-                date: date,
-                index: this.curIndex
-              }
+        this.$axios.get('/contribution/'+this.curIndex+'/'+this.date)
+          .then(ret=>{
+            this.isLoading = false;
+            this.rawData = ret.data
+            //console.log(this.rawData)
+            this.total = this.rawData.length
+            this.getTableData()
+          })
+          .catch(err=>{
+            console.log(err);
+            if (err.message !== 'interrupt') {
+              alert('请求失败')
             }
-          );
-          let websites = ret.data;
-          let websit;
-          for (let i in websites) {
-            websit = {
-              order: websites[i].id,
-              symbol: websites[i].symbol,
-              name: websites[i].name,
-              pctChg: websites[i].pctChg,
-              contribution: websites[i].contribution,
-              contribution5: websites[i].contribution5,
-            };
-            this.rawData.push(websit);
-          }
-          this.total = this.rawData.length;
-        } catch (err) {
-          console.log(err);
-          if (err.message !== 'interrupt') {
-            alert('请求失败')
-          }
-        }
-        this.isLoading = false;
+          })
       },
       // 获取 table 组件每次操作后的参数（重新去请求数据）
       sortChange(params) {
@@ -231,11 +243,33 @@
         this.pageSize = pageSize;
         this.getTableData();
       },
-      async refresh() {
-        this.rawData = [];  //重置数据
-        await this.getRawData(this.date);
-        await this.getTableData();
+      getIndexes(){
+        this.$axios.get('/contribution/market/'+this.curMarket+'/'+this.date).then(
+          ret=>{
+            console.log(ret.data)
+            this.indexes=ret.data
+          }
+        ).catch(err => {
+            alert('请求失败');
+          })
       },
+      orderByCon(val){
+        if(val==1){
+          this.$axios.post('/contribution/sort1',{params:this.rawData})
+            .then(ret=>{
+                this.rawData=ret.data
+                this.getTableData()
+              })
+        }
+        else if(val==5){
+          this.$axios.post('/contribution/sort5',{params:this.rawData})
+            .then(ret=>{
+              this.rawData=ret.data
+              this.getTableData()
+            })
+        }
+      },
+      /*
       dateChange(obj) {
         this.date = this.dateObjToStr(obj);
       },
@@ -250,7 +284,8 @@
           day = "0" + day;
         }
         return year + "" + month + "" + day;
-      }
+      }*/
+
     },
   }
 </script>

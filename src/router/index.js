@@ -42,6 +42,19 @@ export const constantRoutes = [
     component: () => import('@/views/404'),
     hidden: true
   },
+  // 新用户注册
+  {
+    path: '/register',
+    name: 'Register',
+    component: () => import('@/views/login/Register'),
+    hidden: true
+  },
+  {
+    path: '/register-success',
+    name: 'register-success',
+    component: () => import('@/views/login/RegisterSuccess'),
+    hidden: true
+  },
   {
     path: '/',
     component: Layout,
@@ -49,7 +62,7 @@ export const constantRoutes = [
     children: [{
       path: 'index',
       name: 'Dashboard',
-      component: () => import('@/views/dashboard/index'),
+      component: () => import('@/views/dashboard/UserCenter'),
       meta: { requireAuth: true, title: '首页', icon: 'guide' }
     }]
   },
@@ -66,12 +79,12 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/indContribution',
+    path: '/ind',
     component: Layout,
     children: [
       {
-        path: 'indContribution',
-        name: 'IndContribution',
+        path: 'contribution',
+        name: 'indContribution',
         component: () => import('@/views/ind-contribution/ContributionTable'),
         meta: { requireAuth: true, title: '个股贡献度', icon: 'example' }
       }
@@ -83,7 +96,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'industry',
-        name: 'Industry',
+        name: 'industry',
         component: () => import('@/views/industry/index'),
         meta: { requireAuth: true, title: '行业监控', icon: 'component' }
       }
@@ -181,7 +194,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'customFactor',
-        name: 'CustomFactor',
+        name: 'customFactor',
         component: () => import('@/views/custom-factor/FactorSelect'),
         meta: { requireAuth: true, title: '因子分析与有效性验证', icon: 'search' }
       }
@@ -193,7 +206,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'tradingBoard',
-        name: 'TradingBoard',
+        name: 'tradingBoard',
         component: () => import('@/views/trading-board/index'),
         meta: { requireAuth: true, title: '涨停连板情况', icon: 'nested' }
       }
@@ -205,7 +218,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'volatility',
-        name: 'Volatility',
+        name: 'volatility',
         component: () => import('@/views/volatility/index'),
         meta: { requireAuth: true, title: '波动率', icon: 'chart' }
       }
@@ -289,7 +302,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'indDetails',
-        name: 'IndDetails',
+        name: 'indDetails',
         component: () => import('@/views/ind-details/index'),
         meta: { requireAuth: true, title: '个股详情', icon: 'example' }
       }

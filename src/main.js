@@ -1,6 +1,6 @@
 import Vue from 'vue'
 
-import 'normalize.css/normalize.css' // A modern alternative to CSS resets
+// import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
@@ -28,6 +28,7 @@ Vue.prototype.$echarts = echarts
 // 设置反向代理，前端请求默认发送到 http://localhost:8443/api
 var axios = require('axios')
 axios.defaults.baseURL = 'http://localhost:8443/api'
+axios.defaults.withCredentials = true // 支持在不同请求路径下保存session状态
 // 全局注册，之后可在其他组件中通过 this.$axios 发送数据
 // Vue.prototype.$axios = axios
 Vue.config.productionTip = false
