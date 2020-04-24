@@ -105,13 +105,32 @@
             this.indButtonOff();
           })
       },
-      drawLine(){
-        // 基于准备好的dom，初始化echarts实例
-        this.myChart = this.$echarts.init(document.getElementById('myChart'),'default')
-        // 绘制图表
-        this.myChart.setOption(this.option,true);
+      // 点击跳转函数
+      setParams(code){
+        var _this = this
+        _this.$router.push({
+          //跳转路由
+          path:"/indDetails/indDetails",
+          query:{
+            //参数对象
+            tsCode:code,
+          }
+        });
       },
-
+      drawLine(){
+        var _this = this
+        // 基于准备好的dom，初始化echarts实例
+        _this.myChart = this.$echarts.init(document.getElementById('myChart'),'default')
+        // 绘制图表
+        _this.myChart.setOption(this.option,true);
+        _this.myChart.on('click', function (param){
+          var name=param.name;
+          var index=name.lastIndexOf('\n');
+          var pushcode = name.substring(0, index)
+          console.log('获取'+pushcode+'信息');
+          _this.setParams(pushcode)
+        });
+      },
       getLevelOption() {
         return [
           {

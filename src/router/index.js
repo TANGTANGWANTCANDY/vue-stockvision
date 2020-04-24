@@ -283,6 +283,18 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/indDetails',
+    component: Layout,
+    children: [
+      {
+        path: 'indDetails',
+        name: 'IndDetails',
+        component: () => import('@/views/ind-details/index'),
+        meta: { requireAuth: true, title: '个股详情', icon: 'example' }
+      }
+    ]
+  },
   // {
   //   path: '/testview',
   //   component: Layout,
