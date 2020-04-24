@@ -61,8 +61,13 @@ export default {
       this.$store.dispatch('app/toggleSideBar')
     },
     async logout() {
-      await this.$store.dispatch('user/logout')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      this.$axios.get('/user/logout').then((response)=>{
+        if(response.status===200){
+          this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+        }
+      })
+      //await this.$store.dispatch('user/logout')
+      // this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     },
     updateDB() {
       this.buttonstate = true
@@ -77,8 +82,6 @@ export default {
           alert('请求失败');
           this.buttonstate = false
         })
-
-
     }
   }
 }

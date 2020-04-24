@@ -1,6 +1,6 @@
 import Vue from 'vue'
 
-import 'normalize.css/normalize.css' // A modern alternative to CSS resets
+// import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
@@ -51,11 +51,45 @@ if (process.env.NODE_ENV === 'production') {
 }
 */
 // set ElementUI lang to EN
-Vue.use(ElementUI, { locale })
+// Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明
-// Vue.use(ElementUI)
+Vue.use(ElementUI)
 
 Vue.config.productionTip = false
+
+window.axiosCancel = []
+
+// 请求前拦截
+axios.interceptors.request.use(config => {
+  // 添加取消标记
+  config.cancelToken = new axios.CancelToken(cancel => {
+    window.axiosCancel.push({ cancel })
+  })
+  return config
+}, function(error) {
+  return Promise.reject(error)
+})
+
+// 请求后返回数据拦截
+axios.interceptors.response.use(res => {
+  return res
+}, function axiosRetryInterceptor(res) {
+  return Promise.reject(res)
+})
+
+Vue.prototype.$axios = axios
+// 将cancel,挂载到vue原型上
+Vue.prototype.cancel = function() {
+  // 获取缓存的 请求取消标识 数组，取消所有关联的请求
+  const cancelArr = window.axiosCancel
+  cancelArr.forEach((ele, index) => {
+    console.log(ele)
+    console.log(index)
+    // 在失败函数中返回这里自定义的错误信息
+    ele.cancel('interrupt')
+    delete window.axiosCancel[index]
+  })
+}
 
 new Vue({
   el: '#app',

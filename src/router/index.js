@@ -42,6 +42,19 @@ export const constantRoutes = [
     component: () => import('@/views/404'),
     hidden: true
   },
+  // 新用户注册
+  {
+    path: '/register',
+    name: 'Register',
+    component: () => import('@/views/login/Register'),
+    hidden: true
+  },
+  {
+    path: '/register-success',
+    name: 'register-success',
+    component: () => import('@/views/login/RegisterSuccess'),
+    hidden: true
+  },
   {
     path: '/',
     component: Layout,
@@ -49,7 +62,7 @@ export const constantRoutes = [
     children: [{
       path: 'index',
       name: 'Dashboard',
-      component: () => import('@/views/dashboard/index'),
+      component: () => import('@/views/dashboard/UserCenter'),
       meta: { requireAuth: true, title: '首页', icon: 'guide' }
     }]
   },
@@ -66,11 +79,11 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/indContribution',
+    path: '/ind',
     component: Layout,
     children: [
       {
-        path: 'indContribution',
+        path: 'contribution',
         name: 'indContribution',
         component: () => import('@/views/ind-contribution/ContributionTable'),
         meta: { requireAuth: true, title: '个股贡献度', icon: 'example' }
@@ -283,6 +296,18 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/indDetails',
+    component: Layout,
+    children: [
+      {
+        path: 'indDetails',
+        name: 'indDetails',
+        component: () => import('@/views/ind-details/index'),
+        meta: { requireAuth: true, title: '个股详情', icon: 'example' }
+      }
+    ]
+  },
   // {
   //   path: '/testview',
   //   component: Layout,
@@ -313,5 +338,19 @@ export function resetRouter() {
   const newRouter = createRouter()
   router.matcher = newRouter.matcher // reset router
 }
+
+/* 路由拦截器 路由跳转前的操作 */
+router.beforeEach((to, from, next) => {
+  // 获取缓存的 请求取消标识 数组，取消所有关联的请求
+  const cancelArr = window.axiosCancel
+  cancelArr.forEach((ele, index) => {
+    console.log(ele)
+    console.log(index)
+    // 在失败函数中返回这里自定义的错误信息
+    ele.cancel('interrupt')
+    delete window.axiosCancel[index]
+  })
+  next()
+})
 
 export default router

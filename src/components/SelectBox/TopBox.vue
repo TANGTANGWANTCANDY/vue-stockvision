@@ -50,7 +50,6 @@
       getDate(value2) {
         this.$emit('newDate', value2);
       },
-
       buttonOn() {
         this.buttonstate = true;
         this.buttontext = "正在加载"
