@@ -42,6 +42,19 @@ export const constantRoutes = [
     component: () => import('@/views/404'),
     hidden: true
   },
+  //新用户注册
+  {
+    path:'/register',
+    name:'Register',
+    component: ()=>import('@/views/login/Register'),
+    hidden:true
+  },
+  {
+    path:'/register-success',
+    name:'register-success',
+    component:()=>import('@/views/login/RegisterSuccess'),
+    hidden:true
+  },
   {
     path: '/',
     component: Layout,
@@ -49,7 +62,7 @@ export const constantRoutes = [
     children: [{
       path: 'index',
       name: 'Dashboard',
-      component: () => import('@/views/dashboard/index'),
+      component: () => import('@/views/dashboard/UserCenter'),
       meta: { requireAuth: true, title: '首页', icon: 'guide' }
     }]
   },
@@ -66,11 +79,11 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/indContribution',
+    path: '/ind',
     component: Layout,
     children: [
       {
-        path: 'indContribution',
+        path: 'contribution',
         name: 'indContribution',
         component: () => import('@/views/ind-contribution/ContributionTable'),
         meta: { requireAuth: true, title: '个股贡献度', icon: 'example' }

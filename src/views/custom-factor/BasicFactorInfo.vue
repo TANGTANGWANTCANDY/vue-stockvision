@@ -1,0 +1,142 @@
+<template>
+
+</template>
+
+<script>
+  //每日指标
+  const dailyBasicFactorInfo=[
+    {
+      name:'全选',
+      value:'all',
+      description:'全选'
+    },
+    {
+      name:'换手率（%）',
+      value:'turnover_rate',
+      description:'换手率（%）'
+    },
+    {
+      name:'换手率（自由流通股）',
+      value:'turnover_rate_f',
+      description:'换手率（自由流通股）'
+    },
+    {
+      name:'量比',
+      value:'volume_ratio',
+      description:'量比'
+    },
+    {
+      name:'市盈率',
+      value:'pe',
+      description:'市盈率（总市值/净利润， 亏损的PE为空）'
+    },
+    {
+      name:'市盈率（TTM）',
+      value:'pe_ttm',
+      description:'市盈率（TTM，亏损的PE为空）'
+    },
+    {
+      name:'市净率',
+      value:'pb',
+      description:'市净率（总市值/净资产）'
+    },
+    {
+      name:'市销率',
+      value:'ps',
+      description:'市销率'
+    },
+    {
+      name:'市销率（TTM）',
+      value:'ps_ttm',
+      description:'市销率（TTM）'
+    },
+    {
+      name:'股息率（%）',
+      value:'dv_ratio',
+      description:'股息率（%）'
+    },
+    {
+      name:'股息率（TTM）',
+      value:'dv_ttm',
+      description:'股息率（TTM）'
+    },
+  ]
+  //日线行情
+  const dailyFactorInfo=[
+    {
+      name:'全选',
+      value:'all',
+      description:'全选'
+    },
+    {
+      value:'open',
+      name:'开盘价',
+      description:'开盘价'
+    },
+    {
+      value:'high',
+      name:'最高价',
+      description:'最高价'
+    },
+    {
+      value:'low',
+      name:'最低价',
+      description:'最低价'
+    },
+    {
+      value:'close',
+      name:'收盘价',
+      description:'收盘价'
+    },
+    /*
+    change是mysql保留字，而且是一旦使用无法不加引号无法识别那种，真的是烦
+    {
+      value:'`change`',
+      label:'涨跌额'
+    },
+    */
+    {
+      value:'pct_chg',
+      name:'涨跌幅（未复权）',
+      description:'涨跌幅'
+    },
+    {
+      value:'vol',
+      name:'成交量（手）',
+      description:'成交量'
+    },
+    {
+      value:'amount',
+      name:'成交额（千元）',
+      description:'成交额'
+    },
+  ]
+  //现金流量表
+  const cashflowFactorInfo=[
+    {
+      name:'全选',
+      value:'all',
+      description:'全选'
+    },
+    {
+      name:'经营活动现金流入小计',
+      value:'c_inf_fr_operate_a',
+      description:'经营活动现金流入小计'
+    },
+    {
+      name:'经营活动现金流出小计',
+      value:'st_cash_out_act',
+      description:'经营活动现金流出小计'
+    },
+  ]
+
+  export default {
+    name: "BasicFactorInfo",
+    dailyFactorInfo,
+    dailyBasicFactorInfo,
+    cashflowFactorInfo,
+  }
+</script>
+
+<style scoped>
+</style>
