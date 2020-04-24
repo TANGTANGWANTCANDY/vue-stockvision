@@ -136,6 +136,7 @@
               .then((response) => {
                 console.log(response);
                 if(response.data.success){
+                  self.$store.commit('login', self.loginForm)
                   self.$router.push('/index');
                   sessionStorage.setItem('username',self.loginForm.name);
                   sessionStorage.setItem('user',JSON.stringify(self.loginForm));

@@ -1,13 +1,18 @@
 <template>
   <div>
-    <div style="margin-top: 10px;margin-bottom: 20px">
+    <ThemeSwitch  @themeChange = "themeChange"></ThemeSwitch>
+    <div id="select-Stock" style="margin-bottom: 10px">
       <!--span style="margin-left:5px">股票池选择</span-->
-      <StockSelect style="margin-top: 10px" @stockSelectChange="getFactorSelect"></StockSelect>
+      <el-tabs v-model="stockTab">
+        <el-tab-pane label="股票池选择" name="stock1">
+          <StockSelect style="margin-top: 10px" @stockSelectChange="getFactorSelect"></StockSelect>
+        </el-tab-pane>
+      </el-tabs>
     </div>
     <!--span style="margin-left:5px">因子选择</span-->
     <div id="select-Factors" v-if="showFactorSelect" style="margin-top: 10px;margin-bottom: 20px">
       <el-tabs v-model="factorsTab">
-        <el-tab-pane label="基础" name="1">
+        <el-tab-pane label="基础因子" name="1">
           日线行情：
           <el-select class="select" v-model="factors.daily" multiple placeholder="请选择" >
             <el-option
@@ -31,7 +36,7 @@
             </el-option>
           </el-select>
         </el-tab-pane>
-        <el-tab-pane label="财务报表" name="2">
+        <el-tab-pane label="财务报表因子" name="2">
           现金流量表：
           <el-select class="select" v-model="factors.cashflow" multiple placeholder="请选择" >
             <el-option
@@ -65,20 +70,20 @@
       </el-tabs>
     </div>
 
-    <div id="ana-or-vali" v-cloak style="margin-top: 10px;margin-bottom: 20px">
+    <div id="ana-or-vali" v-cloak style="margin-bottom: 10px">
       <el-tabs v-model="twoTab">
         <el-tab-pane label="因子分析" name="analysisTab">
-          <TopBox @newModel="newModel"  @newDate="newDate" @buttonOn="onAnalyse" ref = "topbox"></TopBox>
+          <TopBox @newModel="newModel"  @newDate="newDate" @newChangeBin="newChangeBin" @buttonOn="onAnalyse" ref = "topbox"></TopBox>
           <div id="myChart" :style="{ width:'900px', height: '450px'}"></div>
           <el-button @click="backtest">回测测试</el-button>
         </el-tab-pane>
         <el-tab-pane label="因子有效性" name="validationTab">
           <el-row>
             <el-col :span="12">
-              <DateStartToEnd @getDate="getDate"></DateStartToEnd>
+              <DateStartToEnd @getDate="getValidDate"></DateStartToEnd>
             </el-col>
             <el-col :span="12">
-              <el-button type="primary" style="border-width:0;background-color:#587482;width:100px" @click="handleSearch">验证</el-button>
+              <el-button type="primary" :loading="vailbuttonstate" style="border-width:0;background-color:#587482;width:100px" @click="handleSearch">{{vailbuttontext}}</el-button>
             </el-col>
           </el-row>
           <chart height="100%" width="100%" :result="this.result" :addMark="this.addMark"></chart>
@@ -111,6 +116,7 @@
   import DateStartToEnd from "@/components/SelectBox/DateStartToEnd"
   import Chart from '@/components/Charts/multiFactorValidation'
   import BarTable from "./BarTable";
+  import ThemeSwitch from "@/components/ThemeSwitch/ThemeSwitch"
 
   export default {
     name: "FactorSelect",
@@ -122,13 +128,15 @@
       TopBox,
       DateStartToEnd,
       Chart,
+      ThemeSwitch,
     },
     data() {
       return {
         model:"",
+        changeBin:"",
         date:{
-          startdate:"",
-          enddate:"",
+          startdate: "",
+          enddate: "",
         },
         option: {},
         option1: {},
@@ -138,7 +146,10 @@
         values: [],
         result: [],
         addMark: false,
+        vailbuttonstate: false,
+        vailbuttontext: "验证",
 
+        stockTab: "stock1",
         factorsTab: "1",
         twoTab: "analysisTab",
         stockPool:[],
@@ -271,7 +282,7 @@
             trigger: 'axis'
           },
           legend: {
-            data: ['G01-G05', 'BENCH_RET']
+            data: data[1]
           },
           grid: {
             left: '3%',
@@ -291,18 +302,7 @@
           yAxis: {
             type: 'value'
           },
-          series: [
-            {
-              name: 'G01-G05',
-              data: data[1],
-              type: 'line'
-            },
-            {
-              name: 'BENCH_RET',
-              data: data[2],
-              type: 'line'
-            }
-          ]
+          series: data[2]
         }
       },
       setTurnoverOption(data){
@@ -366,7 +366,7 @@
           yAxis: {
             type: 'value'
           },
-          series:data[2]
+          series: data[2]
         }
       },
       setBuyDecayOption(data){
@@ -489,14 +489,14 @@
       newModel(model){
         this.model = model;
       },
-      newFactor(keywords){
-        this.factor = keywords;
+      newChangeBin(changeBin){
+        this.changeBin = changeBin;
       },
       newDate(value2){
         this.date.startdate = value2[0]
         this.date.enddate = value2[1];
       },
-      getDate(value2) {
+      getValidDate(value2) {
         this.date.startdate = value2[0]
         this.date.enddate = value2[1];
       },
@@ -527,50 +527,70 @@
       },
       icAnalyse(){
         this.$axios
-          .get('/ic-analysis',{
+          .post('/ic-analysis',{
             date:this.date,
-            category: this.category,
-            factors:this.factors
+            pool: this.stockPool,
+            factors:this.categories,
+            basicFactors:this.factors,
+            changeBin:this.changeBin
           })
           .then(res => {
-            this.tree = res.data; //把取item的数据赋给 tree
-            console.log(res.data);
+            console.log('res.data: ' + res.data);
             this.option = this.setIcOption(res.data)
             this.drawLine();
             this.$refs.topbox.buttonOff()
           })
           .catch(err => {
-            alert('请求失败');
+            if (err.message !== 'interrupt') {
+              alert('请求失败')
+            }
+            console.log(err);
             this.$refs.topbox.buttonOff()
           })
       },
       icDecay(){
         this.$axios
-          .get('/ic-decay/'+this.factor+"/"+this.startdate+"/"+this.enddate)
+          .post('/ic-decay',{
+            date:this.date,
+            pool: this.stockPool,
+            factors:this.categories,
+            basicFactors:this.factors,
+            changeBin:this.changeBin
+          })
           .then(res => {
-            this.tree = res.data; //把取item的数据赋给 tree
             console.log(res.data);
             this.option = this.setIcDecayOption(res.data)
             this.drawLine();
             this.$refs.topbox.buttonOff()
           })
           .catch(err => {
-            alert('请求失败');
+            if (err.message !== 'interrupt') {
+              alert('请求失败')
+            }
+            console.log(err);
             this.$refs.topbox.buttonOff()
           })
       },
       retAnalyse(){
         this.$axios
-          .get('/ret-analysis/'+this.factor+"/"+this.startdate+"/"+this.enddate)
+          .post('/ret-analysis',{
+            date:this.date,
+            pool: this.stockPool,
+            factors:this.categories,
+            basicFactors:this.factors,
+            changeBin:this.changeBin
+          })
           .then(res => {
-            this.tree = res.data; //把取item的数据赋给 tree
             console.log(res.data);
             this.option = this.setRetOption(res.data)
             this.drawLine();
             this.$refs.topbox.buttonOff()
           })
           .catch(err => {
-            alert('请求失败');
+            if (err.message !== 'interrupt') {
+              alert('请求失败')
+            }
+            console.log(err);
             this.$refs.topbox.buttonOff()
           })
       },
@@ -578,52 +598,75 @@
         this.$axios
           .post('/turnover-analysis',{
             date:this.date,
-            category: this.category,
-            factors:this.factors
+            pool: this.stockPool,
+            factors:this.categories,
+            basicFactors:this.factors,
+            changeBin:this.changeBin
           })
           .then(res => {
-            this.tree = res.data; //把取item的数据赋给 tree
-            console.log(res.data);
+            console.log(res);
+            console.log('res.data: ' + res.data);
             this.option = this.setTurnoverOption(res.data)
             this.drawLine();
             this.$refs.topbox.buttonOff()
           })
           .catch(err => {
-            alert('请求失败');
+            if (err.message !== 'interrupt') {
+              alert('请求失败')
+            }
+            console.log(err);
             this.$refs.topbox.buttonOff()
           })
       },
       buyDecay(){
         this.$axios
-          .get('/buy-decay/'+this.factor+"/"+this.startdate+"/"+this.enddate)
+          .post('/buy-decay',{
+            date:this.date,
+            pool: this.stockPool,
+            factors:this.categories,
+            basicFactors:this.factors,
+            changeBin:this.changeBin
+          })
           .then(res => {
-            this.tree = res.data; //把取item的数据赋给 tree
             console.log(res.data);
             this.option = this.setBuyDecayOption(res.data)
             this.drawLine();
             this.$refs.topbox.buttonOff()
           })
           .catch(err => {
-            alert('请求失败');
+            if (err.message !== 'interrupt') {
+              alert('请求失败')
+            }
+            console.log(err);
             this.$refs.topbox.buttonOff()
           })
       },
       industryAnalyse(){
         this.$axios
-          .get('/industry-analysis/'+this.factor+"/"+this.startdate+"/"+this.enddate)
+          .post('/industry-analysis',{
+            date:this.date,
+            pool: this.stockPool,
+            factors:this.categories,
+            basicFactors:this.factors,
+            changeBin:this.changeBin
+          })
           .then(res => {
-            this.tree = res.data; //把取item的数据赋给 tree
             console.log(res.data);
             this.option = this.setIndustryOption0(res.data)
             this.drawLine();
             this.$refs.topbox.buttonOff()
           })
           .catch(err => {
-            alert('请求失败');
+            if (err.message !== 'interrupt') {
+              alert('请求失败')
+            }
+            console.log(err);
             this.$refs.topbox.buttonOff()
           })
       },
       handleSearch() {
+        this.vailbuttonstate = true;
+        this.vailbuttontext = "正在加载"
         this.$axios
           .post('/multiFactorValidation',{
             date:this.date,
@@ -634,10 +677,22 @@
             this.result = res.data
             this.addMark = !this.addMark
             console.log(this.result)
+            this.vailbuttonstate = false;
+            this.vailbuttontext = "验证"
           })
           .catch(err => {
-            alert('请求失败');
+            if (err.message !== 'interrupt') {
+              alert('请求失败')
+            }
+            console.log(err);
+            this.vailbuttonstate = false;
+            this.vailbuttontext = "验证"
           })
+      },
+      themeChange(theme) {
+        this.myChart.dispose();//TODO: 释放图表，销毁对象并设置为null(多次操作可能会导致内存溢出)
+        this.myChart = this.$echarts.init(document.getElementById('myChart'),theme)
+        this.myChart.setOption(this.option,true);
       },
       backtest(){
         console.log(this.stockPool)

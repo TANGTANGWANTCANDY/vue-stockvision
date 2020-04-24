@@ -42,18 +42,18 @@ export const constantRoutes = [
     component: () => import('@/views/404'),
     hidden: true
   },
-  //新用户注册
+  // 新用户注册
   {
-    path:'/register',
-    name:'Register',
-    component: ()=>import('@/views/login/Register'),
-    hidden:true
+    path: '/register',
+    name: 'Register',
+    component: () => import('@/views/login/Register'),
+    hidden: true
   },
   {
-    path:'/register-success',
-    name:'register-success',
-    component:()=>import('@/views/login/RegisterSuccess'),
-    hidden:true
+    path: '/register-success',
+    name: 'register-success',
+    component: () => import('@/views/login/RegisterSuccess'),
+    hidden: true
   },
   {
     path: '/',
@@ -102,6 +102,7 @@ export const constantRoutes = [
       }
     ]
   },
+  /*
   {
     path: '/factorAnalysis',
     component: Layout,
@@ -114,7 +115,6 @@ export const constantRoutes = [
       }
     ]
   },
-  /*
   {
     path: '/factorAnalysis',
     component: Layout,
@@ -166,7 +166,6 @@ export const constantRoutes = [
       }
     ]
   },
-  */
   {
     path: '/factorValidation',
     component: Layout,
@@ -188,6 +187,7 @@ export const constantRoutes = [
       }
     ]
   },
+  */
   {
     path: '/customFactor',
     component: Layout,
@@ -196,7 +196,7 @@ export const constantRoutes = [
         path: 'customFactor',
         name: 'customFactor',
         component: () => import('@/views/custom-factor/FactorSelect'),
-        meta: { requireAuth: true, title: '自定义因子组合', icon: 'search' }
+        meta: { requireAuth: true, title: '因子分析与有效性验证', icon: 'search' }
       }
     ]
   },
@@ -297,17 +297,29 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/testview',
+    path: '/indDetails',
     component: Layout,
     children: [
       {
-        path: 'testview',
-        name: 'Testview',
-        component: () => import('@/views/test/index'),
-        meta: { requireAuth: true, title: '测试数据传递', icon: 'drag' }
+        path: 'indDetails',
+        name: 'indDetails',
+        component: () => import('@/views/ind-details/index'),
+        meta: { requireAuth: true, title: '个股详情', icon: 'example' }
       }
     ]
   },
+  // {
+  //   path: '/testview',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'testview',
+  //       name: 'Testview',
+  //       component: () => import('@/views/test/index'),
+  //       meta: { requireAuth: true, title: '测试数据传递', icon: 'drag' }
+  //     }
+  //   ]
+  // },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
@@ -326,5 +338,19 @@ export function resetRouter() {
   const newRouter = createRouter()
   router.matcher = newRouter.matcher // reset router
 }
+
+/* 路由拦截器 路由跳转前的操作 */
+router.beforeEach((to, from, next) => {
+  // 获取缓存的 请求取消标识 数组，取消所有关联的请求
+  const cancelArr = window.axiosCancel
+  cancelArr.forEach((ele, index) => {
+    console.log(ele)
+    console.log(index)
+    // 在失败函数中返回这里自定义的错误信息
+    ele.cancel('interrupt')
+    delete window.axiosCancel[index]
+  })
+  next()
+})
 
 export default router

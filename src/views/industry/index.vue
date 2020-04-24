@@ -2,6 +2,15 @@
   <div class="app-container">
 
     <ThemeSwitch  @themeChange = "themeChange"></ThemeSwitch>
+    <el-row>
+      <el-col :span="12">
+        <DateSelect @getIndustryDate="getIndustryDate"></DateSelect>
+      </el-col>
+      <el-col :span="12">
+        <el-button type="primary" :loading="industryButtonState" style="border-width:0;background-color:#587482;width:100px" @click="indButton">{{industryButtonText}}</el-button>
+      </el-col>
+    </el-row>
+    <p>{{option.data}}</p>
 
     <!--大盘云图开始-->
     <div id="scgl_s1">
@@ -28,43 +37,99 @@
 
 <script>
   import ThemeSwitch from "@/components/ThemeSwitch/ThemeSwitch"
+  import DateSelect from "@/components/SelectBox/DateSelect"
   export default {
-    name: 'testview',
+    name: 'Industry',
     data () {
       return {
         tree: [],
+        industryDate: "",
+        industryButtonState: false,
+        industryButtonText: "确认",
         formatUtil: this.$echarts.format,
         option : {}
       }
     },
     components:{
       ThemeSwitch,
+      DateSelect,
     },
-    mounted(){
-      this.$axios
-        .get('/td/20180102/list')
-        .then(res => {
-          console.log(res.data);
-          this.option = this.setOption(res.data)
-          this.drawLine();
-        })
-        .catch(err => {
-          alert('请求失败');
-        })
-    },
+    // mounted(){
+    //   this.$axios
+    //     .get('/td/20180102/list')
+    //     .then(res => {
+    //       console.log(res.data);
+    //       this.option = this.setOption(res.data)
+    //       this.drawLine();
+    //     })
+    //     .catch(err => {
+    //       alert('请求失败');
+    //     })
+    // },
 
-      methods: {
-        themeChange(theme) {
+    methods: {
+      themeChange(theme) {
           this.myChart.dispose();//TODO: 释放图表，销毁对象并设置为null(多次操作可能会导致内存溢出)
           this.myChart = this.$echarts.init(document.getElementById('myChart'),theme)
           this.myChart.setOption(this.option,true);
         },
 
+      getIndustryDate(value1){
+        this.industryDate = value1
+      },
+      indButtonOn(){
+        this.industryButtonState = true;
+        this.industryButtonText = "正在加载";
+      },
+      indButtonOff(){
+        this.industryButtonState = false;
+        this.industryButtonText = "确认";
+      },
+      indButton(){
+        this.indButtonOn();
+        this.$axios
+          .post('/industrycloud',{
+            date:this.industryDate
+          })
+          .then(res => {
+            console.log(res.data);
+            this.option = this.setOption(res.data)
+            this.drawLine();
+            this.indButtonOff();
+          })
+          .catch(err => {
+            if (err.message !== 'interrupt') {
+              alert("请求失败")
+            }
+            console.log(err);
+            this.indButtonOff();
+          })
+      },
+      // 点击跳转函数
+      setParams(code){
+        var _this = this
+        _this.$router.push({
+          //跳转路由
+          path:"/indDetails/indDetails",
+          query:{
+            //参数对象
+            tsCode:code,
+          }
+        });
+      },
       drawLine(){
+        var _this = this
         // 基于准备好的dom，初始化echarts实例
-        this.myChart = this.$echarts.init(document.getElementById('myChart'),'default')
+        _this.myChart = this.$echarts.init(document.getElementById('myChart'),'default')
         // 绘制图表
-        this.myChart.setOption(this.option,true);
+        _this.myChart.setOption(this.option,true);
+        _this.myChart.on('click', function (param){
+          var name=param.name;
+          var index=name.lastIndexOf('\n');
+          var pushcode = name.substring(0, index)
+          console.log('获取'+pushcode+'信息');
+          _this.setParams(pushcode)
+        });
       },
       getLevelOption() {
         return [
@@ -79,19 +144,6 @@
             }
           },
           {
-            color: [
-              '#085421',
-              '#961010',
-              '#6d1414',
-              '#be0808',
-              '#e41414',
-              '#0e6f2f',
-              '#424453',
-              '#1aa448',
-              '#00d641'
-              ],
-            colorMappingBy: 'id',
-
             itemStyle: {
               borderColor: '#000',
               borderWidth: 1,
@@ -113,7 +165,7 @@
           }
         ];
       },
-        setOption(data){
+      setOption(data){
           return{
             series: [{
               type: 'treemap',
@@ -135,7 +187,7 @@
             }]
           }
         },
-        getData3(){
+      getData3(){
           let tree = [
             { name: "test1", value: 9,
               children: [

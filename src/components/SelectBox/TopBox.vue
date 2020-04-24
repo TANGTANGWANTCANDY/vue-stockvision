@@ -7,6 +7,11 @@
       <el-col :span="10">
         <DateStartToEnd @getDate="getDate"></DateStartToEnd>
       </el-col>
+      <el-col :span="7">
+        <ChangeBinSelect @getChangeBin="getChangeBin"></ChangeBinSelect>
+      </el-col>
+    </el-row>
+    <el-row>
       <el-col :span="4">
         <el-button type="primary" :loading="buttonstate" style="border-width:0;background-color:#587482;width:100px" @click="buttonOn">{{buttontext}}</el-button>
       </el-col>
@@ -18,6 +23,7 @@
   import FactorSelect from "@/components/SelectBox/FactorSelect"
   import DateStartToEnd from "@/components/SelectBox/DateStartToEnd"
   import AnaType from "@/components/SelectBox/AnaType"
+  import ChangeBinSelect from "@/components/SelectBox/ChangeBinSelect"
 
   export default {
     name: 'TopBox',
@@ -31,19 +37,19 @@
     components: {
       FactorSelect,
       DateStartToEnd,
-      AnaType
+      AnaType,
+      ChangeBinSelect
     },
     methods: {
       getAnaModel(models) {
         this.$emit('newModel', models);
       },
-      getFactor(keywords) {
-        this.$emit('newFactor', keywords);
+      getChangeBin(changeBin) {
+        this.$emit('newChangeBin', changeBin);
       },
       getDate(value2) {
         this.$emit('newDate', value2);
       },
-
       buttonOn() {
         this.buttonstate = true;
         this.buttontext = "正在加载"

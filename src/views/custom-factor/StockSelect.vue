@@ -1,8 +1,8 @@
 <template>
   <div id="main_div">
-    <div id="select-stock-pool" style="margin-bottom: 10px">
+    <div id="select-stock-pool">
       <span style="margin-left:5px">交易所：</span>
-      <el-select v-model="exchange" multiple @change="selectExchangeAll" placeholder="请选择" style="width:15%">
+      <el-select v-model="exchange" multiple collapse-tags @change="selectExchangeAll" placeholder="请选择" style="width:17%">
         <el-option
           v-for="item in exchanges"
           :key="item.value"
@@ -14,7 +14,7 @@
       </el-select>
 
       <span style="margin-left:5px">市场类型：</span>
-      <el-select v-model="market" multiple @change="selectMarketAll" placeholder="请选择" style="width:15%">
+      <el-select v-model="market" multiple collapse-tags @change="selectMarketAll" placeholder="请选择" style="width:17%">
         <el-option
           v-for="item in markets"
           :key="item.value"
@@ -25,7 +25,7 @@
       </el-select>
 
       <span style="margin-left:5px">行业：</span>
-      <el-select v-model="industry" multiple @change="selectIndustryAll" placeholder="请选择" style="width:15%">
+      <el-select v-model="industry" multiple collapse-tags @change="selectIndustryAll" placeholder="请选择" style="width:17%">
         <el-option
           v-for="item in industries"
           :key="item.value"
@@ -36,7 +36,7 @@
       </el-select>
 
       <span style="margin-left:5px">指数成分：</span>
-      <el-select v-model="selectedIndex" multiple @change="selectIndexAll" placeholder="请选择" style="width:15%">
+      <el-select v-model="selectedIndex" multiple collapse-tags @change="selectIndexAll" placeholder="请选择" style="width:17%">
         <el-option
           v-for="item in indexes"
           :key="item.value"
@@ -151,6 +151,9 @@
       },
       submit() {
         console.log(this.exchange)
+        console.log(this.industry)
+        console.log(this.market)
+        console.log(this.selectedIndex)
         this.$axios.post('/factor/stock-select', {
             params:{
               exchange:this.exchange,
@@ -161,7 +164,6 @@
           }
         ).then(ret => {
           console.log(ret);
-          ret.data.length
           if(ret.data.length>0){
             this.$emit('stockSelectChange',ret.data)
             //alert("成功选择股票池！");
