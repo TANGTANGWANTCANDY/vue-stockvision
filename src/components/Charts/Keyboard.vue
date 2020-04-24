@@ -6,6 +6,8 @@
 import echarts from 'echarts'
 import resize from './mixins/resize'
 
+import axios from 'axios'
+
 export default {
   mixins: [resize],
   props: {
@@ -24,11 +26,16 @@ export default {
     height: {
       type: String,
       default: '200px'
+    },
+    tradeDate: {
+      type: String,
+      default: '20181228'
     }
   },
   data() {
     return {
-      chart: null
+      chart: null,
+      seriesData: []
     }
   },
   mounted() {
@@ -41,113 +48,142 @@ export default {
     this.chart.dispose()
     this.chart = null
   },
+  watch: {
+    seriesData(val, oldVal) {
+      // console.log('seriesData:' + val)
+      this.setOptions(val)
+    },
+    tradeDate(val, oldVal) {
+      // console.log('tradeDate:' + val)
+      this.getChangeDistribution()
+    }
+  },
   methods: {
     initChart() {
       this.chart = echarts.init(document.getElementById(this.id))
-
-      const xAxisData = []
-      const data = []
-      const data2 = []
-      for (let i = 0; i < 50; i++) {
-        xAxisData.push(i)
-        data.push((Math.sin(i / 5) * (i / 5 - 10) + i / 6) * 5)
-        data2.push((Math.sin(i / 5) * (i / 5 + 10) + i / 6) * 3)
-      }
+      this.getChangeDistribution()
+      this.setOptions(this.seriesData)
+    },
+    getChangeDistribution() {
+      // console.log(this.tradeDate)
+      axios.get('/market/pctChgDistribution', {
+        params: {
+          tradeDate: this.tradeDate
+        }
+      }).then((response) => {
+        this.seriesData = response.data
+      }).catch(function(error) { // 请求失败处理
+        alert('当前日期没有进行交易或输入格式错误（输入示例：20181228）！')
+        console.log(error)
+      })
+    },
+    setOptions(seriesData) {
       this.chart.setOption({
-        backgroundColor: '#08263a',
-        grid: {
-          left: '5%',
-          right: '5%'
-        },
-        xAxis: [{
-          show: false,
-          data: xAxisData
-        }, {
-          show: false,
-          data: xAxisData
-        }],
-        visualMap: {
-          show: false,
-          min: 0,
-          max: 50,
-          dimension: 0,
-          inRange: {
-            color: ['#4a657a', '#308e92', '#b1cfa5', '#f5d69f', '#f5898b', '#ef5055']
+        backgroundColor: '#344b58',
+        title: {
+          text: '',
+          x: '20',
+          top: '20',
+          textStyle: {
+            color: '#fff',
+            fontSize: '22'
+          },
+          subtextStyle: {
+            color: '#90979c',
+            fontSize: '16'
           }
         },
-        yAxis: {
-          axisLine: {
-            show: false
-          },
-          axisLabel: {
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
             textStyle: {
-              color: '#4a657a'
+              color: '#fff'
+            }
+          }
+        },
+        grid: {
+          left: '5%',
+          right: '5%',
+          borderWidth: 0,
+          top: 150,
+          bottom: 95,
+          textStyle: {
+            color: '#fff'
+          }
+        },
+        legend: {
+          x: '5%',
+          top: '10%',
+          textStyle: {
+            color: '#90979c'
+          },
+          data: ['涨跌分布']
+        },
+        calculable: true,
+        xAxis: [{
+          type: 'category',
+          axisLine: {
+            lineStyle: {
+              color: '#90979c'
             }
           },
           splitLine: {
-            show: true,
+            show: false
+          },
+          axisTick: {
+            show: false
+          },
+          splitArea: {
+            show: false
+          },
+          axisLabel: {
+            interval: 0
+          },
+          data: ['<=-7', '-7~-5', '-5~-3', '-3~0', '0', '0~3', '3~5', '5~7', '>=7']
+        }],
+        yAxis: [{
+          type: 'value',
+          splitLine: {
+            show: false
+          },
+          axisLine: {
             lineStyle: {
-              color: '#08263f'
+              color: '#90979c'
             }
           },
           axisTick: {
             show: false
-          }
-        },
-        series: [{
-          name: 'back',
-          type: 'bar',
-          data: data2,
-          z: 1,
-          itemStyle: {
-            normal: {
-              opacity: 0.4,
-              barBorderRadius: 5,
-              shadowBlur: 3,
-              shadowColor: '#111'
-            }
-          }
-        }, {
-          name: 'Simulate Shadow',
-          type: 'line',
-          data,
-          z: 2,
-          showSymbol: false,
-          animationDelay: 0,
-          animationEasing: 'linear',
-          animationDuration: 1200,
-          lineStyle: {
-            normal: {
-              color: 'transparent'
-            }
           },
-          areaStyle: {
-            normal: {
-              color: '#08263a',
-              shadowBlur: 50,
-              shadowColor: '#000'
-            }
-          }
-        }, {
-          name: 'front',
-          type: 'bar',
-          data,
-          xAxisIndex: 1,
-          z: 3,
-          itemStyle: {
-            normal: {
-              barBorderRadius: 5
-            }
+          axisLabel: {
+            interval: 0
+          },
+          splitArea: {
+            show: false
           }
         }],
-        animationEasing: 'elasticOut',
-        animationEasingUpdate: 'elasticOut',
-        animationDelay(idx) {
-          return idx * 20
-        },
-        animationDelayUpdate(idx) {
-          return idx * 20
-        }
+        series: [{
+          name: '涨跌分布',
+          type: 'bar',
+          stack: 'total',
+          barMaxWidth: 35,
+          barGap: '10%',
+          itemStyle: {
+            normal: {
+              color: 'rgba(255,144,128,1)',
+              label: {
+                show: true,
+                textStyle: {
+                  color: '#fff'
+                },
+                position: 'insideTop',
+                formatter(p) {
+                  return p.value > 0 ? p.value : ''
+                }
+              }
+            }
+          },
+          data: seriesData
+        }]
       })
     }
   }

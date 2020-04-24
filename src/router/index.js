@@ -42,6 +42,19 @@ export const constantRoutes = [
     component: () => import('@/views/404'),
     hidden: true
   },
+  //新用户注册
+  {
+    path:'/register',
+    name:'Register',
+    component: ()=>import('@/views/login/Register'),
+    hidden:true
+  },
+  {
+    path:'/register-success',
+    name:'register-success',
+    component:()=>import('@/views/login/RegisterSuccess'),
+    hidden:true
+  },
   {
     path: '/',
     component: Layout,
@@ -49,54 +62,31 @@ export const constantRoutes = [
     children: [{
       path: 'index',
       name: 'Dashboard',
-      component: () => import('@/views/dashboard/index'),
+      component: () => import('@/views/dashboard/UserCenter'),
       meta: { requireAuth: true, title: '首页', icon: 'guide' }
     }]
   },
-  /*
-  {
-    path: '/search',
-    component: Layout,
-    children: [
-      {
-        path: 'search',
-        name: 'Search',
-        component: () => import('@/views/search'),
-        meta: { requireAuth: true, title: '增删改查', icon: 'component' }
-      }
-    ]
-  },
-  */
   {
     path: '/market',
     component: Layout,
-    redirect: '/market/index',
-    name: 'Market',
-    meta: { requireAuth: true, title: '大盘监控', icon: 'dashboard' },
     children: [
       {
-        path: 'index',
-        name: 'Index',
-        component: () => import('@/views/market/index'),
-        meta: { requireAuth: true, title: '介绍', icon: 'dashboard' }
-      },
-      {
-        path: 'line',
-        name: 'Line',
-        component: () => import('@/views/charts/line'),
-        meta: { requireAuth: true, title: '折线图', icon: 'table' }
-      },
-      {
-        path: 'keyboard',
-        name: 'Keyboard',
+        path: 'market',
+        name: 'Market',
         component: () => import('@/views/charts/keyboard'),
-        meta: { requireAuth: true, title: '柱状图', icon: 'table' }
-      },
+        meta: { requireAuth: true, title: '大盘监控', icon: 'dashboard' }
+      }
+    ]
+  },
+  {
+    path: '/ind',
+    component: Layout,
+    children: [
       {
-        path: 'mix',
-        name: 'Mix',
-        component: () => import('@/views/charts/mix-chart'),
-        meta: { requireAuth: true, title: '混合图', icon: 'table' }
+        path: 'contribution',
+        name: 'indContribution',
+        component: () => import('@/views/ind-contribution/ContributionTable'),
+        meta: { requireAuth: true, title: '个股贡献度', icon: 'example' }
       }
     ]
   },
@@ -113,14 +103,100 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/indContribution',
+    path: '/factorAnalysis',
     component: Layout,
     children: [
       {
-        path: 'indContribution',
-        name: 'indContribution',
-        component: () => import('@/views/ind-contribution/ContributionTable'),
-        meta: { requireAuth: true, title: '个股贡献度', icon: 'example' }
+        path: 'factorAnalysis',
+        name: 'FactorAnalysis',
+        component: () => import('@/views/factor-analysis/index'),
+        meta: { requireAuth: true, title: '因子分析', icon: 'component' }
+      }
+    ]
+  },
+  /*
+  {
+    path: '/factorAnalysis',
+    component: Layout,
+    redirect: '/factorAnalysis/index',
+    name: 'FactorAnalysis',
+    meta: { requireAuth: true, title: '因子分析', icon: 'component' },
+    children: [
+      {
+        path: 'index',
+        name: 'Index',
+        component: () => import('@/views/factor-analysis/index'),
+        meta: { requireAuth: true, title: '首页', icon: 'table' }
+      },
+      {
+        path: 'ic',
+        name: 'IC',
+        component: () => import('@/views/factor-analysis/ic'),
+        meta: { requireAuth: true, title: 'IC序列分析', icon: 'table' }
+      },
+      {
+        path: 'icdecay',
+        name: 'ICDECAY',
+        component: () => import('@/views/factor-analysis/icdecay'),
+        meta: { requireAuth: true, title: 'IC衰减', icon: 'table' }
+      },
+      {
+        path: 'ret',
+        name: 'Ret',
+        component: () => import('@/views/factor-analysis/ret'),
+        meta: { requireAuth: true, title: '收益率分析', icon: 'table' }
+      },
+      {
+        path: 'turnover',
+        name: 'Turnover',
+        component: () => import('@/views/factor-analysis/turnover'),
+        meta: { requireAuth: true, title: '换手率分析', icon: 'table' }
+      },
+      {
+        path: 'buydecay',
+        name: 'Buydecay',
+        component: () => import('@/views/factor-analysis/buydecay'),
+        meta: { requireAuth: true, title: '买入信号衰减与反转', icon: 'table' }
+      },
+      {
+        path: 'industryana',
+        name: 'Industryana',
+        component: () => import('@/views/factor-analysis/industry'),
+        meta: { requireAuth: true, title: '版块分析', icon: 'table' }
+      }
+    ]
+  },
+  */
+  {
+    path: '/factorValidation',
+    component: Layout,
+    redirect: '/factor/index',
+    name: 'Factor',
+    meta: { requireAuth: true, title: '因子有效性验证', icon: 'dashboard' },
+    children: [
+      {
+        path: 'singleFactorValidation',
+        name: 'singleFactorValidation',
+        component: () => import('@/views/charts/singleFactorValidation'),
+        meta: { requireAuth: true, title: '单因子有效性验证', icon: 'table' }
+      },
+      {
+        path: 'multiFactorValidation',
+        name: 'multiFactorValidation',
+        component: () => import('@/views/charts/multiFactorValidation'),
+        meta: { requireAuth: true, title: '多因子有效性验证', icon: 'table' }
+      }
+    ]
+  },
+  {
+    path: '/customFactor',
+    component: Layout,
+    children: [
+      {
+        path: 'customFactor',
+        name: 'customFactor',
+        component: () => import('@/views/custom-factor/FactorSelect'),
+        meta: { requireAuth: true, title: '自定义因子组合', icon: 'search' }
       }
     ]
   },
@@ -197,18 +273,6 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/customFactor',
-    component: Layout,
-    children: [
-      {
-        path: 'customFactor',
-        name: 'customFactor',
-        component: () => import('@/views/custom-factor/FactorSelect'),
-        meta: { requireAuth: true, title: '自定义因子组合', icon: 'search' }
-      }
-    ]
-  },
-  {
     path: '/autoTrading',
     component: Layout,
     children: [
@@ -244,111 +308,6 @@ export const constantRoutes = [
       }
     ]
   },
-  /**
-  {
-    path: '/example',
-    component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
-    meta: { title: '行业监控', icon: 'example' },
-    children: [
-      {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
-      },
-      {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' }
-      }
-    ]
-  },
-
-  {
-    path: '/form',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: '个股贡献度', icon: 'form' }
-      }
-    ]
-  },
-
-  {
-    path: '/nested',
-    component: Layout,
-    redirect: '/nested/menu1',
-    name: 'Nested',
-    meta: {
-      title: '涨停连板情况',
-      icon: 'nested'
-    },
-    children: [
-      {
-        path: 'menu1',
-        component: () => import('@/views/nested/menu1/index'), // Parent router-view
-        name: 'Menu1',
-        meta: { title: 'Menu1' },
-        children: [
-          {
-            path: 'menu1-1',
-            component: () => import('@/views/nested/menu1/menu1-1'),
-            name: 'Menu1-1',
-            meta: { title: 'Menu1-1' }
-          },
-          {
-            path: 'menu1-2',
-            component: () => import('@/views/nested/menu1/menu1-2'),
-            name: 'Menu1-2',
-            meta: { title: 'Menu1-2' },
-            children: [
-              {
-                path: 'menu1-2-1',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-1'),
-                name: 'Menu1-2-1',
-                meta: { title: 'Menu1-2-1' }
-              },
-              {
-                path: 'menu1-2-2',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-2'),
-                name: 'Menu1-2-2',
-                meta: { title: 'Menu1-2-2' }
-              }
-            ]
-          },
-          {
-            path: 'menu1-3',
-            component: () => import('@/views/nested/menu1/menu1-3'),
-            name: 'Menu1-3',
-            meta: { title: 'Menu1-3' }
-          }
-        ]
-      },
-      {
-        path: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
-        meta: { title: 'menu2' }
-      }
-    ]
-  },
-
-  {
-    path: 'external-link',
-    component: Layout,
-    children: [
-      {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: { title: 'External Link', icon: 'link' }
-      }
-    ]
-  },
-*/
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }

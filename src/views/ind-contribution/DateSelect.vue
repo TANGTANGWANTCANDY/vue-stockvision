@@ -44,7 +44,6 @@
         days: [],
       }
     },
-
     created() {
       this.init();
     },
@@ -54,21 +53,18 @@
         var year = myDate.getFullYear();//获取当前年
         var month = myDate.getMonth() + 1;//获取当前月
         var day = myDate.getDate();//获取当前日
-
         this.initSelectYear(year);
         this.initSelectMonth();
         this.initSelectDay(year, month);
         this.yearsModel = year;
         this.monthsModel = month;
         this.daysModel = day;
-
         let obj = {
           year: this.yearsModel,
           month: this.monthsModel,
           day: this.daysModel
         };
         this.$emit('dateSelectChange', obj);
-
       },
       initSelectYear(year) {
         this.years = [];
@@ -105,7 +101,6 @@
         } else if (type == 5) {
           this.dayright();
         }
-
         //操作父组件方法
         let obj = {
           year: this.yearsModel,
@@ -134,11 +129,9 @@
         if (tmpDay == null) {
           tmpDay = 0
         }
-
         var yearV = tmpYear;
         var monthV = tmpMonth;
         var dayV = tmpDay;
-
         if ((tmpMonth == 0 || tmpMonth == 1) && (tmpDay == 0 || tmpDay == 1)) {
           yearV = tmpYear - 1;
           monthV = 12;
@@ -163,11 +156,9 @@
         var year = myDate.getFullYear();//获取当前年
         var month = myDate.getMonth() + 1;//获取当前月
         var day = myDate.getDate();//获取当前日
-
         var tmpYear = this.yearsModel;
         var tmpMonth = this.monthsModel;
         var tmpDay = this.daysModel;
-
         if (tmpYear == null) {
           var myDate = new Date;
           var year = myDate.getFullYear();//获取当前年
@@ -178,7 +169,6 @@
           this.daysModel = day;
           return;
         }
-
         if (tmpMonth == null) {
           tmpMonth = 0
         }
@@ -199,12 +189,10 @@
             return;
           }
         }
-
         var maxDay = this.getMaxDay(tmpYear, tmpMonth);
         var yearV = tmpYear;
         var monthV = tmpMonth;
         var dayV = tmpDay;
-
         if ((tmpMonth == 0 || tmpMonth == 12) && (tmpDay == 0 || tmpDay == maxDay)) {
           yearV = tmpYear + 1;
           monthV = 1;
@@ -217,11 +205,9 @@
         if (!(tmpMonth == 0 || tmpMonth == 12) && !(tmpDay == 0 || tmpDay == maxDay)) {
           dayV = tmpDay + 1;
         }
-
         this.yearsModel = yearV;
         this.monthsModel = monthV;
         this.daysModel = dayV;
-
       },
       getMaxDay(year, month) {
         var new_year = year;  //取当前的年份
