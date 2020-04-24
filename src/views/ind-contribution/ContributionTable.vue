@@ -52,6 +52,7 @@
         :table-data="tableConfig.tableData"
         :is-loading="isLoading"
         @sort-change="sortChange"
+        :row-click="toIndDetails"
         row-hover-color="#eee"
         row-click-color="#edf7ff"
         :paging-index="(pageIndex - 1) * pageSize"
@@ -71,12 +72,8 @@
 </template>
 
 <script>
-  import DateSelect from "./DateSelect";
   export default {
     name: "ContributionTable",
-    components: {
-      DateSelect: DateSelect
-    },
     data() {
       return {
         date: "",
@@ -163,7 +160,7 @@
           .then(ret=>{
             this.isLoading = false;
             this.rawData = ret.data
-            //console.log(this.rawData)
+            console.log(this.rawData)
             this.total = this.rawData.length
             this.getTableData()
           })
@@ -213,6 +210,27 @@
           });
         }
       },
+      toIndDetails(rowIndex,rowData,column){
+        //console.log("asdsad")
+        if(column.field=='symbol'){
+          console.log(rowData[column.field])
+          this.$router.push({
+              path:"/indDetails/indDetails",
+              query: {
+                symbol: rowData[column.field]
+              }
+          })
+        }
+        /*
+        else if(column.field=='name'){
+          this.$router.push({
+            path:"/indDetails/indDetails",
+            query: {
+              stockName: rowData[column.field]
+            }
+          })
+        }*/
+      },
       //获取当前页数据
       getTableData() {
         this.tableConfig.tableData = this.rawData.slice((this.pageIndex - 1) * this.pageSize, this.pageIndex * this.pageSize);
@@ -241,12 +259,7 @@
           this.$axios.post('/contribution/sort1',{params:this.rawData})
             .then(ret=>{
                 this.rawData=ret.data
-                if(ret.data.length>0){
-                  this.getTableData()
-                }
-                else{
-                  alert('无指数数据，所选日期可能为非交易日')
-                }
+                this.getTableData()
               })
         }
         else if(val==5){
