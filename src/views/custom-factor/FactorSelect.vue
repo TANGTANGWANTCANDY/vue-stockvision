@@ -724,8 +724,9 @@ export default {
       this.$axios
         .post('/singleFactorValidation', {
           date: this.date,
-          category: this.category,
-          factors: this.factors,
+          pool: this.stockPool,
+          factors: this.categories,
+          basicFactors: this.factors,
           changeBin: this.validationChangeBin
         })
         .then(res => {
@@ -746,8 +747,9 @@ export default {
       this.$axios
         .post('/multiFactorValidation', {
           date: this.date,
-          category: this.category,
-          factors: this.factors,
+          pool: this.stockPool,
+          factors: this.categories,
+          basicFactors: this.factors,
           changeBin: this.validationChangeBin
         })
         .then(res => {
