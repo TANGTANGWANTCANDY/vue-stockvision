@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <router-view v-if=""isRouterAlive/>
+    <keep-alive>
+      <router-view v-if="isRouterAlive"/>
+    </keep-alive>
   </div>
 </template>
 
@@ -25,6 +27,5 @@ export default {
       })
     }
   }
-
 }
 </script>

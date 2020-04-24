@@ -15,8 +15,9 @@
     "svgo": "svgo -f src/icons/svg --config=src/icons/svgo.yml"
   },
   "dependencies": {
+    "-": "0.0.1",
     "axios": "^0.18.1",
-    "echarts": "^4.6.0",
+    "echarts": "^4.7.0",
     "element-ui": "2.7.2",
     "js-cookie": "2.2.0",
     "normalize.css": "7.0.0",
@@ -48,7 +49,7 @@
     "less": "^3.11.1",
     "less-loader": "^5.0.0",
     "mockjs": "1.0.1-beta3",
-    "node-sass": "^4.13.1",
+    "node-sass": "^4.14.0",
     "runjs": "^4.3.2",
     "sass-loader": "^7.3.1",
     "script-ext-html-webpack-plugin": "2.1.3",
