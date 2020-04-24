@@ -151,6 +151,9 @@
       },
       submit() {
         console.log(this.exchange)
+        console.log(this.industry)
+        console.log(this.market)
+        console.log(this.selectedIndex)
         this.$axios.post('/factor/stock-select', {
             params:{
               exchange:this.exchange,
@@ -161,7 +164,6 @@
           }
         ).then(ret => {
           console.log(ret);
-          ret.data.length
           if(ret.data.length>0){
             this.$emit('stockSelectChange',ret.data)
             //alert("成功选择股票池！");

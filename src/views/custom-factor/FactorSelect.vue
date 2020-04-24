@@ -529,8 +529,9 @@
         this.$axios
           .post('/ic-analysis',{
             date:this.date,
-            category: this.category,
-            factors:this.factors,
+            pool: this.stockPool,
+            factors:this.categories,
+            basicFactors:this.factors,
             changeBin:this.changeBin
           })
           .then(res => {
@@ -551,8 +552,9 @@
         this.$axios
           .post('/ic-decay',{
             date:this.date,
-            category: this.category,
-            factors:this.factors,
+            pool: this.stockPool,
+            factors:this.categories,
+            basicFactors:this.factors,
             changeBin:this.changeBin
           })
           .then(res => {
@@ -573,8 +575,9 @@
         this.$axios
           .post('/ret-analysis',{
             date:this.date,
-            category: this.category,
-            factors:this.factors,
+            pool: this.stockPool,
+            factors:this.categories,
+            basicFactors:this.factors,
             changeBin:this.changeBin
           })
           .then(res => {
@@ -595,8 +598,9 @@
         this.$axios
           .post('/turnover-analysis',{
             date:this.date,
-            category: this.category,
-            factors:this.factors,
+            pool: this.stockPool,
+            factors:this.categories,
+            basicFactors:this.factors,
             changeBin:this.changeBin
           })
           .then(res => {
@@ -618,8 +622,9 @@
         this.$axios
           .post('/buy-decay',{
             date:this.date,
-            category: this.category,
-            factors:this.factors,
+            pool: this.stockPool,
+            factors:this.categories,
+            basicFactors:this.factors,
             changeBin:this.changeBin
           })
           .then(res => {
@@ -640,8 +645,9 @@
         this.$axios
           .post('/industry-analysis',{
             date:this.date,
-            category: this.category,
-            factors:this.factors,
+            pool: this.stockPool,
+            factors:this.categories,
+            basicFactors:this.factors,
             changeBin:this.changeBin
           })
           .then(res => {
