@@ -121,9 +121,9 @@
               <div class="block">
                 <span class="demonstration">换仓周期：</span>
                 <el-select v-model="validationChangeBin" filterable placeholder="请选择">
-                  <el-option value='日换仓'>日换仓</el-option>
-                  <el-option value='周换仓'>周换仓</el-option>
-                  <el-option value='月换仓'>月换仓</el-option>
+                  <el-option value='day'>day</el-option>
+                  <el-option value='week'>week</el-option>
+                  <el-option value='month'>month</el-option>
                 </el-select>
               </div>
             </el-col>
@@ -624,9 +624,11 @@ export default {
     handleSearch() {
       this.vailbuttonstate = true
       this.vailbuttontext = '正在加载'
-      if (this.validationModel === '单因子') {
+      console.log(this.validationModel)
+      console.log(this.validationChangeBin)
+      if (this.validationModel == '单因子') {
         this.singleValidation()
-      } else if (this.validationModel === '多因子') {
+      } else if (this.validationModel == '多因子') {
         this.multiValidation()
       } else {
         alert('请选择验证模式')
@@ -644,8 +646,8 @@ export default {
         })
         .then(res => {
           this.result = res.data
-          this.addMark = !this.addMark
           console.log(this.result)
+          this.addMark = !this.addMark
           this.vailbuttonstate = false
           this.vailbuttontext = '验证'
         })
@@ -666,8 +668,10 @@ export default {
         })
         .then(res => {
           this.result = res.data
-          this.addMark = !this.addMark
           console.log(this.result)
+          // console.log(this.result.name)
+          // console.log(this.result.value)
+          this.addMark = !this.addMark
           this.vailbuttonstate = false
           this.vailbuttontext = '验证'
         })

@@ -2,12 +2,14 @@
   <div id="id" class="className">
     <div style="margin-top: 10px">
       验证结果：
+      <el-button @click="exportExcel()" style="border-width:1px; width:100px">下载</el-button>
       <el-card>
         <el-scrollbar style="height:100%;width: 100%"> <!-- 滚动条 -->
           <!-- 注意需要给 el-scrollbar 设置高度，判断是否滚动是看它的height判断的 -->
           <el-row  style="height: 500px;width: 800px;"><!--可显示区域-->
             <el-table
               :data="tables.filter(data => handleAdd)"
+              id="out-table"
               ref="multipleTable"
               tooltip-effect="dark"
               style="width: 100%"
@@ -38,6 +40,9 @@
 </template>
 
 <script>
+  import FileSaver from 'file-saver'
+  import XLSX from 'xlsx'
+
 export default {
   props: {
     result: {
@@ -79,7 +84,7 @@ export default {
       var basic = parseFloat(this.basicValue)
       for (var i = 0; i < this.result.name.length; i++) {
         var isValid = ''
-        if (this.result.value[i][0] >= basic || this.result.value[i][0] <= -basic){
+        if (this.result.value[i][0] >= basic || this.result.value[i][0] <= -basic) {
           isValid = '有效'
         } else {
           isValid = '无效'
@@ -95,6 +100,18 @@ export default {
     },
     handleDelete(index, row) {
       this.tables.splice(index, 1)
+    },
+    exportExcel() {
+      console.log('导出表格')
+      var wb = XLSX.utils.table_to_book(document.querySelector('#out-table'))
+      var wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' })
+      try {
+        FileSaver.saveAs(new Blob([wbout], { type: 'application/octet-stream' }), 'sheetjs.xls')
+      } catch (e) {
+        if (typeof console !== 'undefined'){
+          console.log(e, wbout)
+        }
+      }
     }
   }
 }
