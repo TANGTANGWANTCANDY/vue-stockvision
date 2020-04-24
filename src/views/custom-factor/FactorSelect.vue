@@ -100,23 +100,55 @@
     <div id="ana-or-vali" v-cloak style="margin-bottom: 10px">
       <el-tabs v-model="twoTab">
         <el-tab-pane label="因子分析" name="analysisTab">
-          <TopBox @newModel="newModel"  @newDate="newDate" @buttonOn="onAnalyse" ref = "topbox"></TopBox>
+          <TopBox @newModel="newModel"  @newDate="newDate" @newChangeBin="newChangeBin" @buttonOn="onAnalyse" ref = "topbox"></TopBox>
           <div id="myChart" :style="{ width:'900px', height: '450px'}"></div>
         </el-tab-pane>
         <el-tab-pane label="因子有效性" name="validationTab">
           <el-row>
-            <el-col :span="12">
+            <el-col :span="7">
+              <div class="block">
+                <span class="demonstration">模式：</span>
+                <el-select v-model="validationModel" filterable placeholder="请选择">
+                  <el-option value='单因子'>单因子</el-option>
+                  <el-option value='多因子'>多因子</el-option>
+                </el-select>
+              </div>
+            </el-col>
+            <el-col :span="10">
               <DateStartToEnd @getDate="getValidDate"></DateStartToEnd>
             </el-col>
-            <el-col :span="12">
+            <el-col :span="7">
+              <div class="block">
+                <span class="demonstration">换仓周期：</span>
+                <el-select v-model="validationChangeBin" filterable placeholder="请选择">
+                  <el-option value='日换仓'>日换仓</el-option>
+                  <el-option value='周换仓'>周换仓</el-option>
+                  <el-option value='月换仓'>月换仓</el-option>
+                </el-select>
+              </div>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="7">
+              <div class="block">
+                <span class="demonstration">有效性判断基准：</span>
+                <el-input
+                placeholder="0.03"
+                v-model="basicValue"
+                type="text"
+                tabindex="1"
+                auto-complete="remove"
+                style="width: 100px"
+                />
+              </div>
+            </el-col>
+            <el-col :span="4">
               <el-button type="primary" :loading="vailbuttonstate" style="border-width:0;background-color:#587482;width:100px" @click="handleSearch">{{vailbuttontext}}</el-button>
             </el-col>
           </el-row>
-          <chart height="100%" width="100%" :result="this.result" :addMark="this.addMark"></chart>
+          <chart height="100%" width="100%" :result="this.result" :basicValue="this.basicValue" :addMark="this.addMark"></chart>
         </el-tab-pane>
       </el-tabs>
-
-
     </div>
   </div>
 </template>
@@ -145,20 +177,27 @@ export default {
   data() {
     return {
       model:"",
+      changeBin:"",
       date:{
-        startdate:"",
-        enddate:"",
+        startdate: "",
+        enddate: "",
       },
       option: {},
       option1: {},
 
-      options: [],
-      value: '',
-      values: [],
-      result: [],
+      validationModel: '',
+      validationChangeBin: '',
+      basicValue: '0.03',
+      factorList: [],
+      result: {
+        name: [],
+        value: []
+      },
+      isValid: '',
+      // details: '',
       addMark: false,
       vailbuttonstate: false,
-      vailbuttontext: "验证",
+      vailbuttontext: '验证',
 
       stockTab: "stock1",
       factorsTab: "1",
@@ -179,7 +218,7 @@ export default {
         emotionFactors: [],
         fluctuateFactors: [],
         motiveFactors: [],
-        profitFactors: [],
+        profitFactors: []
       },
       allFactor: {
         dailyBasicFactorAll: FactorInfo.dailyBasicFactorInfo,
@@ -260,7 +299,7 @@ export default {
           trigger: 'axis'
         },
         legend: {
-          data: ['G01-G05', 'BENCH_RET']
+          data: data[1]
         },
         grid: {
           left: '3%',
@@ -280,18 +319,7 @@ export default {
         yAxis: {
           type: 'value'
         },
-        series: [
-          {
-            name: 'G01-G05',
-            data: data[1],
-            type: 'line'
-          },
-          {
-            name: 'BENCH_RET',
-            data: data[2],
-            type: 'line'
-          }
-        ]
+        series: data[2]
       }
     },
     setTurnoverOption(data){
@@ -443,8 +471,8 @@ export default {
     newModel(model){
       this.model = model;
     },
-    newFactor(keywords){
-      this.factor = keywords;
+    newChangeBin(changeBin){
+      this.changeBin = changeBin;
     },
     newDate(value2){
       this.date.startdate = value2[0]
@@ -484,7 +512,8 @@ export default {
         .post('/ic-analysis',{
           date:this.date,
           category: this.category,
-          factors:this.factors
+          factors:this.factors,
+          changeBin:this.changeBin
         })
         .then(res => {
           console.log(res.data);
@@ -502,7 +531,8 @@ export default {
         .post('/ic-decay',{
           date:this.date,
           category: this.category,
-          factors:this.factors
+          factors:this.factors,
+          changeBin:this.changeBin
         })
         .then(res => {
           console.log(res.data);
@@ -520,7 +550,8 @@ export default {
         .post('/ret-analysis',{
           date:this.date,
           category: this.category,
-          factors:this.factors
+          factors:this.factors,
+          changeBin:this.changeBin
         })
         .then(res => {
           console.log(res.data);
@@ -538,7 +569,8 @@ export default {
         .post('/turnover-analysis',{
           date:this.date,
           category: this.category,
-          factors:this.factors
+          factors:this.factors,
+          changeBin:this.changeBin
         })
         .then(res => {
           console.log(res.data);
@@ -556,7 +588,8 @@ export default {
         .post('/buy-decay',{
           date:this.date,
           category: this.category,
-          factors:this.factors
+          factors:this.factors,
+          changeBin:this.changeBin
         })
         .then(res => {
           console.log(res.data);
@@ -574,7 +607,8 @@ export default {
         .post('/industry-analysis',{
           date:this.date,
           category: this.category,
-          factors:this.factors
+          factors:this.factors,
+          changeBin:this.changeBin
         })
         .then(res => {
           console.log(res.data);
@@ -588,25 +622,60 @@ export default {
         })
     },
     handleSearch() {
-      this.vailbuttonstate = true;
-      this.vailbuttontext = "正在加载"
+      this.vailbuttonstate = true
+      this.vailbuttontext = '正在加载'
+      if (this.validationModel === '单因子') {
+        this.singleValidation()
+      } else if (this.validationModel === '多因子') {
+        this.multiValidation()
+      } else {
+        alert('请选择验证模式')
+        this.vailbuttonstate = false
+        this.vailbuttontext = '验证'
+      }
+    },
+    singleValidation() {
       this.$axios
-        .post('/multiFactorValidation',{
-          date:this.date,
+        .post('/singleFactorValidation', {
+          date: this.date,
           category: this.category,
-          factors:this.factors
+          factors: this.factors,
+          changeBin: this.validationChangeBin
         })
         .then(res => {
           this.result = res.data
           this.addMark = !this.addMark
           console.log(this.result)
-          this.vailbuttonstate = false;
-          this.vailbuttontext = "验证"
+          this.vailbuttonstate = false
+          this.vailbuttontext = '验证'
         })
         .catch(err => {
-          alert('请求失败');
-          this.vailbuttonstate = false;
-          this.vailbuttontext = "验证"
+          alert('请求失败!')
+          console.log(err)
+          this.vailbuttonstate = false
+          this.vailbuttontext = '验证'
+        })
+    },
+    multiValidation() {
+      this.$axios
+        .post('/multiFactorValidation', {
+          date: this.date,
+          category: this.category,
+          factors: this.factors,
+          changeBin: this.validationChangeBin
+        })
+        .then(res => {
+          this.result = res.data
+          this.addMark = !this.addMark
+          console.log(this.result)
+          this.vailbuttonstate = false
+          this.vailbuttontext = '验证'
+        })
+        .catch(err => {
+          alert('请求失败!')
+          console.log(err)
+          this.vailbuttonstate = false
+          this.vailbuttontext = '验证'
         })
     },
     themeChange(theme) {
@@ -638,5 +707,16 @@ export default {
     text-align: left;
     font-weight:bold;
     height: 30px;
+  }
+  .el-row {
+    margin-bottom: 10px;
+
+  :last-child {
+    margin-bottom: 0;
+  }
+
+  }
+  .el-col {
+    border-radius: 4px;
   }
 </style>

@@ -152,7 +152,7 @@ export const constantRoutes = [
         meta: { requireAuth: true, title: '版块分析', icon: 'table' }
       }
     ]
-  },
+  },*/
   {
     path: '/factorValidation',
     component: Layout,
@@ -174,7 +174,7 @@ export const constantRoutes = [
       }
     ]
   },
-  */
+
   {
     path: '/customFactor',
     component: Layout,

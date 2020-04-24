@@ -3,13 +3,13 @@
 
     <ThemeSwitch  @themeChange = "themeChange"></ThemeSwitch>
     <el-row>
-      <el-col :span="12">
-        <DateSelect @getIndustryDate="getIndustryDate"></DateSelect>
-      </el-col>
-      <el-col :span="12">
-        <el-button type="primary" :loading="industryButtonState" style="border-width:0;background-color:#587482;width:100px" @click="indButton">{{industryButtonText}}</el-button>
-      </el-col>
-    </el-row>
+    <el-col :span="12">
+      <DateSelect @getIndustryDate="getIndustryDate"></DateSelect>
+    </el-col>
+    <el-col :span="12">
+      <el-button type="primary" :loading="industryButtonState" style="border-width:0;background-color:#587482;width:100px" @click="indButton">{{industryButtonText}}</el-button>
+    </el-col>
+  </el-row>
     <p>{{option.data}}</p>
 
     <!--大盘云图开始-->
@@ -43,7 +43,7 @@
     data () {
       return {
         tree: [],
-        industryDate: "20180102",
+        industryDate: "",
         industryButtonState: false,
         industryButtonText: "确认",
         formatUtil: this.$echarts.format,
@@ -73,7 +73,6 @@
           this.myChart = this.$echarts.init(document.getElementById('myChart'),theme)
           this.myChart.setOption(this.option,true);
         },
-
       getIndustryDate(value1){
         this.industryDate = value1
       },
