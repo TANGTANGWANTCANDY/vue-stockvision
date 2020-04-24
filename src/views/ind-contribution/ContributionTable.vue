@@ -155,22 +155,6 @@
         }
       }
     },
-    /*
-    async created() {
-      let myDate = new Date;
-      let year = myDate.getFullYear();//获取当前年
-      let month = myDate.getMonth() + 1;//获取当前月
-      let day = myDate.getDate();//获取当前日
-      let dateObj = {
-        year: year,
-        month: month,
-        day: day
-      };
-      this.date = this.dateObjToStr(dateObj);
-      await this.getRawData(this.date);
-      await this.getTableData();
-    },
-    */
     methods: {
       refresh() {
         //使用axios的get请求向后台获取用户信息数据
@@ -209,7 +193,6 @@
           this.tableConfig.tableData.sort(function (a, b) {
             if (orderBy === 'asc') {
               if (orderColumn === 'pctChg') {
-                console.log("jsgfsjhdgfhds");
                 return a.pctChg - b.pctChg;
               } else if (orderColumn === 'contribution') {
                 return a.contribution - b.contribution;
@@ -258,7 +241,12 @@
           this.$axios.post('/contribution/sort1',{params:this.rawData})
             .then(ret=>{
                 this.rawData=ret.data
-                this.getTableData()
+                if(ret.data.length>0){
+                  this.getTableData()
+                }
+                else{
+                  alert('无指数数据，所选日期可能为非交易日')
+                }
               })
         }
         else if(val==5){
@@ -269,23 +257,6 @@
             })
         }
       },
-      /*
-      dateChange(obj) {
-        this.date = this.dateObjToStr(obj);
-      },
-      dateObjToStr(obj) {
-        var year = obj.year;
-        var month = obj.month;
-        var day = obj.day;
-        if (month < 10) {
-          month = "0" + month;
-        }
-        if (day < 10) {
-          day = "0" + day;
-        }
-        return year + "" + month + "" + day;
-      }*/
-
     },
   }
 </script>
