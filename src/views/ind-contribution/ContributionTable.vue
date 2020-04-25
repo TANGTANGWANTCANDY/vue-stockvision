@@ -212,12 +212,12 @@
       },
       toIndDetails(rowIndex,rowData,column){
         //console.log("asdsad")
-        if(column.field=='symbol'){
+        if(column.field==='symbol'){
           console.log(rowData[column.field])
           this.$router.push({
               path:"/indDetails/indDetails",
               query: {
-                symbol: rowData[column.field]
+                tsCode: rowData[column.field]
               }
           })
         }
