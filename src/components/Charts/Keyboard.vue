@@ -6,8 +6,6 @@
 import echarts from 'echarts'
 import resize from './mixins/resize'
 
-import axios from 'axios'
-
 export default {
   mixins: [resize],
   props: {
@@ -27,15 +25,17 @@ export default {
       type: String,
       default: '200px'
     },
-    tradeDate: {
-      type: String,
-      default: '20181228'
+    seriesData: {
+      type: Array
     }
+    // tradeDate: {
+    //   type: String,
+    //   default: ''
+    // }
   },
   data() {
     return {
-      chart: null,
-      seriesData: []
+      chart: null
     }
   },
   mounted() {
@@ -52,33 +52,31 @@ export default {
     seriesData(val, oldVal) {
       // console.log('seriesData:' + val)
       this.setOptions(val)
-    },
-    tradeDate(val, oldVal) {
-      // console.log('tradeDate:' + val)
-      this.getChangeDistribution()
     }
+    // tradeDate(val, oldVal) {
+    //   // console.log('tradeDate:' + val)
+    //   this.getChangeDistribution()
+    // }
   },
   methods: {
     initChart() {
       this.chart = echarts.init(document.getElementById(this.id))
-      this.getChangeDistribution()
+      // this.getChangeDistribution()
       this.setOptions(this.seriesData)
     },
-    getChangeDistribution() {
-      // console.log(this.tradeDate)
-      axios.get('/market/pctChgDistribution', {
-        params: {
-          tradeDate: this.tradeDate
-        }
-      }).then((response) => {
-        this.seriesData = response.data
-      }).catch(function(error) { // 请求失败处理
-        if (error.message !== 'interrupt') {
-          alert("当前日期没有进行交易或输入格式错误（输入示例：20181228）！")
-        }
-        console.log(error)
-      })
-    },
+    // getChangeDistribution() {
+    //   // console.log(this.tradeDate)
+    //   this.$axios.get('/market/pctChgDistribution', {
+    //     params: {
+    //       tradeDate: this.tradeDate
+    //     }
+    //   }).then((response) => {
+    //     this.seriesData = response.data
+    //   }).catch(err => { // 请求失败处理
+    //     alert('当前日期没有进行交易或输入格式错误（输入示例：20181228）！')
+    //     console.log(error)
+    //   })
+    // },
     setOptions(seriesData) {
       this.chart.setOption({
         backgroundColor: '#344b58',
