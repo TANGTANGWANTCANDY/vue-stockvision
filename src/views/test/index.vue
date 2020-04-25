@@ -1,31 +1,29 @@
 <template>
   <div class="app-container">
+    <ThemeSwitch  @themeChange = "themeChange"></ThemeSwitch>
 
-    <div id="toolbar">
+    <p>日期：{{returntext}}</p>
+    <p>数据传递：{{returntext1}}</p>
+    <FactorSelect @getFactor="getFactor"></FactorSelect>
+    <DateStartToEnd @getDate="getDate"></DateStartToEnd>
 
-      <div id="theme">
-        <span>Theme:</span>
-        <p :title="item.text" :class="item.text" v-for="(item,index) in list" :key="index" @click="choice(index)" ><span></span></p>
-      </div>
-    </div>
+    <div id="myChart" :style="{ width:'900px', height: '500px'}" ></div>
 
-    <div id="myChart" :style="{ width:'900px', height: '500px'}"></div>
   </div>
 </template>
 
 <script>
+  import ThemeSwitch from "@/components/ThemeSwitch/ThemeSwitch"
+  import FactorSelect from "@/components/SelectBox/FactorSelect"
+  import DateStartToEnd from "@/components/SelectBox/DateStartToEnd"
 export default {
   name: 'testview',
   data () {
     return {
-      msg:['一','二','三'],
-      theme:['default','light','dark'],
-      status: 0,
-      list: [
-        { text: "default" },
-        { text: "light" },
-        { text: "dark" }
-      ],
+      returntext:"初始状态",
+      returntext1:"未传递",
+      factorname: 'change',
+
       option: {
         title: {
           text: '折线图堆叠'
@@ -90,131 +88,64 @@ export default {
       }
     }
   },
-  mounted(){
-    this.drawLine();
+  components:{
+    ThemeSwitch,
+    FactorSelect,
+    DateStartToEnd
   },
+  mounted(){
+    this.$axios
+      .get('/test-box/'+'默认'+'/chosefactor')
+      .then(resp => {
+        this.returntext1 = resp.data
+        console.log('您选择了：',resp.data)
+        this.drawLine();
+      })
+      .catch(err => {
+        alert('请求失败');
+      })
+
+  },
+  inject: ['reload'], // 注入reload方法
+
   methods: {
-    choice(index) {
-      this.status = index;
+    themeChange(theme) {
       this.myChart.dispose();//TODO: 释放图表，销毁对象并设置为null(多次操作可能会导致内存溢出)
-      this.myChart = this.$echarts.init(document.getElementById('myChart'),this.theme[this.status])
-      //this.myChart.setTheme(this.theme[this.status])//不生效
+      this.myChart = this.$echarts.init(document.getElementById('myChart'),theme)
       this.myChart.setOption(this.option,true);
     },
     drawLine(){
       // 基于准备好的dom，初始化echarts实例
-      this.myChart = this.$echarts.init(document.getElementById('myChart'),this.theme[0])
+      this.myChart = this.$echarts.init(document.getElementById('myChart'),'default')
       // 绘制图表
       this.myChart.setOption(this.option,true);
+    },
+
+    getFactor(keywords){
+      this.returntext = keywords;
+      this.postFactor(keywords)
+    },
+
+    postFactor (keywords) {
+      this.$axios
+        .get('/test-box/'+keywords)
+        .then(resp => {
+            this.returntext1 = resp.data
+            console.log('您选择了：',resp.data)
+      })
+        .catch(err => {
+          alert('请求失败');
+        })
+   //   this.reload()
+    },
+    getDate(value2){
+      this.returntext = value2[0]+"+"+value2[1];
     }
   }
 }
+
 </script>
 
 <style>
-
-  #toolbar {
-    height: 30px;
-    position: fixed;
-    margin-top: 20px;
-    width: 500px;
-    right: 0;
-    z-index: 200
-  }
-
-  #theme {
-    float: right;
-    margin-right: 30px
-  }
-
-  #theme>span {
-    vertical-align: middle;
-    display: inline-block;
-    margin-right: 10px;
-    font-size: 16px;
-    font-weight: bold
-  }
-
-  #theme p {
-    cursor: pointer;
-    display: inline-block;
-    vertical-align: middle;
-    display: inline-block;
-    width: 30px;
-    height: 30px;
-    margin: 0 5px;
-    -webkit-border-radius: 2px;
-    border-radius: 2px;
-    -webkit-box-sizing: content-box;
-    box-sizing: content-box;
-    background: #fff
-  }
-
-  #theme p span {
-    display: inline-block;
-    width: 26px;
-    height: 26px;
-    margin-left: 2px;
-    margin-top: 2px
-  }
-
-  #theme p:hover {
-    -webkit-box-shadow: 0 0 8px rgba(0,0,0,0.1);
-    box-shadow: 0 0 8px rgba(0,0,0,0.1)
-  }
-
-  #theme p.selected {
-    border: 1px solid #e43c59
-  }
-
-  #theme p.default span {
-    background: #c23531;
-    background: linear-gradient(135deg, #de7e7b 0%, #c23531 50%, #2f4554 51%, #547b95 100%);
-  }
-
-  #theme p.light span {
-    background: #37A2DA;
-    background: linear-gradient(135deg, #8dcaea 0%, #37A2DA 50%, #ffd85c 51%, #fff0c2 100%)
-  }
-
-  #theme p.dark {
-    background: #333
-  }
-
-  #theme p.dark span {
-    background: #dd6b66;
-    background: linear-gradient(135deg, #f0bcb9 0%, #dd6b66 50%, #759aa0 51%, #b1c6ca 100%)
-  }
-
-  #toolbar #theme {
-    padding: 4px 10px;
-    background: #fff;
-    -webkit-border-radius: 5px;
-    border-radius: 5px;
-    -webkit-box-shadow: 0 0 15px rgba(0,0,0,0.1);
-    box-shadow: 0 0 15px rgba(0,0,0,0.1);
-    border: 1px solid #aaa
-  }
-
-  #toolbar #theme.dark {
-    background: #222;
-    color: #fff
-  }
-
-  .popover-title {
-    color: #000
-  }
-
-  .theme-palette {
-    color: #000;
-    font-size: 18px
-  }
-
-  .theme-palette span {
-    width: 20px;
-    height: 20px;
-    margin-left: 3px;
-    display: inline-block
-  }
 
 </style>
