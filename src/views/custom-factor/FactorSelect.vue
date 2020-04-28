@@ -75,6 +75,7 @@
         <el-tab-pane label="因子分析" name="analysisTab">
           <TopBox @newModel="newModel"  @newDate="newDate" @newChangeBin="newChangeBin" @buttonOn="onAnalyse" ref = "topbox"></TopBox>
           <div id="myChart" :style="{ width:'900px', height: '450px'}"></div>
+          <div class="js-eclegend-tool" style="position: absolute;right: 20px;top: 40%"></div>
           <el-button @click="backtest">回测测试</el-button>
         </el-tab-pane>
         <el-tab-pane label="因子有效性" name="validationTab">
@@ -461,9 +462,14 @@ export default {
             type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
           }
         },
-        //    legend: {
-        //    data: data[1]
-        //},
+        legend: {
+          type: 'scroll',
+          orient: 'vertical',
+          right: 0,
+          top: 10,
+          bottom: 10,
+          data: data[1]
+        },
         toolbox: {
           feature: {
             saveAsImage: {}
@@ -471,7 +477,7 @@ export default {
         },
         grid: {
           left: '3%',
-          right: '4%',
+          right: '15%',
           bottom: '3%',
           containLabel: true
         },
@@ -495,11 +501,11 @@ export default {
           trigger: 'item',
           formatter: '{a} <br/>{b} : {c} ({d}%)'
         },
-        //        legend: {
-        //        orient: 'vertical',
-        //      left: 'right',
-        //    data: data[1]
-        //},
+        legend: {
+          orient: 'vertical',
+          left: 'right',
+          data: data[1]
+        },
         toolbox: {
           feature: {
             saveAsImage: {}

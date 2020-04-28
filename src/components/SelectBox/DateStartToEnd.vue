@@ -1,6 +1,6 @@
 <template>
   <div class="block">
-    <span class="demonstration">日期：</span>
+    <!--<span class="demonstration">日期：</span>-->
     <el-date-picker
       v-model="value2"
       @change = "dateValue"

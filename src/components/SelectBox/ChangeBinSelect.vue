@@ -1,7 +1,7 @@
 <template>
   <div class="block">
-    <span class="changebin">换仓间隔：</span>
-    <el-select v-model="changeBin" @change = "changeBinValue" filterable placeholder="请选择">
+    <!--<span class="changebin">换仓间隔：</span>-->
+    <el-select v-model="changeBin" @change = "changeBinValue" filterable placeholder="换仓间隔">
       <el-option
         v-for="item in options"
         :key="item.value"

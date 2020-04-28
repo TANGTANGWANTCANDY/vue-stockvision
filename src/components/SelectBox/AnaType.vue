@@ -1,7 +1,7 @@
 <template>
   <div class="block">
-    <span class="demonstration">模块：</span>
-    <el-select v-model="models" @change = "modelValue" filterable placeholder="请选择">
+    <!--<span class="demonstration">模块：</span>-->
+    <el-select v-model="models" @change = "modelValue" filterable placeholder="因子分析模块">
       <el-option
         v-for="item in options"
         :key="item.value"
