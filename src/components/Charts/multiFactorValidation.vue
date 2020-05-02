@@ -24,13 +24,11 @@
                   width="160px">
                 </el-table-column>
               </template>
-              <!--
               <el-table-column label="操作" width="80" align="center">
                 <template slot-scope="scope">
                   <el-button size="mini" class="del-com" @click="handleDelete(scope.$index,scope.row)" >删除<i class="iconfont icon-shanchu"></i></el-button>
                 </template>
               </el-table-column>
-              -->
             </el-table>
           </el-row>
         </el-scrollbar>

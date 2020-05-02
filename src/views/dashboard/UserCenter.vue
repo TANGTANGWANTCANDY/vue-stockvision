@@ -14,22 +14,27 @@
 					<el-input v-model="form.name" :disabled="disabled"></el-input>
 				</el-form-item>
 				<el-form-item label="邮箱">
-					<el-input v-model="form.email"></el-input>
+					<el-input v-model="form.email" :disabled="disabled"></el-input>
 				</el-form-item>
 				<el-form-item label="手机">
-					<el-input v-model="form.phone"></el-input>
-				</el-form-item>
-				<el-form-item label="出生日期">
-					<el-col :span="24">
-						<el-date-picker type="date" placeholder="选择日期" v-model="form.birth" style="width: 100%;"></el-date-picker>
-					</el-col>
+					<el-input v-model="form.phone" :disabled="disabled"></el-input>
 				</el-form-item>
 				<el-form-item label="性别">
-					<el-select class="select-sex" v-model="form.sex" placeholder="请选择性别">
+					<el-select class="select-sex" v-model="form.sex" placeholder="请选择性别" :disabled="disabled">
 						<el-option label="男" value="man"></el-option>
 						<el-option label="女" value="woman"></el-option>
 					</el-select>
 				</el-form-item>
+        <el-form-item label="地址">
+          <el-input v-model="form.address" :disabled="disabled"></el-input>
+        </el-form-item>
+        <el-form-item label="个人简介">
+          <el-input v-model="form.info" :disabled="disabled"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="updateUser">修改个人信息</el-button>
+          <el-button @click="modifyPassword">修改密码</el-button>
+        </el-form-item>
 			</el-form>
 		</div>
     <Confirm ref="myConfirm"></Confirm>
@@ -48,8 +53,9 @@
 				  name:'',
           email:'',
           phone:'',
-          birth:'',
-          sex:''
+          sex:'',
+          address:'',
+          info:''
 				},
         showDialog:false
 			}
@@ -61,17 +67,16 @@
 		},
 		mounted() {
       let self=this
-      this.$axios.get('/user/getUser').then(function(response) {
-        console.log(response);
+      console.log(sessionStorage.getItem('ms_user'))
+      this.$axios.get('/user/getUser/'+sessionStorage.getItem('ms_user')).then(function(response) {
         if(response.data.success){
           let result = response.data.user;
           self.form.name = result.username;
-          /*
-          self.form.email = result.email;
-          self.form.phone = result.phone;
-          self.form.birth = result.birth;
-          self.form.sex = result.sex;
-          */
+          self.form.email = result.mailAddress;
+          self.form.phone = result.phoneNumber;
+          self.form.sex = result.gender;
+          self.form.address=result.address;
+          self.form.info=result.info;
         }else{
           self.$refs.myConfirm.show('系统检测到您还未登录！', {
             type: 'confirm',
@@ -83,6 +88,14 @@
       }).then(function(error) {
         console.log(error);
       })
+    },
+    methods: {
+      updateUser(){
+        this.$router.push({path:'/user/update-user'})
+      },
+      modifyPassword(){
+        this.$router.push({path:'/user/modify-password'})
+      }
     }
     }
 	

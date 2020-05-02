@@ -28,7 +28,7 @@
 
 <style>
 	.main-content{
-		background-image: url('../../../static/img/success.jpg');
+		background-image: url('../../assets/img/success.jpg');
 		background-size: cover;
 		height: 100%;
 	}

@@ -69,21 +69,21 @@
 					checkPass: self.form.checkPass
 				};			
 				self.$refs[formName].validate((valid) => {
-                    if (valid) {
-                        self.$http.post('/api/user/modifyPassword',formData).then(function(response) {
+          if (valid) {
+            self.$axios.post('/user/modifyPassword',formData).then(function(response) {
 							console.log(response);
 							self.$router.push('/login');
 						}).then(function(error) {
 							console.log(error);
 						})
-                    } else {
-                        console.log('error submit!!');
-                        return false;
-                    }
-                });
-        	},
+          } else {
+              console.log('error submit!!');
+              return false;
+          }
+        });
+				},
         	onCancle() {
-        		this.$router.push('/userCenter');
+        		this.$router.push('/user/center');
         	}        	
         }
 	}
@@ -95,4 +95,3 @@
 		margin: 0 auto;
 	}
 </style>
-   

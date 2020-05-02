@@ -53,6 +53,7 @@
         :is-loading="isLoading"
         @sort-change="sortChange"
         :row-click="toIndDetails"
+        :column-cell-class-name="columnCellClass"
         row-hover-color="#eee"
         row-click-color="#edf7ff"
         :paging-index="(pageIndex - 1) * pageSize"
@@ -211,25 +212,20 @@
         }
       },
       toIndDetails(rowIndex,rowData,column){
-        //console.log("asdsad")
-        if(column.field=='symbol'){
+        if(column.field=='symbol'||column.field=='name'){
           console.log(rowData[column.field])
           this.$router.push({
               path:"/indDetails/indDetails",
               query: {
-                symbol: rowData[column.field]
+                tsCode: rowData[column.field]
               }
           })
         }
-        /*
-        else if(column.field=='name'){
-          this.$router.push({
-            path:"/indDetails/indDetails",
-            query: {
-              stockName: rowData[column.field]
-            }
-          })
-        }*/
+      },
+      columnCellClass(rowIndex,columnName,rowData){
+        if(columnName==='symbol'||columnName==='name'){
+          return 'column-cell-class-name-cailia';
+        }
       },
       //获取当前页数据
       getTableData() {
@@ -249,6 +245,9 @@
           ret=>{
             console.log(ret.data)
             this.indexes=ret.data
+            if(ret.data.length==0){
+              alert('当日')
+            }
           }
         ).catch(err => {
             alert('请求失败');
@@ -303,5 +302,14 @@
   }
   .layout-footer-center {
     text-align: center;
+  }
+  .column-cell-class-name-cailia .v-table-body-cell:hover{
+    color: white;
+    background-color: darkmagenta;
+    text-underline: gold;
+    cursor: pointer;
+  }
+  .column-cell-class-name-cailia .v-table-body-cell:hover span{
+    border-bottom: 1px solid white;
   }
 </style>

@@ -74,7 +74,8 @@
         errorInfo : false,
         loginForm: {
           username: '',
-          password: ''
+          password: '',
+          validate:''
         },
         rules: {
           username: [
@@ -125,22 +126,25 @@
         })
       },
       submitForm(formName) {
-        // debounceAjax(formName)
         const self = this;
         self.$refs[formName].validate((valid) => {
           if (valid) {
             self.$axios.post('/user/login',{
               username: self.loginForm.username,
-              password: self.loginForm.password
+              password: self.loginForm.password,
+              rememberMe:self.rememberMe
             })
               .then((response) => {
-                console.log(response);
                 if(response.data.success){
-                  self.$store.commit('login', self.loginForm)
-                  self.$router.push('/index');
-                  sessionStorage.setItem('username',self.loginForm.name);
-                  sessionStorage.setItem('user',JSON.stringify(self.loginForm));
-                  console.log(JSON.stringify(self.loginForm));
+                  sessionStorage.setItem('ms_user',self.loginForm.username);
+                  //普通用户
+                  if(response.data.msg == 'general_user'){
+                    self.$router.push('/user/center');
+                  }
+                  //管理员
+                  if(response.data.msg == 'admin'){
+                    self.$router.push('/admin/center');
+                  }
                 }else{
                   self.errorInfo = true;
                   self.errInfo = response.data.msg;
