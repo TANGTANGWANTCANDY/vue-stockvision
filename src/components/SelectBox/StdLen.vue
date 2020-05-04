@@ -1,7 +1,7 @@
 <template>
   <div class="block">
     <!--<span class="demonstration">时间长度</span>-->
-    <el-select v-model="stdLen" @change = "stdLenValue" filterable placeholder="前几天内的波动率">
+    <el-select v-model="stdLen" @change = "stdLenValue" filterable placeholder="计算标准差所需间隔">
       <el-option
         v-for="item in options"
         :key="item.value"

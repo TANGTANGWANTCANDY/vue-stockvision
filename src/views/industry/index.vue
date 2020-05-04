@@ -87,13 +87,18 @@
       indButton(){
         this.indButtonOn();
         this.$axios
-          .post('/industrycloud',{
+          .post('/industry-cloud',{
             date:this.industryDate
           })
           .then(res => {
-            console.log(res.data);
-            this.option = this.setOption(res.data)
-            this.drawLine();
+            console.log(res);
+            if(res.data === ""){
+              alert("当前日期无交易数据，请重新选择")
+            }
+            else{
+              this.option = this.setOption(res.data)
+              this.drawLine();
+            }
             this.indButtonOff();
           })
           .catch(err => {
