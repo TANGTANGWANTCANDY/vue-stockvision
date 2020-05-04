@@ -6,30 +6,38 @@
       </el-breadcrumb>
     </div>
     <div class="user-management">
-      <el-row>
-        <div class="user-manage-btns">
-          <el-button @click="manageGeneralUsers">普通用户管理</el-button>
-          <el-button @click="addAdmin">创建管理员账户</el-button>
-        </div>
-      </el-row>
-      <div v-if="displayUsers" class="dispaly-users">
-        普通用户列表：
-        <el-table :data="users" border>
-          <el-table-column
-            v-for="{prop,label} in colConfigs"
-            :key="prop"
-            :prop="prop"
-            :label="label"
-          >
-          </el-table-column>
-          <el-table-column label="操作"><a href="javascript:;" @click="deleteUser(index)">删除</a></el-table-column>
-        </el-table>
-      </div>
+      <el-tabs>
+        <el-tab-pane label="用户管理">
+          <el-row>
+            <div class="user-manage-btns">
+              <el-button @click="manageGeneralUsers">普通用户管理</el-button>
+              <el-button @click="addAdmin">创建管理员账户</el-button>
+            </div>
+          </el-row>
+          <div v-if="displayUsers" class="dispaly-users">
+            普通用户列表：
+            <el-table :data="users" border>
+              <el-table-column
+                v-for="{prop,label} in colConfigs"
+                :key="prop"
+                :prop="prop"
+                :label="label"
+              >
+              </el-table-column>
+              <el-table-column label="操作"><a href="javascript:;" @click="deleteUser(index)">删除</a></el-table-column>
+            </el-table>
+          </div>
+        </el-tab-pane>
+      </el-tabs>
     </div>
 
     <div class="sys-management">
-      <el-button>数据库管理</el-button>
-      <el-button>增加因子</el-button>
+      <el-tabs>
+        <el-tab-pane label="系统管理">
+          <el-button>数据库管理</el-button>
+          <el-button>增加因子</el-button>
+        </el-tab-pane>
+      </el-tabs>
     </div>
   </div>
 </template>

@@ -239,6 +239,12 @@ export const constantRoutes = [
         name: 'customFactor',
         component: () => import('@/views/custom-factor/FactorSelect'),
         meta: { requireAuth: true, title: '因子分析与有效性验证', icon: 'search' }
+      },
+      {
+        path: 'model/sr',
+        name: 'StackRegressor',
+        component: () => import('@/views/custom-factor/StackRegressor'),
+        meta: { requireAuth: true, title: '因子分析与有效性验证', icon: 'search' }
       }
     ]
   },

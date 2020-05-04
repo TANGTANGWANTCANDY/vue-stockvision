@@ -1,5 +1,5 @@
 <template>
-  <el-table :data="tableData">
+  <el-table :data="tableData" border>
     <!--total_commission_money-->
     <el-table-column prop="0" label="总交易费用"></el-table-column>
     <!--benchmark_cum_return-->
