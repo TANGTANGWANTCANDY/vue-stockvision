@@ -6,33 +6,25 @@
       </el-breadcrumb>
     </div>
     <div class="user-management">
-      <el-button @click="manageGeneralUsers">普通用户管理</el-button>
+      <el-row>
+        <div class="user-manage-btns">
+          <el-button @click="manageGeneralUsers">普通用户管理</el-button>
+          <el-button @click="addAdmin">创建管理员账户</el-button>
+        </div>
+      </el-row>
       <div v-if="displayUsers" class="dispaly-users">
         普通用户列表：
-        <table>
-          <tr>
-            <th>id</th>
-            <th>用户名</th>
-            <th>密码</th>
-            <th>手机</th>
-            <th>邮箱</th>
-            <th>性别</th>
-            <th>住址</th>
-            <th>操作</th>
-          </tr>
-          <tr v-cloak v-for="(item, index) of users">
-            <td>{{item.id}}</td>
-            <td>{{item.username}}</td>
-            <td>{{item.password}}</td>
-            <td>{{item.phoneNumber}}</td>
-            <td>{{item.mailAddress}}</td>
-            <td>{{item.gender}}</td>
-            <td>{{item.address}}</td>
-            <td><a href="javascript:;" @click="deleteUser(index)">删除</a></td>
-          </tr>
-        </table>
+        <el-table :data="users" border>
+          <el-table-column
+            v-for="{prop,label} in colConfigs"
+            :key="prop"
+            :prop="prop"
+            :label="label"
+          >
+          </el-table-column>
+          <el-table-column label="操作"><a href="javascript:;" @click="deleteUser(index)">删除</a></el-table-column>
+        </el-table>
       </div>
-      <el-button @click="addAdmin">创建管理员账户</el-button>
     </div>
 
     <div class="sys-management">
@@ -46,6 +38,14 @@
     export default {
       name: "AdminCenter",
       data(){
+          this.colConfigs=[
+            {prop:'id',label:'id'},
+            {prop:'username',label:'用户名'},
+            {prop:'phoneNumber',label:'电话号码'},
+            {prop:'mailAddress',label:'邮箱'},
+            {prop:'gender',label:'性别'},
+            {prop:'info',label:'个人简介'},
+          ]
           return{
             users:[],
             displayUsers:false,

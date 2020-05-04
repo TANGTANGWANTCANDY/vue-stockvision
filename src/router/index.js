@@ -42,6 +42,12 @@ export const constantRoutes = [
     component: () => import('@/views/404'),
     hidden: true
   },
+  {
+    path: '/',
+    name: 'Login',
+    component: () => import('@/views/login/index'),
+    hidden: true
+  },
   // 新用户注册
   {
     path: '/register',
@@ -589,7 +595,6 @@ router.beforeEach((to, from, next) => {
     delete window.axiosCancel[index]
   })
   next()
-
 })
 
 export default router
