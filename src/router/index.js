@@ -69,12 +69,33 @@ export const constantRoutes = [
   {
     path: '/market',
     component: Layout,
+    redirect: '/market/index',
+    name: 'Market',
+    meta: { requireAuth: true, title: '大盘监控', icon: 'dashboard' },
     children: [
       {
-        path: 'market',
-        name: 'Market',
+        path: 'keyboard',
+        name: 'Keyboard',
         component: () => import('@/views/charts/keyboard'),
-        meta: { requireAuth: true, title: '大盘监控', icon: 'dashboard' }
+        meta: { requireAuth: true, title: '涨跌分布', icon: 'table' }
+      },
+      {
+        path: 'limitUpDown',
+        name: 'limitUpDown',
+        component: () => import('@/views/charts/limitUpDown'),
+        meta: { requireAuth: true, title: '涨跌停', icon: 'chart' }
+      },
+      {
+        path: 'limitUpStockPool',
+        name: 'limitUpStockPool',
+        component: () => import('@/views/charts/limitUpStockPool'),
+        meta: { requireAuth: true, title: '涨停股池', icon: 'tree' }
+      },
+      {
+        path: 'limitDownStockPool',
+        name: 'limitDownStockPool',
+        component: () => import('@/views/charts/limitDownStockPool'),
+        meta: { requireAuth: true, title: '跌停股池', icon: 'tree-table' }
       }
     ]
   },

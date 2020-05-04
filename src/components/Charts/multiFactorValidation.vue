@@ -6,9 +6,10 @@
       <el-card>
         <el-scrollbar style="height:100%;width: 100%"> <!-- 滚动条 -->
           <!-- 注意需要给 el-scrollbar 设置高度，判断是否滚动是看它的height判断的 -->
-          <el-row  style="height: 500px;width: 800px;"><!--可显示区域-->
+          <el-row  style="height: 500px;width: 862px;"><!--可显示区域-->
             <el-table
               :data="tables.filter(data => handleAdd)"
+              border
               id="out-table"
               ref="multipleTable"
               tooltip-effect="dark"
@@ -23,7 +24,7 @@
                   :prop="col.dataItem"
                   :label="col.dataName"
                   :key="col.dataItem"
-                  width="160px">
+                  width="175px">
                 </el-table-column>
               </template>
               <el-table-column label="操作" width="80" align="center">
@@ -40,8 +41,8 @@
 </template>
 
 <script>
-  import FileSaver from 'file-saver'
-  import XLSX from 'xlsx'
+import FileSaver from 'file-saver'
+import XLSX from 'xlsx'
 
 export default {
   props: {
