@@ -130,6 +130,6 @@
 
 <style scoped>
   .select-date{
-    position: center;
+    text-align: left;
   }
 </style>

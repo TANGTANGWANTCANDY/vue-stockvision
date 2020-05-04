@@ -53,7 +53,7 @@
           <div class="advanced-factor-select">
             <li v-for="category in categories">
               {{category.name}}:
-              <el-select v-model="categories[categories.indexOf(category)].selected" @change="selectFactorChange($event,category)" multiple placeholder="请选择">
+              <el-select v-model="categories[categories.indexOf(category)].selected" @change="selectFactorChange($event,category)" multiple placeholder="请选择" style="width:17%">
                 <el-option
                   v-for="item in category.value"
                   :key="item.value"
@@ -647,30 +647,6 @@
         this.myChart = this.$echarts.init(document.getElementById('myChart'),theme)
         this.myChart.setOption(this.option,true);
       },
-      /*
-      backtest(){
-        console.log(this.stockPool)
-        this.$axios
-          .post('/factor/backtest',{
-            date:this.date,
-            pool: this.stockPool,
-            factors:this.categories,
-            basicFactors:this.factors,
-          })
-          .then(res => {
-            this.tree = res.data; //把取item的数据赋给 tree
-            console.log(res.data);
-            this.$refs.barTable.tableData=res.data
-            this.option = this.setBacktestOption(res.data)
-            this.drawLine();
-            this.$refs.topbox.buttonOff()
-          })
-          .catch(err => {
-            alert('请求失败');
-            this.$refs.topbox.buttonOff()
-          })
-      },
-      */
       toStackRegressor(){
         this.$router.push({path:'/customFactor/model/sr',
           query:{
