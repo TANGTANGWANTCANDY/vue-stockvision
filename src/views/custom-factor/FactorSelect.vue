@@ -53,7 +53,7 @@
           <div class="advanced-factor-select">
             <li v-for="category in categories">
               {{category.name}}:
-              <el-select v-model="categories[categories.indexOf(category)].selected" @change="selectFactorChange($event,category)" multiple placeholder="请选择">
+              <el-select v-model="categories[categories.indexOf(category)].selected" @change="selectFactorChange($event,category)" multiple placeholder="请选择" style="width:17%">
                 <el-option
                   v-for="item in category.value"
                   :key="item.value"
@@ -75,6 +75,7 @@
         <el-tab-pane label="因子分析" name="analysisTab">
           <TopBox @newModel="newModel"  @newDate="newDate" @newChangeBin="newChangeBin" @buttonOn="onAnalyse" ref = "topbox"></TopBox>
           <div id="myChart" :style="{ width:'900px', height: '450px'}"></div>
+          <!--<el-button @click="backtest">回测测试</el-button>-->
           <div class="js-eclegend-tool" style="position: absolute;right: 20px;top: 40%"></div>
           <el-button @click="backtest">回测测试</el-button>
         </el-tab-pane>
@@ -123,20 +124,8 @@
           </el-row>
           <chart height="100%" width="100%" :result="this.result" :basicValue="this.basicValue" :addMark="this.addMark"></chart>
         </el-tab-pane>
-        <el-tab-pane label="堆叠模型测试" name="ModelBacktest">
-          <el-row>
-            <el-col :span="12">
-              <DateStartToEnd @getDate="getDate"></DateStartToEnd>
-            </el-col>
-            <el-col :span="12">
-              <el-button style="border-width:0;background-color:#587482;width:120px" @click="modelBacktest">堆叠模型回测</el-button>
-            </el-col>
-          </el-row>
-          <el-row>
-            <BarTable ref="barTable"></BarTable>
-          </el-row>
-          <div id="testChart" :style="{ width:'900px', height: '450px',marginTop:'10px'}"></div>
-          <chart height="100%" width="100%" :result="this.result" :basicValue="this.basicValue" :addMark="this.addMark"></chart>
+        <el-tab-pane label="模型回测" name="Modeltest">
+          <el-button @click="toStackRegressor">堆叠模型</el-button>
         </el-tab-pane>
       </el-tabs>
     </div>

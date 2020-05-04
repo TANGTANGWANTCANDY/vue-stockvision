@@ -7,33 +7,28 @@
             </el-breadcrumb>
 		</div>
 		<div class="userContent">
-			<el-form ref="form" :model="form" :rules="rules" label-width="80px">
-				<el-form-item prop="name" label="用户名称">
-					<el-input v-model="form.name" disabled></el-input>
-				</el-form-item>
-				<el-form-item prop="account" label="账号名称">
-					<el-input v-model="form.account" disabled></el-input>
-				</el-form-item>
-				<el-form-item prop="email" label="邮箱">
-					<el-input v-model="form.email" placeholder="请输入邮箱"></el-input>
-				</el-form-item>
-				<el-form-item prop="phone" label="手机">
-					<el-input v-model="form.phone" placeholder="请输入手机号"></el-input>
-				</el-form-item>
-				<el-form-item prop="card" label="身份证">
-					<el-input v-model="form.card" placeholder="请输入身份证"></el-input>
-				</el-form-item>
-				<el-form-item prop="birth" label="出生日期">
-					<el-col :span="24">
-						<el-date-picker type="date" placeholder="选择日期" v-model="form.birth" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
-					</el-col>
-				</el-form-item>
-				<el-form-item prop="sex" label="性别">
-					<el-select class="select-sex" v-model="form.sex" placeholder="请选择性别">
-						<el-option label="男" value="man"></el-option>
-						<el-option label="女" value="woman"></el-option>
-					</el-select>
-				</el-form-item>
+      <el-form ref="form" :model="form" :rules="rules">
+        <el-form-item label="用户名称" prop="name">
+          <el-input v-model="form.name"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="form.email"></el-input>
+        </el-form-item>
+        <el-form-item label="手机" prop="phone">
+          <el-input v-model="form.phone"></el-input>
+        </el-form-item>
+        <el-form-item label="性别" prop="sex">
+          <el-select class="select-sex" v-model="form.sex" placeholder="请选择性别">
+            <el-option label="男" value="man"></el-option>
+            <el-option label="女" value="woman"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="地址" prop="address">
+          <el-input v-model="form.address"></el-input>
+        </el-form-item>
+        <el-form-item label="个人简介" prop="info">
+          <el-input v-model="form.info"></el-input>
+        </el-form-item>
 				<el-form-item>
 					<el-button type="primary" @click="updateUserData('form')">确定</el-button>
 					<el-button @click="onCancle()">取消</el-button>
@@ -49,7 +44,9 @@
 		data() {
 			var validateEmail = (rule, value, callback) => {
 				if (value === '') {
-					callback(new Error('请输入邮箱'));
+					//callback(new Error('请输入邮箱'));
+          console.log("空醇")
+          callback();
 				} else if (!Util.emailReg.test(this.form.email)){
 					callback(new Error('请输入正确的邮箱'));
 				} else {
@@ -58,71 +55,53 @@
 			};
 			var validatePhone = (rule, value, callback) => {
 				if (value === '') {
-					callback(new Error('请输入手机号'));
+					//callback(new Error('请输入手机号'));
+          callback()
 				} else if (!Util.phoneReg.test(this.form.phone)){
 					callback(new Error('请输入正确的手机号'));
 				} else {
 					callback();
 				}
 			};
-			var validateCard = (rule, value, callback) => {
-				if (value === '') {
-					callback(new Error('请输入身份证号'));
-				} else if (!Util.idCardReg.test(this.form.card)){
-					callback(new Error('请输入正确的身份证号'));
-				} else {
-					callback();
-				}
-			};
-            return {
+      return {
 				form: {
-					name: '',
-					account: '',					
-					email: '',
-					phone: '',
-					card: '',
-					birth: '',
-					sex: ''
+          name:'',
+          email:'',
+          phone:'',
+          sex:'',
+          address:'',
+          info:''
 				},
 				rules: {
-                    name: [
-                        { required: true, message: '请输入用户名', trigger: 'blur' }
-                    ],
-                    account: [
-                        { required: true, message: '请输入账号', trigger: 'blur' }
-                    ],
-                    email: [
-                        { validator: validateEmail, trigger: 'blur' }
-                    ],
-                    phone: [
-                        { validator: validatePhone, trigger: 'blur' }
-                    ],
-                    card: [
-                        { validator: validateCard, trigger: 'blur' }
-                    ],
-                    birth: [
-                        { required: true, message: '请输入出生日期',type: 'date', trigger: 'blur' }
-                    ],
-                    sex: [
-                        { required: true, message: '请输入性别', trigger: 'blur' }
-                    ]
-                }
+            name: [
+              { required: true, message: '请输入用户名', trigger: 'blur' }
+            ],
+            email: [
+              { validator: validateEmail, trigger: 'blur' }
+            ],
+            phone: [
+              { validator: validatePhone, trigger: 'blur' }
+            ],
+            sex: [
+              { message: '请输入性别', trigger: 'blur' }
+            ],
+            address:[{message: '住址', trigger: 'blur'}],
+            info:[{message: '介绍自己', trigger: 'blur'}]
+        }
 			}
         },
         methods:{
         	getUserData() {
 				const self = this;	
-				let username = sessionStorage.getItem('ms_user').name;			
-				self.$http.get('/api/user/getUser',{name: username}).then(function(response) {
+				self.$axios.get('/user/getUser/'+sessionStorage.getItem('ms_user')).then(function(response) {
 					console.log(response);
-					let result = response.data[0];
+					let result = response.data.user;
 					self.form.name = result.username;
-					self.form.account = result.account;
-					self.form.email = result.email;
-					self.form.phone = result.phone;
-					self.form.card = result.card;
-					self.form.birth = new Date(result.birth);
-					self.form.sex = result.sex;
+          self.form.email = result.mailAddress;
+          self.form.phone = result.phoneNumber;
+          self.form.sex = result.gender;
+          self.form.address=result.address;
+          self.form.info=result.info;
 					sessionStorage.setItem('ms_userId', result.id);
 				}).then(function(error) {
 					console.log(error);
@@ -132,30 +111,33 @@
 				const self = this;
 				let formData = {
 					id: parseInt(sessionStorage.getItem('ms_userId')),
-					email: self.form.email,
-					phone: self.form.phone,
-					card: self.form.card,
-					birth: self.form.birth,
-					sex: self.form.sex
+          username:self.form.name,
+          password:'',
+          phoneNumber:self.form.phone,
+          mailAddress:self.form.email,
+          gender:self.form.sex,
+          address:self.form.address,
+          info:self.form.info,
+          perems:''
 				};
-						
+
 				self.$refs[formName].validate((valid) => {
-                    if (valid) {
-                        self.$http.post('/api/user/updateUser',formData).then(function(response) {
-							console.log(response);										
-							self.$router.push('/success');
+          if (valid) {
+            self.$axios.post('/user/updateUser',formData).then(function(response) {
+							//console.log(response);
+							self.$router.push('/user/update/success');
 						}).then(function(error) {
 							console.log(error);
 						})
-                    } else {
-                        console.log('error submit!!');
-                        return false;
-                    }
-                });
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
 			},
-        	onCancle() {
-        		 this.$router.push('/userCenter');
-        	}       	
+      onCancle() {
+         this.$router.push('/user/center');
+      }
 		},
 		//初始化
 		mounted() {

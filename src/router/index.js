@@ -42,6 +42,12 @@ export const constantRoutes = [
     component: () => import('@/views/404'),
     hidden: true
   },
+  {
+    path: '/',
+    name: 'Login',
+    component: () => import('@/views/login/index'),
+    hidden: true
+  },
   // 新用户注册
   {
     path: '/register',
@@ -56,15 +62,51 @@ export const constantRoutes = [
     hidden: true
   },
   {
-    path: '/',
+    path: '/admin',
     component: Layout,
-    redirect: '/index',
-    children: [{
-      path: 'index',
-      name: 'Dashboard',
-      component: () => import('@/views/dashboard/UserCenter'),
-      meta: { requireAuth: true, title: '首页', icon: 'guide' }
-    }]
+    children: [
+      {
+        path: 'center',
+        name: 'center',
+        component:()=>import('@/views/dashboard/AdminCenter'),
+        meta: { requireAuth: true, title: '管理中心', icon: 'dashboard' }
+      },
+      {
+        path: 'add',
+        name: 'addAdmin',
+        component:()=>import('@/views/dashboard/addAdmin'),
+      }
+    ]
+  },
+  {
+    path: '/user',
+    component: Layout,
+    children: [
+      {
+        path: 'center',
+        name: 'userCenter',
+        component: () => import('@/views/dashboard/UserCenter'),
+        meta: { requireAuth: true, title: '首页', icon: 'guide' }
+      },
+      {
+        path:'update-user',
+        name:'update-user',
+        component:()=>import('@/views/dashboard/ModifyUser'),
+        hidden: true
+      },
+      {
+        path:'modify-password',
+        name:'modify-password',
+        component:()=>import('@/views/dashboard/ModifyPassword'),
+        hidden: true
+      },
+      {
+        path:'update/success',
+        name:'update-success',
+        component:()=>import('@/views/dashboard/Success'),
+        hidden: true
+      }
+    ]
   },
   {
     path: '/market',
@@ -218,6 +260,12 @@ export const constantRoutes = [
         name: 'customFactor',
         component: () => import('@/views/custom-factor/FactorSelect'),
         meta: { requireAuth: true, title: '因子分析与有效性验证', icon: 'search' }
+      },
+      {
+        path: 'model/sr',
+        name: 'StackRegressor',
+        component: () => import('@/views/custom-factor/StackRegressor'),
+        hidden: true
       }
     ]
   },
@@ -345,6 +393,210 @@ export const constantRoutes = [
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
+
+/*
+export const adminRoutes = [
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import('@/views/login/index'),
+    hidden: true
+  },
+  {
+    path: '/404',
+    component: () => import('@/views/404'),
+    hidden: true
+  },
+  // 新用户注册
+  {
+    path: '/register',
+    name: 'Register',
+    component: () => import('@/views/login/Register'),
+    hidden: true
+  },
+  {
+    path: '/register-success',
+    name: 'register-success',
+    component: () => import('@/views/login/RegisterSuccess'),
+    hidden: true
+  },
+  {
+    path: '/admin',
+    component: Layout,
+    children: [
+      {
+        path: 'center',
+        name: 'center',
+        component:()=>import('@/views/dashboard/AdminCenter'),
+        meta: { requireAuth: true, title: '管理中心', icon: 'dashboard' }
+      },
+      {
+        path: 'add',
+        name: 'addAdmin',
+        component:()=>import('@/views/dashboard/addAdmin'),
+      }
+    ]
+  },
+  {
+    path: '/market',
+    component: Layout,
+    children: [
+      {
+        path: 'market',
+        name: 'Market',
+        component: () => import('@/views/charts/keyboard'),
+        meta: { requireAuth: true, title: '大盘监控', icon: 'dashboard' }
+      }
+    ]
+  },
+  {
+    path: '/ind',
+    component: Layout,
+    children: [
+      {
+        path: 'contribution',
+        name: 'indContribution',
+        component: () => import('@/views/ind-contribution/ContributionTable'),
+        meta: { requireAuth: true, title: '个股贡献度', icon: 'example' }
+      }
+    ]
+  },
+  {
+    path: '/industry',
+    component: Layout,
+    children: [
+      {
+        path: 'industry',
+        name: 'industry',
+        component: () => import('@/views/industry/index'),
+        meta: { requireAuth: true, title: '行业监控', icon: 'component' }
+      }
+    ]
+  },
+  {
+    path: '/customFactor',
+    component: Layout,
+    children: [
+      {
+        path: 'customFactor',
+        name: 'customFactor',
+        component: () => import('@/views/custom-factor/FactorSelect'),
+        meta: { requireAuth: true, title: '因子分析与有效性验证', icon: 'search' }
+      }
+    ]
+  },
+  {
+    path: '/tradingBoard',
+    component: Layout,
+    children: [
+      {
+        path: 'tradingBoard',
+        name: 'tradingBoard',
+        component: () => import('@/views/trading-board/index'),
+        meta: { requireAuth: true, title: '涨停连板情况', icon: 'nested' }
+      }
+    ]
+  },
+  {
+    path: '/volatility',
+    component: Layout,
+    children: [
+      {
+        path: 'volatility',
+        name: 'volatility',
+        component: () => import('@/views/volatility/index'),
+        meta: { requireAuth: true, title: '波动率', icon: 'chart' }
+      }
+    ]
+  },
+  {
+    path: '/abnormalPlate',
+    component: Layout,
+    children: [
+      {
+        path: 'abnormalPlate',
+        name: 'abnormalPlate',
+        component: () => import('@/views/abnormal-plate/index'),
+        meta: { requireAuth: true, title: '异动板块', icon: 'documentation' }
+      }
+    ]
+  },
+  {
+    path: '/customIndex',
+    component: Layout,
+    children: [
+      {
+        path: 'customIndex',
+        name: 'customIndex',
+        component: () => import('@/views/custom-index/index'),
+        meta: { requireAuth: true, title: '自定义指数', icon: 'edit' }
+      }
+    ]
+  },
+  {
+    path: '/notice',
+    component: Layout,
+    children: [
+      {
+        path: 'notice',
+        name: 'notice',
+        component: () => import('@/views/notice/index'),
+        meta: { requireAuth: true, title: '公告内容监测', icon: 'message' }
+      }
+    ]
+  },
+  {
+    path: '/fund',
+    component: Layout,
+    children: [
+      {
+        path: 'fund',
+        name: 'fund',
+        component: () => import('@/views/fund/index'),
+        meta: { requireAuth: true, title: '资金监控', icon: 'money' }
+      }
+    ]
+  },
+  {
+    path: '/autoTrading',
+    component: Layout,
+    children: [
+      {
+        path: 'autoTrading',
+        name: 'autoTrading',
+        component: () => import('@/views/auto-trading/index'),
+        meta: { requireAuth: true, title: '自动交易', icon: 'shopping' }
+      }
+    ]
+  },
+  {
+    path: '/profitLoss',
+    component: Layout,
+    children: [
+      {
+        path: 'profitLoss',
+        name: 'profitLoss',
+        component: () => import('@/views/profit-loss/index'),
+        meta: { requireAuth: true, title: '盈亏统计', icon: 'table' }
+      }
+    ]
+  },
+  {
+    path: '/indDetails',
+    component: Layout,
+    children: [
+      {
+        path: 'indDetails',
+        name: 'indDetails',
+        component: () => import('@/views/ind-details/index'),
+        meta: { requireAuth: true, title: '个股详情', icon: 'example' }
+      }
+    ]
+  },
+  // 404 page must be placed at the end !!!
+  { path: '*', redirect: '/404', hidden: true }
+]
+*/
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support

@@ -2,47 +2,62 @@
   <div>
     <div style="margin-left: 20px;margin-top: 10px;clear: both">
       <div class="select-div" style="">
-        <div class="select-date" style="margin-right: 100px;float: left">
-          <el-date-picker
-            type="date"
-            placeholder="选择日期"
-            v-model="date"
-            value-format="yyyyMMdd"
-            format="yyyy-MM-dd"
-            style="width: 100%;"></el-date-picker>
-        </div>
-        <div class="select-market">
-          <el-select v-model="curMarket" style="width: 100px" placeholder="请选择">
-            <el-option
-              v-for="item in markets"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
+        <el-tabs>
+          <el-tab-pane label="确定日期和指数所属市场">
+            <div class="select-date" style="margin-right: 50px;float: left">
+              <el-date-picker
+                type="date"
+                placeholder="选择日期"
+                v-model="date"
+                value-format="yyyyMMdd"
+                format="yyyy-MM-dd"
+                style="width: 100%;"></el-date-picker>
+            </div>
+            <div class="select-market">
+              <el-select v-model="curMarket" style="width: 150px" placeholder="请选择">
+                <el-option
+                  v-for="item in markets"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </div>
+          </el-tab-pane>
+        </el-tabs>
+        <el-row style="margin-top: 10px;margin-bottom: 10px">
           <el-button @click="getIndexes">确认</el-button>
-        </div>
-        <div class="select-index">
-          <el-select v-if="indexes.length>0" v-model="curIndex" style="width: 100px" placeholder="请选择">
-            <el-option
-              v-for="item in indexes"
-              :key="item.tsCode"
-              :label="item.name"
-              :title="item.fullName"
-              :value="item.tsCode">
-            </el-option>
-          </el-select>
-        </div>
+        </el-row>
+        <el-tabs>
+          <el-tab-pane label="选择指数">
+            <div class="select-index">
+              <el-select v-if="indexes.length>0" v-model="curIndex" style="width: 100px" placeholder="请选择">
+                <el-option
+                  v-for="item in indexes"
+                  :key="item.tsCode"
+                  :label="item.name"
+                  :title="item.fullName"
+                  :value="item.tsCode">
+                </el-option>
+              </el-select>
+            </div>
+          </el-tab-pane>
+        </el-tabs>
       </div>
-      <p></p>
-      <div >
-        <el-button @click="refresh">刷新</el-button>
-        <el-button @click="orderByCon(1)">当日个股贡献度排序</el-button>
-        <el-button @click="orderByCon(5)">5日个股贡献度排序</el-button>
-      </div>
+
+      <el-tabs>
+        <el-tab-pane label="操作">
+          <div >
+            <el-button @click="refresh">刷新</el-button>
+            <el-button @click="orderByCon(1)">当日个股贡献度排序</el-button>
+            <el-button @click="orderByCon(5)">5日个股贡献度排序</el-button>
+          </div>
+        </el-tab-pane>
+      </el-tabs>
     </div>
 
-    <div style="text-align: center;background-color: #587482;margin-left: 10px;margin-right: 10px">
+
+    <div class="result-table" v-if="showTable">
       <v-table
         is-horizontal-resize
         column-width-drag
@@ -88,6 +103,7 @@
         isLoading: false,
         total: 0,
         multipleSort: false,
+        showTable:false,
         tableConfig: {
           tableData: [],
           columns: [
@@ -159,6 +175,7 @@
         this.$axios.get('/contribution/'+this.curIndex+'/'+this.date)
           .then(ret=>{
             this.isLoading = false;
+            this.showTable=true
             this.rawData = ret.data
             console.log(this.rawData)
             this.total = this.rawData.length
@@ -211,8 +228,7 @@
         }
       },
       toIndDetails(rowIndex,rowData,column){
-        //console.log("asdsad")
-        if(column.field==='symbol'){
+        if(column.field=='symbol'||column.field=='name'){
           console.log(rowData[column.field])
           this.$router.push({
               path:"/indDetails/indDetails",
@@ -221,15 +237,11 @@
               }
           })
         }
-        /*
-        else if(column.field=='name'){
-          this.$router.push({
-            path:"/indDetails/indDetails",
-            query: {
-              stockName: rowData[column.field]
-            }
-          })
-        }*/
+      },
+      columnCellClass(rowIndex,columnName,rowData){
+        if(columnName==='symbol'||columnName==='name'){
+          return 'column-cell-class-name-cailia';
+        }
       },
       //获取当前页数据
       getTableData() {
@@ -249,6 +261,9 @@
           ret=>{
             console.log(ret.data)
             this.indexes=ret.data
+            if(ret.data.length==0){
+              alert('当日')
+            }
           }
         ).catch(err => {
             alert('请求失败');
@@ -258,15 +273,30 @@
         if(val==1){
           this.$axios.post('/contribution/sort1',{params:this.rawData})
             .then(ret=>{
-                this.rawData=ret.data
-                this.getTableData()
+                if(ret.data.length>0){
+                  this.rawData=ret.data
+                  this.getTableData()
+                }else{
+                  alert("先刷新试试看")
+                }
               })
+            .catch(err=>{
+               alert("先刷新试试看")
+            })
+
         }
         else if(val==5){
           this.$axios.post('/contribution/sort5',{params:this.rawData})
             .then(ret=>{
-              this.rawData=ret.data
-              this.getTableData()
+              if(ret.data.length>0){
+                this.rawData=ret.data
+                this.getTableData()
+              }else{
+                alert("先刷新试试看")
+              }
+            })
+            .catch(err=>{
+              alert("先刷新试试看")
             })
         }
       },
@@ -303,5 +333,21 @@
   }
   .layout-footer-center {
     text-align: center;
+  }
+  .column-cell-class-name-cailia .v-table-body-cell:hover{
+    color: white;
+    background-color: darkmagenta;
+    text-underline: gold;
+    cursor: pointer;
+  }
+  .column-cell-class-name-cailia .v-table-body-cell:hover span{
+    border-bottom: 1px solid white;
+  }
+  .result-table{
+    text-align: center;
+    background-color: #587482;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 20px;
   }
 </style>

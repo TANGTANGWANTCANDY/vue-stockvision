@@ -10,11 +10,6 @@
 				<el-form-item prop="name" label="用户名称">
 					<el-input v-model="form.name" placeholder="请输入用户名称"></el-input>
 				</el-form-item>
-        <!--
-				<el-form-item prop="account" label="账号名称">
-					<el-input v-model="form.account" placeholder="请输入账号"></el-input>
-				</el-form-item>
-				-->
 				<el-form-item prop="pass" label="密码">
 					<el-input v-model="form.pass" type="password" placeholder="请输入密码"></el-input>
 				</el-form-item>
@@ -27,23 +22,18 @@
 				<el-form-item prop="phone" label="手机">
 					<el-input v-model="form.phone" placeholder="请输入手机号"></el-input>
 				</el-form-item>
-        <!--
-				<el-form-item prop="card" label="身份证">
-					<el-input v-model="form.card" placeholder="请输入身份证号"></el-input>
-				</el-form-item>
-				-->
-				<el-form-item prop="birth" label="出生日期">
-					<el-col :span="24">
-            <!--<el-input v-model="form.birth" placeholder=""></el-input>-->
-						<el-date-picker type="date" placeholder="选择日期" v-model="form.birth" value-format="yyyy-MM-dd" format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
-					</el-col>
-				</el-form-item>
 				<el-form-item prop="sex" label="性别">
 					<el-select class="select-sex" v-model="form.sex" placeholder="请选择性别">
 						<el-option label="男" value="man"></el-option>
 						<el-option label="女" value="woman"></el-option>
 					</el-select>
 				</el-form-item>
+        <el-form-item prop="address" label="住址">
+          <el-input v-model="form.address" placeholder="地址"></el-input>
+        </el-form-item>
+        <el-form-item prop="info" label="个人简介">
+          <el-input v-model="form.info" placeholder="简单介绍自己"></el-input>
+        </el-form-item>
 				<el-form-item>
 					<el-button type="primary" @click="onSubmit('form')">确定</el-button>
 					<el-button @click="onCancle()">取消</el-button>
@@ -94,34 +84,21 @@
 					callback();
 				}
 			};
-			/*
-			var validateCard = (rule, value, callback) => {
-				if (value === '') {
-					callback(new Error('请输入身份证号'));
-				} else if (!Util.idCardReg.test(this.form.card)){
-					callback(new Error('请输入正确的身份证号'));
-				} else {
-					callback();
-				}
-			};
-			*/
-            return {
+      return {
 				form: {
 					name: '',
-					//account: '',
 					pass: '',
 					checkPass: '',
 					email: '',
 					phone: '',
-					//card: '',
-					birth: '',
-					sex: ''
+					sex: '',
+          address:'',
+          info:'',
                 },
                 rules: {
                     name: [
                         { required: true, message: '请输入用户名', trigger: 'blur' }
                     ],
-                    //account: [{ required: true, message: '请输入账号', trigger: 'blur' }],
                     pass: [
                         { required:true, message:'设置密码',validator: validatePass, trigger: 'blur' }
                     ],
@@ -134,13 +111,11 @@
                     phone: [
                         { validator: validatePhone, trigger: 'blur' }
                     ],
-                    //card: [{ validator: validateCard, trigger: 'blur' }],
-                    birth: [
-                        { message: '请输入出生日期',type: 'string', trigger: 'blur' }
-                    ],
                     sex: [
                         { message: '请输入性别', trigger: 'blur' }
-                    ]
+                    ],
+                    address:[{message: '住址', trigger: 'blur'}],
+                    info:[{message: '介绍自己', trigger: 'blur'}]
                 }
 			}
         },
