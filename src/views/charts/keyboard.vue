@@ -66,7 +66,7 @@ export default {
         this.seriesData = response.data
         this.indButtonOff()
       }).catch(err => { // 请求失败处理
-        alert('当前日期没有进行交易,请重新选择日期!')
+        alert('当前日期没有交易数据,请重新选择日期!')
         console.log(err)
         this.indButtonOff()
       })
