@@ -12,7 +12,7 @@
         </el-tab-pane>
       </el-tabs>
       <el-row style="margin-top: 20px;margin-left: 20px">
-        <el-button style="border-width:0;background-color:#587482;width:120px" @click="backtest">模型回测</el-button>
+        <el-button style="border-width:0;background-color:#587482;width:120px" :loading="loadingData" @click="backtest">模型回测</el-button>
       </el-row>
     </div>
     <div class="backtest-result" v-if="showResult">
@@ -36,6 +36,7 @@
       data(){
         return{
           showResult:false,
+          loadingData:false,
           trainDate:{
             startdate:'',
             enddate:''
@@ -105,6 +106,7 @@
           }
         },
         backtest(){
+          this.loadingData=true
           this.$axios.post('/factor/modelTest',{
               trainDate:this.trainDate,
               targetDate:this.targetDate,
@@ -115,6 +117,7 @@
             .then(res => {
               this.tree = res.data.chart_data; //把取item的数据赋给 tree
               this.showResult=true
+              this.loadingData=false
               console.log(res.data)
               this.$refs.barTable.getTableData(res.data.table_data)
               this.option = this.setBacktestOption(res.data.chart_data)
