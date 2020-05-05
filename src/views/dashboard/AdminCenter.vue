@@ -14,9 +14,13 @@
               <el-button @click="addAdmin">创建管理员账户</el-button>
             </div>
           </el-row>
-          <div v-if="displayUsers" class="dispaly-users">
-            普通用户列表：
+          <div v-if="displayUsers" class="display-users">
+            <p style="font-style: initial">普通用户列表</p>
             <el-table :data="users" border>
+              <el-table-column
+                type="index"
+                label="序列">
+              </el-table-column>
               <el-table-column
                 v-for="{prop,label} in colConfigs"
                 :key="prop"
@@ -24,8 +28,24 @@
                 :label="label"
               >
               </el-table-column>
-              <el-table-column label="操作"><a href="javascript:;" @click="deleteUser(index)">删除</a></el-table-column>
+
+              <el-table-column label="操作">
+                <template scope="scope">
+                  <!--scope.row代表当前对应行-->
+                  <el-button type="danger" size="small" @click="deleteUser(scope.row)">删除</el-button>
+                </template>
+              </el-table-column>
             </el-table>
+
+            <el-pagination
+              @size-change="sizeChange"
+              @current-change="currentChange"
+              :current-page="currentPage"
+              :page-sizes="[10, 20, 30, 50, 100]"
+              :page-size="pageSize"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="users.length">
+            </el-pagination>
           </div>
         </el-tab-pane>
       </el-tabs>
@@ -47,7 +67,6 @@
       name: "AdminCenter",
       data(){
           this.colConfigs=[
-            {prop:'id',label:'id'},
             {prop:'username',label:'用户名'},
             {prop:'phoneNumber',label:'电话号码'},
             {prop:'mailAddress',label:'邮箱'},
@@ -57,20 +76,35 @@
           return{
             users:[],
             displayUsers:false,
+            // 当前页
+            currentPage: 1,
+            //  每页多少条
+            pageSize: 10,
           }
       },
       methods:{
         getUsers(){
           this.$axios.get('/admin/getGeneralUsers').then(
             ret=>{
-              this.users=ret.data
+              if(ret.data.length==0){
+                alert("无用户")
+              }else{
+                this.users=ret.data
+              }
             }
           ).catch(err=>{
             console.log(err)
           })
         },
-        deleteUser(index){
-          let user=this.users[index]
+        // 每页多少条
+        sizeChange(val) {
+          this.pageSize = val
+        },
+        // 当前页
+        currentChange(val) {
+          this.currentPage = val
+        },
+        deleteUser(user){
           this.$axios.get('/admin/deleteUser/'+user.id).then(ret=>{
             this.getUsers()
             console.log(ret)
@@ -92,12 +126,17 @@
 
 <style scoped>
   .crumbs{
-    height: 50px;
+    height: 10%;
   }
   .user-management{
-    height: 200px;
+    height: 40%;
+    margin-top: 10px;
   }
   .sys-management{
-    height: 200px;
+    height: 20%;
+    margin-top: 50px;
+  }
+  .display-users{
+    text-align: center;
   }
 </style>

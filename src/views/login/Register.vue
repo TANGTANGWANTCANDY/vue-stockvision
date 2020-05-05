@@ -106,10 +106,10 @@
                         { required:true,message:'确认密码',validator: validatePass2, trigger: 'blur' }
                     ],
                     email: [
-                        { validator: validateEmail, trigger: 'blur' }
+                        { required:true,validator: validateEmail, trigger: 'blur' }
                     ],
                     phone: [
-                        { validator: validatePhone, trigger: 'blur' }
+                        { required:true,validator: validatePhone, trigger: 'blur' }
                     ],
                     sex: [
                         { message: '请输入性别', trigger: 'blur' }
@@ -121,30 +121,33 @@
         },
         methods:{
         	onSubmit(formName) {
-				const self = this;			
-				self.$refs[formName].validate((valid) => {
-                    if (valid) {
-                        self.$axios.post('/user/addUser',self.form).then(function(response) {
-							console.log(response);
-							self.$router.push('/register-success');
-						}).then(function(error) {
-							console.log(error);
-						})
-                    } else {
-                        console.log('error submit!!');
-                        return false;
-                    }
-                });
-				
-        	},
-        	onCancle() {
+            const self = this;
+            self.$refs[formName].validate((valid) => {
+              if (valid) {
+                self.$axios.post('/user/addUser',self.form).then(response=>{
+                  console.log(response);
+                  if(response.data=='success'){
+                    self.$router.push('/register-success')
+                  }else{
+                    alert("您已注册过，请勿重复注册！")
+                  }
+                }).catch(error=>{
+                  console.log(error);
+                })
+              } else {
+                console.log('error submit!!');
+                return false;
+              }
+            });
+            },
+          onCancle() {
         		this.$router.push('/login');
-			},
-			getDateTimes(str) {
-				var str = new Date(str);
-        		return str;
-			}       	
-        }
+          },
+          getDateTimes(str) {
+            var str = new Date(str);
+                return str;
+          }
+		  }
 	}
 </script>
 

@@ -35,8 +35,8 @@
           if(value === '') {
             callback(new Error('请输入密码'));
           } else {
-            if(this.form.checkPass !== '') {
-              this.$refs.form.validateField('checkPass');
+            if(this.adminForm.checkPass !== '') {
+              this.$refs.adminForm.validateField('checkPass');
             }
             callback();
           }
@@ -44,7 +44,7 @@
         var validatePass2 = (rule, value, callback) => {
           if(value === '') {
             callback(new Error('请再次输入密码'));
-          } else if (value !== this.form.pass) {
+          } else if (value !== this.adminForm.password) {
             callback(new Error('两次输入的密码不一致'));
           } else {
             callback();
@@ -71,11 +71,16 @@
         onSubmit(formName){
           this.$refs[formName].validate((valid) => {
             if (valid) {
-              self.$axios.post('/admin/addAdmin',this.adminForm).then(response=> {
+              this.$axios.post('/admin/addAdmin',this.adminForm).then(response=> {
                 console.log(response);
-                //返回管理界面
-                this.$router.push('/admin/center');
-              }).then(error=> {
+                if(response.data=='success'){
+                  alert("添加管理员账户成功")
+                }else{
+                  alert("管理员账户已存在")
+                }
+                //刷新页面
+                location.reload()
+              }).catch(error=> {
                 console.log(error);
               })
             } else {
