@@ -269,6 +269,7 @@ export const constantRoutes = [
       }
     ]
   },
+  /*
   {
     path: '/tradingBoard',
     component: Layout,
@@ -281,6 +282,7 @@ export const constantRoutes = [
       }
     ]
   },
+  */
   {
     path: '/volatility',
     component: Layout,
@@ -290,6 +292,18 @@ export const constantRoutes = [
         name: 'volatility',
         component: () => import('@/views/volatility/index'),
         meta: { requireAuth: true, title: '波动率', icon: 'chart' }
+      }
+    ]
+  },
+  {
+    path: '/indDetails',
+    component: Layout,
+    children: [
+      {
+        path: 'indDetails',
+        name: 'indDetails',
+        component: () => import('@/views/ind-details/index'),
+        meta: { requireAuth: true, title: '个股详情', icon: 'example' }
       }
     ]
   },
@@ -362,18 +376,6 @@ export const constantRoutes = [
         name: 'profitLoss',
         component: () => import('@/views/profit-loss/index'),
         meta: { requireAuth: true, title: '盈亏统计', icon: 'table' }
-      }
-    ]
-  },
-  {
-    path: '/indDetails',
-    component: Layout,
-    children: [
-      {
-        path: 'indDetails',
-        name: 'indDetails',
-        component: () => import('@/views/ind-details/index'),
-        meta: { requireAuth: true, title: '个股详情', icon: 'example' }
       }
     ]
   },

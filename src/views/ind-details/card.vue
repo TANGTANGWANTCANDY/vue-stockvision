@@ -44,7 +44,6 @@
             tsCode:tsCode
           })
           .then(res => {
-            console.log('res.data: ' + res.data);
             this.stockName = res.data[0]
             this.area = res.data[1]
             this.tsCode = res.data[2]

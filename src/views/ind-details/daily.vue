@@ -122,7 +122,7 @@
     },
     activated() {
       this.tsCode = this.$route.query.tsCode
-      console.log('active: ' + this.tsCode);
+      // console.log('active: ' + this.tsCode);
       if (this.tsCode) {
         this.getDailyData();
       }else{
@@ -145,7 +145,6 @@
             tsCode:this.tsCode
           })
           .then(res => {
-            console.log('res.data: ' + res.data);
             this.dailyList = res.data
             this.buttonOff()
           })
