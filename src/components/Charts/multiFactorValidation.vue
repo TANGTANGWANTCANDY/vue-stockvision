@@ -5,7 +5,6 @@
       <el-button @click="exportExcel()" style="border-width:1px; width:100px">下载</el-button>
       <el-card>
         <el-scrollbar style="height:100%;width: 100%"> <!-- 滚动条 -->
-          <!-- 注意需要给 el-scrollbar 设置高度，判断是否滚动是看它的height判断的 -->
           <el-row  style="height: 500px;width: 862px;"><!--可显示区域-->
             <el-table
               :data="tables.filter(data => handleAdd)"
