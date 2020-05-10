@@ -75,7 +75,8 @@ export default {
         .get('/update-database')
         .then(res => {
           console.log(res.data);
-          alert(res.data);
+          var alertData = res.data
+          alert(alertData);
           this.buttonstate = false
         })
         .catch(err => {

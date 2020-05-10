@@ -1,7 +1,8 @@
 <template>
   <div class="app-container">
-
+    <!--主题切换框-->
     <ThemeSwitch  @themeChange = "themeChange"></ThemeSwitch>
+    <!--日期选择与确认按钮-->
     <el-row>
     <el-col :span="12">
       <DateSelect @getIndustryDate="getIndustryDate"></DateSelect>
@@ -10,8 +11,6 @@
       <el-button type="primary" :loading="industryButtonState" style="border-width:0;background-color:#587482;width:100px" @click="indButton">{{industryButtonText}}</el-button>
     </el-col>
   </el-row>
-    <p>{{option.data}}</p>
-
     <!--大盘云图开始-->
     <div id="scgl_s1">
       <p id="hd">
@@ -19,9 +18,8 @@
         <span>大盘云图</span>
       </p>
     </div>
-
     <div id="myChart" :style="{ width:'1000px', height: '700px'}"></div>
-
+    <!--颜色图标-->
     <div class="step" style="background:#00d641;">-4%</div>
     <div class="step" style="background:#1aa448;">-3%</div>
     <div class="step" style="background:#0e6f2f;">-2%</div>
@@ -47,7 +45,7 @@
         industryButtonState: false,
         industryButtonText: "确认",
         formatUtil: this.$echarts.format,
-        option : {}
+        option : {},
       }
     },
     components:{
@@ -85,29 +83,38 @@
         this.industryButtonText = "确认";
       },
       indButton(){
+        // 按钮变为“正在加载状态”
         this.indButtonOn();
-        this.$axios
-          .post('/industry-cloud',{
-            date:this.industryDate
-          })
-          .then(res => {
-            console.log(res);
-            if(res.data === ""){
-              alert("当前日期无交易数据，请重新选择")
-            }
-            else{
-              this.option = this.setOption(res.data)
-              this.drawLine();
-            }
-            this.indButtonOff();
-          })
-          .catch(err => {
-            if (err.message !== 'interrupt') {
-              alert("请求失败")
-            }
-            console.log(err);
-            this.indButtonOff();
-          })
+        console.log(this.industryDate);
+        if(this.industryDate === null){
+          alert("请选择日期")
+          this.indButtonOff();
+        }
+        else{
+          this.$axios
+            .post('/industry-cloud',{
+              date:this.industryDate
+            })
+            .then(res => {
+              console.log(res);
+              if(res.data === ""){
+                alert("当前日期无交易数据，请重新选择")
+              }
+              else{
+                this.option = this.setOption(res.data)
+                this.drawLine();
+              }
+              this.indButtonOff();
+            })
+            .catch(err => {
+              if (err.message !== 'interrupt') {
+                alert("请求失败")
+              }
+              console.log(err);
+              // 恢复按钮状态
+              this.indButtonOff();
+            })
+        }
       },
       // 点击跳转函数
       setParams(code){
@@ -130,9 +137,14 @@
         _this.myChart.on('click', function (param){
           var name=param.name;
           var index=name.lastIndexOf('\n');
-          var pushcode = name.substring(0, index)
+          var pushcode = name.substring(0, index);
           console.log('获取'+pushcode+'信息');
-          _this.setParams(pushcode)
+          if( pushcode === "" ){
+            console.log(pushcode + '是行业，不跳转');
+          }
+          else{
+            _this.setParams(pushcode)
+          }
         });
       },
       getLevelOption() {

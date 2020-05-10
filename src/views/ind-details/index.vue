@@ -30,15 +30,15 @@
     },
     methods: {
       changeCard(tsCode) {
-        console.log('运行changeCard');
+        // console.log('运行changeCard');
         this.$refs.basicCard.newCard(tsCode)
       },
       changeDailyOther(tsCode) {
-        console.log('changeDailyOther');
+        // console.log('changeDailyOther');
         this.$refs.dailybasictable.changeTsCode(tsCode)
       },
       changeDailyBasicOther(tsCode) {
-        console.log('changeDailyBasicOther');
+        // console.log('changeDailyBasicOther');
         this.$refs.dailytable.changeTsCode(tsCode)
       }
     }
