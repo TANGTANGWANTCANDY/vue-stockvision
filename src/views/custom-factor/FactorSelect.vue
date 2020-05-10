@@ -768,48 +768,14 @@ export default {
       this.myChart = this.$echarts.init(document.getElementById('myChart'),theme)
       this.myChart.setOption(this.option,true);
     },
-    backtest(){
-      console.log(this.stockPool)
-      this.$axios
-        .post('/factor/backtest',{
-          date:this.date,
-          pool: this.stockPool,
+    toStackRegressor(){
+      this.$router.push({path:'/customFactor/model/sr',
+        query:{
+          pool:this.stockPool,
           factors:this.categories,
-          basicFactors:this.factors,
-        })
-        .then(res => {
-          this.tree = res.data; //把取item的数据赋给 tree
-          console.log(res.data);
-          this.$refs.barTable.tableData=res.data
-          this.option = this.setBacktestOption(res.data)
-          this.drawLine();
-          this.$refs.topbox.buttonOff()
-        })
-        .catch(err => {
-          alert('请求失败');
-          this.$refs.topbox.buttonOff()
-        })
-    },
-    modelBacktest(){
-      this.$axios
-        .post('/factor/modelTest',{
-          date:this.date,
-          category: this.category,
-          factors:this.factors
-        })
-        .then(res => {
-          //console.log(res.data);
-          this.tree = res.data.chart_data; //把取item的数据赋给 tree
-          //console.log(res.data.table_data)
-          this.$refs.barTable.getTableData(res.data.table_data)
-          this.option = this.setBacktestOption(res.data.chart_data)
-          this.testDrawLine();
-          this.$refs.topbox.buttonOff()
-        })
-        .catch(err => {
-          alert('请求失败');
-          this.$refs.topbox.buttonOff()
-        })
+          basicFactors:this.factors
+        }
+      })
     }
   }
 }
@@ -835,16 +801,5 @@ export default {
     text-align: left;
     font-weight:bold;
     height: 30px;
-  }
-  .el-row {
-    margin-bottom: 10px;
-
-  :last-child {
-    margin-bottom: 0;
-  }
-
-  }
-  .el-col {
-    border-radius: 4px;
   }
 </style>

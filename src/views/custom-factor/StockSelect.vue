@@ -46,7 +46,7 @@
         </el-option>
       </el-select>
     </div>
-    <el-button @click="submit">确认股票池</el-button>
+    <el-button @click="submit" :loading="LoadingStock">确认股票池</el-button>
   </div>
 </template>
 
@@ -75,6 +75,7 @@
         oldIndustryOptions:[[]],
         oldMarketOptions:[[]],
         oldIndexOptions:[[]],
+        LoadingStock:false
       }
     },
     created() {
@@ -85,40 +86,18 @@
         //console.log(old)
         this.exchange = this.selectAll(val,this.exchanges,this.oldExchangeOptions)
         this.oldExchangeOptions[1]=this.exchange
-        //this.$emit('stockSelectChange',category)
       },
       selectIndexAll(val){
         this.selectedIndex=this.selectAll(val,this.indexes,this.oldIndexOptions)
         this.oldIndexOptions[1]=this.selectedIndex
-        let category={
-          exchange:this.exchange,
-          industry:this.industry,
-          market:this.market,
-          index:this.selectedIndex
-        }
-        //this.$emit('stockSelectChange',category)
       },
       selectMarketAll(val){
         this.market=this.selectAll(val,this.markets,this.oldMarketOptions)
         this.oldMarketOptions[1]=this.market
-        let category={
-          exchange:this.exchange,
-          industry:this.industry,
-          market:this.market,
-          index:this.selectedIndex
-        }
-        //this.$emit('stockSelectChange',category)
       },
       selectIndustryAll(val){
         this.industry=this.selectAll(val,this.industries,this.oldIndustryOptions)
         this.oldIndustryOptions[1]=this.industry
-        let category={
-          exchange:this.exchange,
-          industry:this.industry,
-          market:this.market,
-          index:this.selectedIndex
-        }
-        //this.$emit('stockSelectChange',category)
       },
       selectAll(val,target,oldOptions){
         let allValues = []
@@ -165,8 +144,8 @@
         ).then(ret => {
           console.log(ret);
           if(ret.data.length>0){
+            this.LoadingStock=true
             this.$emit('stockSelectChange',ret.data)
-            //alert("成功选择股票池！");
           }else{
             alert("股票池为空，请重新选择！");
           }

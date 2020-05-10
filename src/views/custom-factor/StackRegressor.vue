@@ -135,4 +135,7 @@
   .select-date{
     text-align: left;
   }
+  .backtest-result{
+    margin-top: 20px;
+  }
 </style>
