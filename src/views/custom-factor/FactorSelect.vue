@@ -710,7 +710,7 @@ export default {
       } else if (this.validationModel == '多因子') {
         this.multiValidation()
       } else {
-        alert('请选择验证模式')
+        alert('请选择验证模式!')
         this.vailbuttonstate = false
         this.vailbuttontext = '验证'
       }
