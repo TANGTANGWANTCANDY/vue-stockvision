@@ -15,8 +15,8 @@ import router from './router'
 import '@/icons' // icon
 import '@/permission' // permission control
 import echarts from 'echarts'
-import 'echarts/theme/customed.js'
-import 'echarts/theme/chalk.js'
+//import 'echarts/theme/customed.js'
+//import 'echarts/theme/chalk.js'
 
 // 引入样式
 import 'vue-easytable/libs/themes-base/index.css'

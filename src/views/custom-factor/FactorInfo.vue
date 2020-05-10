@@ -371,7 +371,7 @@
     ]
 
     export default {
-        name: "FactorInfo",
+      name: "FactorInfo",
       dailyFactorInfo,
       dailyBasicFactorInfo,
       cashflowFactorInfo,

@@ -24,6 +24,7 @@
     "nprogress": "0.2.0",
     "path-to-regexp": "2.4.0",
     "qs": "^6.9.1",
+    "sass": "^1.26.5",
     "vue": "2.6.10",
     "vue-easytable": "^1.7.2",
     "vue-router": "3.0.6",

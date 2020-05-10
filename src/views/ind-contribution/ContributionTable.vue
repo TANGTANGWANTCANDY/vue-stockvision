@@ -14,7 +14,7 @@
                 style="width: 100%;"></el-date-picker>
             </div>
             <div class="select-market">
-              <el-select v-model="curMarket" style="width: 150px" placeholder="请选择">
+              <el-select v-model="curMarket" style="width: 150px" placeholder="请选择市场类型">
                 <el-option
                   v-for="item in markets"
                   :key="item.value"
@@ -96,7 +96,7 @@
         curIndex: '',
         markets:[{value: 'MSCI', label: 'MSCI指数'}, {value: 'CSI', label: '中证指数'},{value:'SSE',label:'上交所指数'},
           {value: 'SZSE', label: '深交所指数'},{value: 'CICC', label: '中金指数'},{value: 'SW', label: '申万指数'},{value: 'OTH', label: '其他指数'}],
-        curMarket:'SSE',
+        curMarket:'',
         rawData: [],
         pageIndex: 1,
         pageSize: 20,
