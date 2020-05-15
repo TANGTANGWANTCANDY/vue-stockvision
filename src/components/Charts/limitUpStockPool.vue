@@ -33,6 +33,9 @@ export default {
         dataItem: 'tsCode',
         dataName: '股票代码'
       }, {
+        dataItem: 'stockName',
+        dataName: '股票名称'
+      }, {
         dataItem: 'tradeDate',
         dataName: '交易日期'
       }, {
