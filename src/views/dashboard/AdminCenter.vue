@@ -54,8 +54,8 @@
     <div class="sys-management">
       <el-tabs>
         <el-tab-pane label="系统管理">
-          <el-button>数据库管理</el-button>
-          <el-button>增加因子</el-button>
+          <el-button>基础数据库管理</el-button>
+          <el-button @click="toFactorManage">因子管理</el-button>
         </el-tab-pane>
       </el-tabs>
     </div>
@@ -119,7 +119,11 @@
         addAdmin(){
           //跳转新增管理员账户界面
           this.$router.push('/admin/add')
-        }
+        },
+        toFactorManage(){
+          //跳转到因子管理界面
+          this.$router.push('/admin/factor/manage')
+        },
       }
     }
 </script>

@@ -171,10 +171,10 @@
     methods: {
       refresh() {
         //使用axios的get请求向后台获取用户信息数据
-        this.isLoading = true;
+        this.isLoading = true
         this.$axios.get('/contribution/'+this.curIndex+'/'+this.date)
           .then(ret=>{
-            this.isLoading = false;
+            this.isLoading = false
             this.showTable=true
             this.rawData = ret.data
             console.log(this.rawData)
