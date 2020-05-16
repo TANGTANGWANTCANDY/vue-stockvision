@@ -5,8 +5,8 @@
         <el-form-item label="因子类key" prop="key">
           <el-input v-model="categoryForm.key" style="width: 25%"></el-input>
         </el-form-item>
-        <el-form-item label="因子类名（中文）" prop="name">
-          <el-input v-model="categoryForm.name" style="width: 50%"></el-input>
+        <el-form-item label="因子类名" prop="name">
+          <el-input v-model="categoryForm.name" style="width: 25%"></el-input>
         </el-form-item>
         <el-form-item label="因子类描述" prop="desc">
           <el-input v-model="categoryForm.desc" style="width: 50%"></el-input>

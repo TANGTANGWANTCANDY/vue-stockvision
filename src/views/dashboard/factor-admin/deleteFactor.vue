@@ -44,7 +44,7 @@
       name: "deleteFactor",
       data(){
         this.colConfigs=[
-          {prop:'value',label:'因子'},
+          {prop:'factor',label:'因子'},
           {prop:'name',label:'因子名'},
           {prop:'description',label:'描述'},
         ]

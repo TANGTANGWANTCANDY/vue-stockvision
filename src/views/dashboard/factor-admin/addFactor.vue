@@ -17,7 +17,7 @@
           <el-input v-model="name" placeholder="因子名" style="width: 80%"></el-input>
         </el-col>
         <el-col>
-          <el-input v-model="desc" placeholder="因子描述" style="width: 80%"></el-input>
+          <el-input v-model="desc" placeholder="因子描述" style="width: 100%"></el-input>
         </el-col>
       </el-row>
       <el-row style="margin-top: 10px">

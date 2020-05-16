@@ -15,6 +15,11 @@
         <delete-factor ref="deleteFactorChild" :categories="categories"></delete-factor>
       </el-tab-pane>
     </el-tabs>
+    <el-tabs>
+      <el-tab-pane label="更新因子数据库">
+        <el-button :loading="updating" @click="updateFactorData">更新因子数据库</el-button>
+      </el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 
@@ -28,6 +33,7 @@
       data(){
         return{
           categories:[],
+          updating:false,
         }
       },
       beforeCreate(){
@@ -42,7 +48,19 @@
         })
       },
       methods:{
-
+        updateFactorData(){
+          this.updating=true
+          this.$axios.get('/admin/update/factor').then(ret=>{
+            if(ret.data=='success'){
+              this.updating=false
+              alert("更新因子数据成功！")
+            }else{
+              alert("当日可能为非交易日，请确认！更新失败！")
+            }
+          }).catch(err=>{
+            console.log(err)
+          })
+        }
       }
     }
 </script>
