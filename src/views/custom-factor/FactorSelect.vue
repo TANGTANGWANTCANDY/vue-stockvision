@@ -75,9 +75,7 @@
         <el-tab-pane label="因子分析" name="analysisTab">
           <TopBox @newModel="newModel"  @newDate="newDate" @newChangeBin="newChangeBin" @buttonOn="onAnalyse" ref = "topbox"></TopBox>
           <div id="myChart" :style="{ width:'900px', height: '450px'}"></div>
-          <!--<el-button @click="backtest">回测测试</el-button>-->
           <div class="js-eclegend-tool" style="position: absolute;right: 20px;top: 40%"></div>
-          <el-button @click="backtest">回测测试</el-button>
         </el-tab-pane>
         <el-tab-pane label="因子有效性" name="validationTab">
           <el-row>
@@ -340,38 +338,6 @@ export default {
       return{
         title: {
           text: '换手率分析',
-        },
-        tooltip: {
-          trigger: 'axis'
-        },
-        legend: {
-          data: data[1]
-        },
-        grid: {
-          left: '3%',
-          right: '4%',
-          bottom: '3%',
-          containLabel: true
-        },
-        toolbox: {
-          feature: {
-            saveAsImage: {}
-          }
-        },
-        xAxis: {
-          type: 'category',
-          data: data[0]
-        },
-        yAxis: {
-          type: 'value'
-        },
-        series: data[2]
-      }
-    },
-    setBacktestOption(data){
-      return{
-        title: {
-          text: '回测',
         },
         tooltip: {
           trigger: 'axis'
