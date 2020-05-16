@@ -1,7 +1,7 @@
 <template>
   <div class="tag">
     {{param.text}}:
-    <el-input v-model="param.value" @change="onInputChange"></el-input>
+    <el-input v-model="param.value" @change="onInputChange" style="width: 20%"></el-input>
     <button @click="onCloseClick">x</button>
   </div>
 </template>
@@ -9,12 +9,14 @@
 <script>
     export default {
       name: "paramInput",
+      props:{
+        param:{
+          text:'',
+          value:'',
+        }
+      },
       data(){
         return{
-          param:{
-            text:'',
-            value:'',
-          }
         }
       },
       methods:{
@@ -32,5 +34,6 @@
   .tag{
     display: inline-block;
     margin: 3px;
+    width: 35%;
   }
 </style>

@@ -3,13 +3,13 @@
     <div calss="add-category">
       <el-form ref="categoryForm" :model="categoryForm">
         <el-form-item label="因子类key" prop="key">
-          <el-input v-model="categoryForm.key"></el-input>
+          <el-input v-model="categoryForm.key" style="width: 25%"></el-input>
         </el-form-item>
         <el-form-item label="因子类名（中文）" prop="name">
-          <el-input v-model="categoryForm.name"></el-input>
+          <el-input v-model="categoryForm.name" style="width: 50%"></el-input>
         </el-form-item>
         <el-form-item label="因子类描述" prop="desc">
-          <el-input v-model="categoryForm.desc"></el-input>
+          <el-input v-model="categoryForm.desc" style="width: 50%"></el-input>
         </el-form-item>
       </el-form>
     </div>
@@ -52,5 +52,8 @@
 </script>
 
 <style scoped>
-
+  .add-category{
+    width: 50%;
+    text-align: center;
+  }
 </style>

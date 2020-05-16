@@ -51,7 +51,7 @@
         return{
           showFactor:false,
           categories:[],
-          category:'',
+          category:{},
           factorList:[],
           currentPage:1,
           pageSize:5
@@ -64,7 +64,7 @@
         displayFactors(category){
           this.showFactor=false
           this.category=category  //记录选择的因子类
-          this.$axios.get('/admin/get/factors/'+category.category).then(ret=>{
+          this.$axios.get('/admin/get/factors/'+category.id).then(ret=>{
             this.showFactor=true
             this.factorList=ret.data
           }).catch(err=>{
@@ -80,7 +80,7 @@
           this.currentPage = val
         },
         deleteFactor(factor){
-          this.$axios.get('/admin/deleteFactor/'+factor.id).then(ret=>{
+          this.$axios.get('/admin/deleteFactor/'+this.category.id+"/"+factor.id).then(ret=>{
             if(ret.data=='success'){
               alert("删除因子成功！")
               this.displayFactors(this.category)
@@ -96,5 +96,11 @@
 </script>
 
 <style scoped>
-
+  .display-factor{
+    text-align: center;
+    width: 100%;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-top: 10px;
+  }
 </style>

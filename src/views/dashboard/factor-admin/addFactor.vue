@@ -1,20 +1,32 @@
 <template>
   <div>
     <div class="basicDiv">
-      <el-select v-model="category" style="width: 100px" placeholder="请选择">
-        <el-option
-          v-for="item in categories"
-          :key="item.id"
-          :label="item.name"
-          :title="item.description"
-          :value="item.id">
-        </el-option>
-      </el-select>
-
-      <el-input v-model="param.function" ></el-input>
+      <el-row style="display: inline-flex">
+        <el-col>
+          <el-select v-model="category" style="width: 80%" placeholder="请选择因子类">
+            <el-option
+              v-for="item in categories"
+              :key="item.id"
+              :label="item.name"
+              :title="item.description"
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </el-col>
+        <el-col>
+          <el-input v-model="name" placeholder="因子名" style="width: 80%"></el-input>
+        </el-col>
+        <el-col>
+          <el-input v-model="desc" placeholder="因子描述" style="width: 80%"></el-input>
+        </el-col>
+      </el-row>
+      <el-row style="margin-top: 10px">
+        计算因子函数名：
+        <el-input v-model="param.function" style="width: 50%"></el-input>
+      </el-row>
     </div>
     <div class="param0Div">
-      <el-select v-model="param.param0" multiple >
+      <el-select v-model="param.param0" multiple placeholder="请选择计算因子所需的基础数据" style="width: 35%">
         <el-option
           v-for="item in dailyFactorAll"
           :key="item.value"
@@ -27,21 +39,22 @@
     </div>
     <div class="param1Div">
       <div v-if="param1List && param1List.length>0">
-        <param-input
-          v-for="p in param1List"
-          :param="p"
-          @delete="onParamInputDelete"
-          @inputChange="onParamInputChange"
-        >
-        </param-input>
+        <el-col>
+          <param-input
+            v-for="p in param1List"
+            :param="p"
+            @delete="onParamInputDelete"
+            @inputChange="onParamInputChange"
+          >
+          </param-input>
+        </el-col>
       </div>
       <div v-else-if="param1List">没有常量参数</div>
 
       <el-button @click="addParam1">添加常量参数</el-button>
     </div>
-    <el-input v-model="name" >因子名</el-input>
-    <el-input v-model="desc">因子描述</el-input>
-    <el-button @click="addFactor">新增因子</el-button>
+
+    <el-button @click="addFactor" style="margin-top: 10px">新增因子</el-button>
   </div>
 </template>
 
@@ -56,7 +69,7 @@
         return{
           categories:[],
           showInputDiv:false,
-          category:0,
+          category:null,
           param:{
             function:'',
             param0:[],
@@ -79,25 +92,35 @@
         addParam1(){
           //新建一个常量参数对象
           let paramNew={
-            text:"参数"+this.param1List.length,
+            text:"参数"+(this.param1List.length+1),
             value:'0'
           }
+          console.log(paramNew.text)
           this.param1List.push(paramNew)
         },
         onParamInputChange(param){
           //更新参数值的改变
-          for ( let i = 0; i <param1List.length; i++){
+          for ( let i = 0; i <this.param1List.length; i++){
             if(this.param1List[i].text==param.text){
               this.param1List[i].value=param.value
             }
           }
         },
         addFactor(){
+          //记录常量参数的选择
+          for ( let i = 0; i <this.param1List.length; i++){
+            this.param.param1.push(this.param1List[i].value)
+          }
+          //添加基本表信息
+          for ( let i = 0; i <this.param.param0.length; i++){
+            this.param.param0[i]="daily."+this.param.param0[i]
+          }
+          //发起后端请求
           this.$axios.post('/admin/add/factor',{
-            category:this.category.id,
+            category:this.category,
             name:this.name,
             desc:this.desc,
-            parm:this.param
+            param:this.param
           }).then(ret=>{
             if(ret.data=='success'){
               alert("新增因子成功！")
@@ -113,5 +136,7 @@
 </script>
 
 <style scoped>
-
+  .param0Div{
+    margin-top: 20px;
+  }
 </style>
