@@ -75,6 +75,11 @@ export const constantRoutes = [
         path: 'add',
         name: 'addAdmin',
         component:()=>import('@/views/dashboard/addAdmin'),
+      },
+      {
+        path:'factor/manage',
+        name:'FactorManage',
+        component:()=>import('@/views/dashboard/factor-admin/factorManage'),
       }
     ]
   },

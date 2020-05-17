@@ -133,6 +133,7 @@
         console.log(this.industry)
         console.log(this.market)
         console.log(this.selectedIndex)
+        this.LoadingStock=true
         this.$axios.post('/factor/stock-select', {
             params:{
               exchange:this.exchange,
@@ -144,7 +145,7 @@
         ).then(ret => {
           console.log(ret);
           if(ret.data.length>0){
-            this.LoadingStock=true
+            this.LoadingStock=false
             this.$emit('stockSelectChange',ret.data)
           }else{
             alert("股票池为空，请重新选择！");

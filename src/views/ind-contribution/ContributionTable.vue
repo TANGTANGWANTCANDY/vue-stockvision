@@ -54,6 +54,17 @@
           </div>
         </el-tab-pane>
       </el-tabs>
+      <div class="illustration">
+        <el-row>
+          <label style="opacity: 60%">计算口径：</label>
+        </el-row>
+        <el-row>
+          <label style="font-size: small;font-style: normal;opacity: 50%">当日个股贡献度={（该股发行股数*价格波动）/上海证券交易所全部发性股数}/上证指数波动。（以上证指数为例）</label>
+        </el-row>
+        <el-row>
+          <label style="font-size: small;font-style: normal;opacity: 50%">5日个股贡献度中5日个股贡献度的价格波动采用当日收盘价减去前5个连续交易日的收盘价作为5日价格波动，发行股数采用个股当日总股本</label>
+        </el-row>
+      </div>
     </div>
 
 
@@ -148,7 +159,12 @@
               orderBy: 'asc',
               formatter: function (rowData, rowIndex, pagingIndex, field) {
                 let num = rowData[field] * Math.pow(10, 9);
-                return num.toFixed(2);
+                if (rowData[field] > 0)
+                  return `<span style="color:red">${num.toFixed(2)}</span>`;
+                else if (rowData[field] < 0)
+                  return `<span style="color:green">${num.toFixed(2)}</span>`;
+                else
+                  return num.toFixed(2);
               }
             },
             {
@@ -161,7 +177,12 @@
               orderBy: 'asc',
               formatter: function (rowData, rowIndex, pagingIndex, field) {
                 let num = rowData[field] * Math.pow(10, 9);
-                return num.toFixed(2);
+                if (rowData[field] > 0)
+                  return `<span style="color:red">${num.toFixed(2)}</span>`;
+                else if (rowData[field] < 0)
+                  return `<span style="color:green">${num.toFixed(2)}</span>`;
+                else
+                  return num.toFixed(2);
               }
             }
           ]
@@ -171,10 +192,10 @@
     methods: {
       refresh() {
         //使用axios的get请求向后台获取用户信息数据
-        this.isLoading = true;
+        this.isLoading = true
         this.$axios.get('/contribution/'+this.curIndex+'/'+this.date)
           .then(ret=>{
-            this.isLoading = false;
+            this.isLoading = false
             this.showTable=true
             this.rawData = ret.data
             console.log(this.rawData)
@@ -349,5 +370,8 @@
     margin-left: 10px;
     margin-right: 10px;
     margin-top: 20px;
+  }
+  .illustration{
+
   }
 </style>

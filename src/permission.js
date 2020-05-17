@@ -9,28 +9,30 @@ import { getToken } from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
 const whiteList = ['/login'] // no redirect whitelist
 */
-/*
-router.beforeEach((to, from, next) => {
-  // start progress bar
-  NProgress.start()
-  if (to.meta.requireAuth) {
-    if (store.state.user.username) {
-      next()
-      NProgress.done()
-    } else {
-      next()
-      NProgress.done()
-    }
-  } else {
-    next()
-  }
-}
-)
+
+// router.beforeEach((to, from, next) => {
+//   // start progress bar
+//   NProgress.start()
+//   if (to.meta.requireAuth) {
+//     if (store.state.user.username) {
+//       next()
+//       NProgress.done()
+//     } else {
+//       next({
+//         path: 'login',
+//         query: { redirect: to.fullPath }
+//       })
+//     }
+//   } else {
+//     next()
+//   }
+// }
+// )
 router.afterEach(() => {
   // finish progress bar
   NProgress.done()
 })
-*/
+
 /*
 router.beforeEach(async(to, from, next) => {
   // start progress bar

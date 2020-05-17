@@ -55,7 +55,7 @@
       <el-tabs>
         <el-tab-pane label="系统管理">
           <el-button @click="manageDB">数据库管理</el-button>
-          <el-button>增加因子</el-button>
+          <el-button @click="toFactorManage">因子管理</el-button>
           <div v-if="displayDB" style="margin-top: 20px;margin-left: 10px">
             请选择更新时间：<DateStartToEnd @getDate="updateDate"></DateStartToEnd>
           </div>
@@ -199,6 +199,10 @@
         addAdmin(){
           //跳转新增管理员账户界面
           this.$router.push('/admin/add')
+        },
+        toFactorManage(){
+          //跳转到因子管理界面
+          this.$router.push('/admin/factor/manage')
         },
         manageDB(){
           this.displayDB=true
