@@ -7,38 +7,32 @@
         <el-tab-pane label="股票池选择" name="stock1">
           <StockSelect style="margin-top: 10px" @stockSelectChange="getFactorSelect"></StockSelect>
         </el-tab-pane>
+        <el-tab-pane label="股票选择" name="stock2">
+          <el-select v-model="stockPool" multiple placeholder="选择股票">
+            <el-option
+              v-for="item in allStock"
+              :key="item.tsCode"
+              :label="item.symbol"
+              :value="item.tsCode"
+              :title="item.name"
+            >
+            </el-option>
+          </el-select>
+
+          <el-button @click="getFactorSelect(stockPool)">确认</el-button>
+        </el-tab-pane>
       </el-tabs>
     </div>
     <!--span style="margin-left:5px">因子选择</span-->
     <div id="select-Factors" v-if="showFactorSelect" style="margin-top: 10px;margin-bottom: 20px">
       <el-tabs v-model="factorsTab">
         <el-tab-pane label="基础因子" name="1">
-          日线行情：
-          <el-select class="select" v-model="factors.daily" multiple placeholder="请选择" >
-            <el-option
-              v-for="item in allFactor.dailyFactorAll"
-              :key="item.value"
-              :label="item.name"
-              :value="item.value"
-              :title="item.description"
-            >
-            </el-option>
-          </el-select>
-          每日指标：
-          <el-select class="select" v-model="factors.daily_basic" multiple placeholder="请选择" >
-            <el-option
-              v-for="item in allFactor.dailyBasicFactorAll"
-              :key="item.value"
-              :label="item.name"
-              :value="item.value"
-              :title="item.description"
-            >
-            </el-option>
-          </el-select>
+          <BasicFactorSelect @basicFactorSelectChange="basicFactorSelect"></BasicFactorSelect>
         </el-tab-pane>
+        <!--
         <el-tab-pane label="财务报表因子" name="2">
           现金流量表：
-          <el-select class="select" v-model="factors.cashflow" multiple placeholder="请选择" >
+          <el-select class="select" v-model="factors.cashflow" @change="selectFactorChange($event,category)" multiple placeholder="请选择" >
             <el-option
               v-for="item in allFactor.cashflowFactorAll"
               :key="item.value"
@@ -49,6 +43,7 @@
             </el-option>
           </el-select>
         </el-tab-pane>
+        -->
         <el-tab-pane label="高级" name="3">
           <div class="advanced-factor-select">
             <li v-for="category in categories">
@@ -124,6 +119,8 @@
         </el-tab-pane>
         <el-tab-pane label="模型回测" name="Modeltest">
           <el-button @click="toStackRegressor">堆叠模型</el-button>
+          <el-button @click="toGCForest">随机森林模型</el-button>
+          <el-button @click="toAvgMoment">粒子群均线动量模型</el-button>
         </el-tab-pane>
       </el-tabs>
     </div>
@@ -140,10 +137,12 @@ import DateStartToEnd from "@/components/SelectBox/DateStartToEnd"
 import Chart from '@/components/Charts/multiFactorValidation'
 import BarTable from "./BarTable";
 import ThemeSwitch from "@/components/ThemeSwitch/ThemeSwitch"
+import BasicFactorSelect from "./BasicFactorSelect";
 
 export default {
   name: "FactorSelect",
   components: {
+    BasicFactorSelect,
     BarTable,
     Pane,
     StockSelect,
@@ -194,7 +193,16 @@ export default {
         dailyFactorAll: BasicFactorInfo.dailyFactorInfo,
         cashflowFactorAll: BasicFactorInfo.cashflowFactorInfo,
       },
+      allStock:[],
     }
+  },
+  beforeCreate(){
+    this.$axios.get('/factor/get/allStock').then(ret=>{
+      this.allStock=ret.data
+      console.log(this.allStock)
+    }).catch(err=>{
+      console.log(err)
+    })
   },
   methods: {
     getFactorSelect(stockPool){
@@ -211,6 +219,16 @@ export default {
         .catch(err=>{
           console.log(err)
         })
+    },
+    basicFactorSelect(daily,dailyBasic){
+      if(daily.indexOf('all')>=0){
+        daily.splice(daily.indexOf('all'),1)
+      }
+      if(dailyBasic.indexOf('all')>=0){
+        dailyBasic.splice(dailyBasic.indexOf('all'),1)
+      }
+      this.factors.daily=daily
+      this.factors.daily_basic=dailyBasic
     },
     selectFactorChange(val, old) {
       console.log(val)
@@ -247,7 +265,6 @@ export default {
         if (val.length === allValues.length - 1) ret = allValues
         else ret = val
       }
-
       this.categories[index].selected = ret
 
       //记录选择
@@ -483,10 +500,6 @@ export default {
       this.myChart = this.$echarts.init(document.getElementById('myChart'),'default')
       // 绘制图表
       this.myChart.setOption(this.option,true);
-    },
-    testDrawLine(){
-      this.testChart=this.$echarts.init(document.getElementById('testChart'),'default')
-      this.testChart.setOption(this.option,true);
     },
     newModel(model){
       this.model = model;
@@ -740,6 +753,22 @@ export default {
           pool:this.stockPool,
           factors:this.categories,
           basicFactors:this.factors
+        }
+      })
+    },
+    toGCForest(){
+      this.$router.push({path:'/customFactor/model/gcf',
+        query:{
+          pool:this.stockPool,
+          factors:this.categories,
+          basicFactors:this.factors
+        }
+      })
+    },
+    toAvgMoment(){
+      this.$router.push({path:'/customFactor/model/am',
+        query:{
+          pool:this.stockPool,
         }
       })
     }

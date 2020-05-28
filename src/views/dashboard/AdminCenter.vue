@@ -46,6 +46,8 @@
               layout="total, sizes, prev, pager, next, jumper"
               :total="users.length">
             </el-pagination>
+
+            <el-button @click="packUp" style="margin-top: 1%">收起列表</el-button>
           </div>
         </el-tab-pane>
       </el-tabs>
@@ -124,6 +126,9 @@
           //跳转到因子管理界面
           this.$router.push('/admin/factor/manage')
         },
+        packUp(){
+          this.displayUsers=false
+        }
       }
     }
 </script>

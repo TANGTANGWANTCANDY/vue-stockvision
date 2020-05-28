@@ -271,6 +271,18 @@ export const constantRoutes = [
         name: 'StackRegressor',
         component: () => import('@/views/custom-factor/StackRegressor'),
         hidden: true
+      },
+      {
+        path:'model/gcf',
+        name:'GCForest',
+        component: () => import('@/views/custom-factor/strategy/GCForest'),
+        hidden: true
+      },
+      {
+        path:'model/am',
+        name:'AvgMoment',
+        component: () => import('@/views/custom-factor/strategy/AvgMoment'),
+        hidden: true
       }
     ]
   },

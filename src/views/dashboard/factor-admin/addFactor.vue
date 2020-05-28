@@ -54,7 +54,7 @@
       <el-button @click="addParam1">添加常量参数</el-button>
     </div>
 
-    <el-button @click="addFactor" style="margin-top: 10px">新增因子</el-button>
+    <el-button :loading="addingFactor" @click="addFactor" style="margin-top: 10px">新增因子</el-button>
   </div>
 </template>
 
@@ -69,6 +69,7 @@
         return{
           categories:[],
           showInputDiv:false,
+          addingFactor:false,
           category:null,
           param:{
             function:'',
@@ -80,6 +81,12 @@
           dailyFactorAll: BasicFactorInfo.dailyFactorInfo,
           param1List:[{text:'参数1',value:'0'}],
         }
+      },
+      create(){
+        // 初始化参数记录
+        console.log(this.param)
+        this.param.param0=[]
+        this.param.param1=[]
       },
       methods:{
         initCategories(categories){
@@ -107,6 +114,7 @@
           }
         },
         addFactor(){
+          this.addingFactor=true
           //记录常量参数的选择
           for ( let i = 0; i <this.param1List.length; i++){
             this.param.param1.push(this.param1List[i].value)
@@ -122,12 +130,20 @@
             desc:this.desc,
             param:this.param
           }).then(ret=>{
+            this.addingFactor=false
+            // 还原param状态，为下一次增加因子作准备
+            this.param.param0=[]
+            this.param.param1=[]
             if(ret.data=='success'){
               alert("新增因子成功！")
             }else{
               alert("未知错误！新增因子失败！")
             }
           }).catch(err=>{
+            this.addingFactor=false
+            // 还原param状态，为下一次增加因子作准备
+            this.param.param0=[]
+            this.param.param1=[]
             alert("未知错误！")
           })
         },

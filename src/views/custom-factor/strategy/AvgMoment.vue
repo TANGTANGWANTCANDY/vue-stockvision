@@ -2,19 +2,18 @@
   <div>
     <div class="select-date">
       <el-tabs>
-        <el-tab-pane label="训练数据日期范围选择">
-          <DateStartToEnd @getDate="getTrainDate"></DateStartToEnd>
-        </el-tab-pane>
-      </el-tabs>
-      <el-tabs>
         <el-tab-pane label="目标日期范围选择">
           <DateStartToEnd @getDate="getTargetDate"></DateStartToEnd>
         </el-tab-pane>
       </el-tabs>
-      <el-row style="margin-top: 20px;margin-left: 20px">
-        <el-button style="border-width:0;background-color:#587482;width:120px" :loading="loadingData" @click="backtest">模型回测</el-button>
-      </el-row>
     </div>
+    <div class="select-param" style="margin-top: 5%">
+      <el-input v-model="populationSize" placeholder="请输入最大粒子数"></el-input>
+      <el-input v-model="maxStep" placeholder="请输入最大迭代次数"></el-input>
+    </div>
+    <el-row style="margin-top: 20px;margin-left: 20px">
+      <el-button style="border-width:0;background-color:#587482;width:120px" :loading="loadingData" @click="backtest">模型回测</el-button>
+    </el-row>
     <div class="backtest-result" v-if="showResult">
       <el-row>
         <BarTable :table-data="barTableData"></BarTable>
@@ -28,42 +27,24 @@
 
 <script>
   import DateStartToEnd from "@/components/SelectBox/DateStartToEnd"
-  import BarTable from "./BarTable"
-
+  import BarTable from "../BarTable"
     export default {
-      name: "StackRegressor",
+      name: "AvgMoment",
       components: {BarTable,DateStartToEnd},
       data(){
         return{
+          populationSize:'',
+          maxStep:'',
           showResult:false,
           loadingData:false,
-          trainDate:{
-            startdate:'',
-            enddate:''
-          },
           targetDate:{
             startdate:'',
             enddate:''
           },
-          basicFactors:{
-            daily_basic: [],
-            daily: [],
-            cashflow: [],
-          },
-          factors:[],
-          option:{},
           barTableData:[],
         }
       },
-      mounted(){
-        console.log(this.$route.query.factors)
-        console.log(this.$route.query.basicFactors)
-      },
       methods:{
-        getTrainDate(dates){
-          this.trainDate.startdate=dates[0]
-          this.trainDate.enddate=dates[1]
-        },
         getTargetDate(dates){
           this.targetDate.startdate=dates[0]
           this.targetDate.enddate=dates[1]
@@ -108,33 +89,29 @@
         },
         backtest(){
           this.loadingData=true
-          this.$axios.post('/factor/modelTest',{
-              trainDate:this.trainDate,
-              targetDate:this.targetDate,
-              pool:this.$route.query.pool,
-              factors:this.$route.query.factors,
-              basicFactors: this.$route.query.basicFactors
-            }).then(res => {
-              this.showResult=true
-              this.loadingData=false
-              console.log(res.data)
-              this.barTableData=res.data.table_data
-              this.option = this.setBacktestOption(res.data.chart_data)
-              this.drawLine();
-            }).catch(err => {
-              this.loadingData=false
-              alert('未知错误！请求失败！');
-            })
+          this.$axios.post('/factor/model/AvgMoment',{
+            targetDate:this.targetDate,
+            pool:this.$route.query.pool,
+            params:{
+              populationSize: this.populationSize,
+              maxStep: this.maxStep
+            }
+          }).then(res => {
+            this.showResult=true
+            this.loadingData=false
+            console.log(res.data)
+            this.barTableData=res.data.table_data
+            this.option = this.setBacktestOption(res.data.chart_data)
+            this.drawLine();
+          }).catch(err => {
+            this.loadingData=false
+            alert('未知错误！请求失败！');
+          })
         },
       }
     }
 </script>
 
 <style scoped>
-  .select-date{
-    text-align: left;
-  }
-  .backtest-result{
-    margin-top: 20px;
-  }
+
 </style>

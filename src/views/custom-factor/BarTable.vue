@@ -25,18 +25,19 @@
 
 <script>
     export default {
-        name: "BarTable",
-      data(){
-          return{
-            tableData:[]
-          }
+      name: "BarTable",
+      props:{
+          tableData:{
+            type: Array,
+            required:true,
+          },
       },
-      methods:{
-        getTableData(data){
-          console.log(data)
-          this.tableData=data
+      data(){
+        return{
+
         }
-      }
+      },
+
     }
 
 </script>
