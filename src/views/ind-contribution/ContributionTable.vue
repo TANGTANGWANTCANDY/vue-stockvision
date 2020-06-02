@@ -26,12 +26,12 @@
           </el-tab-pane>
         </el-tabs>
         <el-row style="margin-top: 10px;margin-bottom: 10px">
-          <el-button @click="getIndexes">确认</el-button>
+          <el-button @click="getIndexes" :loading="btn1Loading">确认</el-button>
         </el-row>
         <el-tabs>
           <el-tab-pane label="选择指数">
             <div class="select-index">
-              <el-select v-if="indexes.length>0" v-model="curIndex" style="width: 100px" placeholder="请选择">
+              <el-select v-if="indexes.length>0" v-model="curIndex" style="width: 200px" placeholder="请选择">
                 <el-option
                   v-for="item in indexes"
                   :key="item.tsCode"
@@ -48,7 +48,7 @@
       <el-tabs>
         <el-tab-pane label="操作">
           <div >
-            <el-button @click="refresh">刷新</el-button>
+            <el-button @click="refresh" :loading="btn2Loading">刷新</el-button>
             <el-button @click="orderByCon(1)">当日个股贡献度排序</el-button>
             <el-button @click="orderByCon(5)">5日个股贡献度排序</el-button>
           </div>
@@ -115,6 +115,8 @@
         total: 0,
         multipleSort: false,
         showTable:false,
+        btn1Loading:false,
+        btn2Loading:false,
         tableConfig: {
           tableData: [],
           columns: [
@@ -142,11 +144,11 @@
               orderBy: 'asc',
               formatter: function (rowData, rowIndex, pagingIndex, field) {
                 if (rowData[field] > 0)
-                  return `<span style="color:red">${rowData[field]}</span>`;
+                  return `<span style="color:red">${rowData[field].toFixed(2)}</span>`;
                 else if (rowData[field] < 0)
-                  return `<span style="color:green">${rowData[field]}</span>`;
+                  return `<span style="color:green">${rowData[field].toFixed(2)}</span>`;
                 else
-                  return rowData[field];
+                  return rowData[field].toFixed(2);
               }
             },
             {
@@ -191,22 +193,23 @@
     },
     methods: {
       refresh() {
-        //使用axios的get请求向后台获取用户信息数据
+        //使用axios的get请求向后台获取指数信息数据
         this.isLoading = true
+        this.btn2Loading=true
         this.$axios.get('/contribution/'+this.curIndex+'/'+this.date)
           .then(ret=>{
             this.isLoading = false
+            this.btn2Loading=false
             this.showTable=true
             this.rawData = ret.data
             console.log(this.rawData)
             this.total = this.rawData.length
             this.getTableData()
-          })
-          .catch(err=>{
-            console.log(err);
-            if (err.message !== 'interrupt') {
-              alert('请求失败')
-            }
+          }).catch(err=>{
+            this.isLoading = false
+            this.btn2Loading=false
+            console.log(err)
+            alert("请求失败")
           })
       },
       // 获取 table 组件每次操作后的参数（重新去请求数据）
@@ -278,8 +281,10 @@
         this.getTableData();
       },
       getIndexes(){
+        this.btn1Loading=true
         this.$axios.get('/contribution/market/'+this.curMarket+'/'+this.date).then(
           ret=>{
+            this.btn1Loading=false
             console.log(ret.data)
             this.indexes=ret.data
             if(ret.data.length==0){
@@ -287,8 +292,9 @@
             }
           }
         ).catch(err => {
-            alert('请求失败');
-          })
+          this.btn1Loading=false
+          alert('请求失败');
+        })
       },
       orderByCon(val){
         if(val==1){
